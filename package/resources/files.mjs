@@ -23,7 +23,7 @@ export class Files extends APIResource {
             query,
             ...options,
             headers: buildHeaders([
-                { ...(workspace_id != null ? { 'anthropic-workspace-id': workspace_id } : undefined) },
+                { ...(workspace_id != null ? { 'juglow-workspace-id': workspace_id } : undefined) },
                 options?.headers,
             ]),
         });
@@ -41,7 +41,7 @@ export class Files extends APIResource {
         return this._client.delete(path `/v1/files/${fileID}`, {
             ...options,
             headers: buildHeaders([
-                { ...(workspace_id != null ? { 'anthropic-workspace-id': workspace_id } : undefined) },
+                { ...(workspace_id != null ? { 'juglow-workspace-id': workspace_id } : undefined) },
                 options?.headers,
             ]),
         });
@@ -64,7 +64,7 @@ export class Files extends APIResource {
             headers: buildHeaders([
                 {
                     Accept: 'application/binary',
-                    ...(workspace_id != null ? { 'anthropic-workspace-id': workspace_id } : undefined),
+                    ...(workspace_id != null ? { 'juglow-workspace-id': workspace_id } : undefined),
                 },
                 options?.headers,
             ]),
@@ -86,7 +86,7 @@ export class Files extends APIResource {
         return this._client.get(path `/v1/files/${fileID}`, {
             ...options,
             headers: buildHeaders([
-                { ...(workspace_id != null ? { 'anthropic-workspace-id': workspace_id } : undefined) },
+                { ...(workspace_id != null ? { 'juglow-workspace-id': workspace_id } : undefined) },
                 options?.headers,
             ]),
         });
@@ -107,7 +107,7 @@ export class Files extends APIResource {
             body,
             ...options,
             headers: buildHeaders([
-                { ...(workspace_id != null ? { 'anthropic-workspace-id': workspace_id } : undefined) },
+                { ...(workspace_id != null ? { 'juglow-workspace-id': workspace_id } : undefined) },
                 stainlessHelperHeaderFromFile(body.file),
                 options?.headers,
             ]),

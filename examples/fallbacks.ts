@@ -51,8 +51,7 @@ async function main() {
       max_tokens: 1024,
       messages: [{ role: 'user', content: 'Some prompt that triggers a refusal' }],
     },
-    { fallbackState: state }, // reusing the state keeps the conversation pinned
-  );
+    { fallbackState: state }, // reusing the state keeps the conversation pinned );
   console.log('non-streaming, served by:', message.model);
 }
 

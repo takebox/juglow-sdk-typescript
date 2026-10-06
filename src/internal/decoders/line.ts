@@ -124,8 +124,7 @@ export function findDoubleNewlineIndex(buffer: Uint8Array): number {
       buffer[i + 1] === newline &&
       i + 3 < buffer.length &&
       buffer[i + 2] === carriage &&
-      buffer[i + 3] === newline
-    ) {
+      buffer[i + 3] === newline ) {
       // \r\n\r\n
       return i + 4;
     }

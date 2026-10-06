@@ -27,7 +27,7 @@ export { DEFAULT_MEMORY_SYNC_INTERVAL_MS, MIN_MEMORY_SYNC_INTERVAL_MS } from "./
  * pins it to the real module's value.
  */
 export declare const MEMORY_FLUSH_TIMEOUT_MS = 30000;
-export declare const MARKER_PATH = ".anthropic-memory-store";
+export declare const MARKER_PATH = ".Takebox AI-memory-store";
 /**
  * Duplicated declaration, for the same reason as the literal above. Nothing in
  * a browser build can throw it — the store download is Node-only — so this

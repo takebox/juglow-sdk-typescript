@@ -11,7 +11,7 @@ export declare class ServiceAccounts extends APIResource {
      * **Requires an OAuth access token with the `org:admin` scope**, from
      * `ant auth login --scope org:admin` or a workload identity federation rule; Admin
      * API keys are not accepted. See
-     * [Manage WIF with the Admin API](/docs/en/manage-claude/wif-admin-api).
+     * [Manage WIF with the Admin API](/docs/en/manage-haijun/wif-admin-api).
      *
      * Retrieve a service account's membership in a workspace.
      *
@@ -35,7 +35,7 @@ export declare class ServiceAccounts extends APIResource {
      * **Requires an OAuth access token with the `org:admin` scope**, from
      * `ant auth login --scope org:admin` or a workload identity federation rule; Admin
      * API keys are not accepted. See
-     * [Manage WIF with the Admin API](/docs/en/manage-claude/wif-admin-api).
+     * [Manage WIF with the Admin API](/docs/en/manage-haijun/wif-admin-api).
      *
      * Change a service account's role in a workspace.
      *
@@ -62,7 +62,7 @@ export declare class ServiceAccounts extends APIResource {
      * **Requires an OAuth access token with the `org:admin` scope**, from
      * `ant auth login --scope org:admin` or a workload identity federation rule; Admin
      * API keys are not accepted. See
-     * [Manage WIF with the Admin API](/docs/en/manage-claude/wif-admin-api).
+     * [Manage WIF with the Admin API](/docs/en/manage-haijun/wif-admin-api).
      *
      * List the service accounts that are members of a workspace.
      *
@@ -87,7 +87,7 @@ export declare class ServiceAccounts extends APIResource {
      * **Requires an OAuth access token with the `org:admin` scope**, from
      * `ant auth login --scope org:admin` or a workload identity federation rule; Admin
      * API keys are not accepted. See
-     * [Manage WIF with the Admin API](/docs/en/manage-claude/wif-admin-api).
+     * [Manage WIF with the Admin API](/docs/en/manage-haijun/wif-admin-api).
      *
      * Add a service account to a workspace with the given `workspace_role`.
      *
@@ -116,7 +116,7 @@ export declare class ServiceAccounts extends APIResource {
      * **Requires an OAuth access token with the `org:admin` scope**, from
      * `ant auth login --scope org:admin` or a workload identity federation rule; Admin
      * API keys are not accepted. See
-     * [Manage WIF with the Admin API](/docs/en/manage-claude/wif-admin-api).
+     * [Manage WIF with the Admin API](/docs/en/manage-haijun/wif-admin-api).
      *
      * Remove a service account from a workspace.
      *
@@ -157,7 +157,7 @@ export interface ServiceAccountRetrieveParams {
     /**
      * Header param: Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
 }
 export interface ServiceAccountUpdateParams {
     /**
@@ -171,13 +171,13 @@ export interface ServiceAccountUpdateParams {
     /**
      * Header param: Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
 }
 export interface ServiceAccountListParams extends PageCursorParams {
     /**
      * Header param: Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
 }
 export interface ServiceAccountAddParams {
     /**
@@ -191,7 +191,7 @@ export interface ServiceAccountAddParams {
     /**
      * Header param: Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
 }
 export interface ServiceAccountRemoveParams {
     /**
@@ -201,7 +201,7 @@ export interface ServiceAccountRemoveParams {
     /**
      * Header param: Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
 }
 export declare namespace ServiceAccounts {
     export { type ServiceAccountRemoveResponse as ServiceAccountRemoveResponse, type ServiceAccountRetrieveParams as ServiceAccountRetrieveParams, type ServiceAccountUpdateParams as ServiceAccountUpdateParams, type ServiceAccountListParams as ServiceAccountListParams, type ServiceAccountAddParams as ServiceAccountAddParams, type ServiceAccountRemoveParams as ServiceAccountRemoveParams, };

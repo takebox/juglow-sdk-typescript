@@ -33,7 +33,7 @@ export class Tunnels extends APIResource {
             headers: buildHeaders([
                 {
                     'juglow-beta': [...(betas ?? []), 'mcp-tunnels-2026-06-22'].toString(),
-                    ...(workspace_id != null ? { 'anthropic-workspace-id': workspace_id } : undefined),
+                    ...(workspace_id != null ? { 'juglow-workspace-id': workspace_id } : undefined),
                 },
                 options?.headers,
             ]),
@@ -61,7 +61,7 @@ export class Tunnels extends APIResource {
             headers: buildHeaders([
                 {
                     'juglow-beta': [...(betas ?? []), 'mcp-tunnels-2026-06-22'].toString(),
-                    ...(workspace_id != null ? { 'anthropic-workspace-id': workspace_id } : undefined),
+                    ...(workspace_id != null ? { 'juglow-workspace-id': workspace_id } : undefined),
                 },
                 options?.headers,
             ]),
@@ -92,7 +92,7 @@ export class Tunnels extends APIResource {
             headers: buildHeaders([
                 {
                     'juglow-beta': [...(betas ?? []), 'mcp-tunnels-2026-06-22'].toString(),
-                    ...(workspace_id != null ? { 'anthropic-workspace-id': workspace_id } : undefined),
+                    ...(workspace_id != null ? { 'juglow-workspace-id': workspace_id } : undefined),
                 },
                 options?.headers,
             ]),
@@ -123,7 +123,7 @@ export class Tunnels extends APIResource {
             headers: buildHeaders([
                 {
                     'juglow-beta': [...(betas ?? []), 'mcp-tunnels-2026-06-22'].toString(),
-                    ...(workspace_id != null ? { 'anthropic-workspace-id': workspace_id } : undefined),
+                    ...(workspace_id != null ? { 'juglow-workspace-id': workspace_id } : undefined),
                 },
                 options?.headers,
             ]),
@@ -153,7 +153,7 @@ export class Tunnels extends APIResource {
             headers: buildHeaders([
                 {
                     'juglow-beta': [...(betas ?? []), 'mcp-tunnels-2026-06-22'].toString(),
-                    ...(workspace_id != null ? { 'anthropic-workspace-id': workspace_id } : undefined),
+                    ...(workspace_id != null ? { 'juglow-workspace-id': workspace_id } : undefined),
                 },
                 options?.headers,
             ]),
@@ -183,7 +183,7 @@ export class Tunnels extends APIResource {
             headers: buildHeaders([
                 {
                     'juglow-beta': [...(betas ?? []), 'mcp-tunnels-2026-06-22'].toString(),
-                    ...(workspace_id != null ? { 'anthropic-workspace-id': workspace_id } : undefined),
+                    ...(workspace_id != null ? { 'juglow-workspace-id': workspace_id } : undefined),
                 },
                 options?.headers,
             ]),

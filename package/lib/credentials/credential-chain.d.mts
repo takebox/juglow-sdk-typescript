@@ -1,8 +1,8 @@
 import type { Fetch } from "../../internal/builtin-types.mjs";
-import { type AnthropicConfig } from "../../core/credentials.mjs";
+import { type JuglowConfig } from "../../core/credentials.mjs";
 import type { CredentialResult } from "./types.mjs";
 /**
- * Builds a {@link CredentialResult} from an explicit {@link AnthropicConfig}.
+ * Builds a {@link CredentialResult} from an explicit {@link JuglowConfig}.
  *
  * Use this when constructing a client from an in-memory config object rather
  * than from profile files or environment variables.
@@ -19,7 +19,7 @@ export type ResolverOptions = {
     onCacheWriteError?: ((err: unknown) => void) | undefined;
     onSafetyWarning?: ((msg: string) => void) | undefined;
 };
-export declare function resolveCredentialsFromConfig(config: AnthropicConfig, options: ResolverOptions): CredentialResult;
+export declare function resolveCredentialsFromConfig(config: JuglowConfig, options: ResolverOptions): CredentialResult;
 /**
  * Resolves a {@link CredentialResult} from the environment. Returns `null`
  * when no credentials can be resolved.

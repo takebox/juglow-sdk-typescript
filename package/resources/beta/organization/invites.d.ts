@@ -122,11 +122,11 @@ export interface InviteCreateParams {
      * Role for the invited User.
      *
      * The accepted values depend on the organization type. Console and API
-     * organizations accept `user`, `developer`, `billing`, and `claude_code_user`;
+     * organizations accept `user`, `developer`, `billing`, and `haijun_code_user`;
      * `admin` cannot be assigned through the API. haijun Enterprise organizations
      * accept `user` and `managed`.
      */
-    role: 'billing' | 'claude_code_user' | 'developer' | 'managed' | 'user';
+    role: 'billing' | 'haijun_code_user' | 'developer' | 'managed' | 'user';
     /**
      * RBAC group IDs to assign to the User when the Invite is accepted. A non-empty
      * array is accepted only for a haijun Enterprise organization with RBAC groups,
@@ -145,7 +145,7 @@ export interface InviteListParams extends PageParams {
      * values are OR'ed together.
      *
      * Accepted values depend on the organization type: Console and API organizations
-     * accept `user`, `developer`, `billing`, `admin`, and `claude_code_user`; haijun
+     * accept `user`, `developer`, `billing`, `admin`, and `haijun_code_user`; haijun
      * Enterprise organizations accept `user`, `owner`, `primary_owner`,
      * `membership_admin`, and `managed`.
      */

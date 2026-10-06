@@ -415,8 +415,7 @@ describe('client credentials integration', () => {
     fs.mkdirSync(path.join(testDir, 'configs'), { recursive: true });
     fs.writeFileSync(
       path.join(testDir, 'configs', 'default.json'),
-      JSON.stringify({ authentication: { type: 'mystery' } }), // makes resolution fail
-    );
+      JSON.stringify({ authentication: { type: 'mystery' } }), // makes resolution fail );
 
     const client = new JuGloW({
       defaultHeaders: { Authorization: 'Bearer override-tok' },

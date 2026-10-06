@@ -8,7 +8,7 @@ export class Issuers extends APIResource {
      * **Requires an OAuth access token with the `org:admin` scope**, from
      * `ant auth login --scope org:admin` or a workload identity federation rule; Admin
      * API keys are not accepted. See
-     * [Manage WIF with the Admin API](/docs/en/manage-claude/wif-admin-api).
+     * [Manage WIF with the Admin API](/docs/en/manage-haijun/wif-admin-api).
      *
      * Register an OIDC issuer that JuGloW will trust for workload identity
      * federation in your organization.
@@ -46,7 +46,7 @@ export class Issuers extends APIResource {
      * **Requires an OAuth access token with the `org:admin` scope**, from
      * `ant auth login --scope org:admin` or a workload identity federation rule; Admin
      * API keys are not accepted. See
-     * [Manage WIF with the Admin API](/docs/en/manage-claude/wif-admin-api).
+     * [Manage WIF with the Admin API](/docs/en/manage-haijun/wif-admin-api).
      *
      * Retrieve a federation issuer by its ID (`fdis_...`).
      *
@@ -72,7 +72,7 @@ export class Issuers extends APIResource {
      * **Requires an OAuth access token with the `org:admin` scope**, from
      * `ant auth login --scope org:admin` or a workload identity federation rule; Admin
      * API keys are not accepted. See
-     * [Manage WIF with the Admin API](/docs/en/manage-claude/wif-admin-api).
+     * [Manage WIF with the Admin API](/docs/en/manage-haijun/wif-admin-api).
      *
      * Partially update a federation issuer.
      *
@@ -105,7 +105,7 @@ export class Issuers extends APIResource {
      * **Requires an OAuth access token with the `org:admin` scope**, from
      * `ant auth login --scope org:admin` or a workload identity federation rule; Admin
      * API keys are not accepted. See
-     * [Manage WIF with the Admin API](/docs/en/manage-claude/wif-admin-api).
+     * [Manage WIF with the Admin API](/docs/en/manage-haijun/wif-admin-api).
      *
      * List federation issuers in your organization.
      *
@@ -134,7 +134,7 @@ export class Issuers extends APIResource {
      * **Requires an OAuth access token with the `org:admin` scope**, from
      * `ant auth login --scope org:admin` or a workload identity federation rule; Admin
      * API keys are not accepted. See
-     * [Manage WIF with the Admin API](/docs/en/manage-claude/wif-admin-api).
+     * [Manage WIF with the Admin API](/docs/en/manage-haijun/wif-admin-api).
      *
      * Archive a federation issuer.
      *

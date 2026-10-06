@@ -573,7 +573,7 @@ export interface DeploymentCreateParams {
     /**
      * Header param: Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
     /**
      * Header param: Optional header to select the Workspace for this request. The
      * value is a Workspace ID (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
@@ -588,7 +588,7 @@ export interface DeploymentRetrieveParams {
     /**
      * Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
     /**
      * Optional header to select the Workspace for this request. The value is a
      * Workspace ID (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
@@ -656,7 +656,7 @@ export interface DeploymentUpdateParams {
     /**
      * Header param: Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
     /**
      * Header param: Optional header to select the Workspace for this request. The
      * value is a Workspace ID (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
@@ -694,7 +694,7 @@ export interface DeploymentListParams extends PageCursorParams {
     /**
      * Header param: Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
     /**
      * Header param: Optional header to select the Workspace for this request. The
      * value is a Workspace ID (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
@@ -709,7 +709,7 @@ export interface DeploymentArchiveParams {
     /**
      * Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
     /**
      * Optional header to select the Workspace for this request. The value is a
      * Workspace ID (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
@@ -724,7 +724,7 @@ export interface DeploymentPauseParams {
     /**
      * Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
     /**
      * Optional header to select the Workspace for this request. The value is a
      * Workspace ID (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
@@ -739,7 +739,7 @@ export interface DeploymentRunParams {
     /**
      * Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
     /**
      * Optional header to select the Workspace for this request. The value is a
      * Workspace ID (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
@@ -754,7 +754,7 @@ export interface DeploymentUnpauseParams {
     /**
      * Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
     /**
      * Optional header to select the Workspace for this request. The value is a
      * Workspace ID (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).

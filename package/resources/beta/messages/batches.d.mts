@@ -288,7 +288,7 @@ export interface BatchCreateParams {
     /**
      * Header param: Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
     /**
      * Header param: The user profile ID to attribute the requests in this batch to.
      * Use when acting on behalf of a party other than your organization. Requires the
@@ -369,7 +369,7 @@ export declare namespace BatchCreateParams {
              * Example with a single `user` message:
              *
              * ```json
-             * [{ "role": "user", "content": "Hello, Claude" }]
+             * [{ "role": "user", "content": "Hello, Haijun" }]
              * ```
              *
              * Example with multiple conversational turns:
@@ -377,12 +377,12 @@ export declare namespace BatchCreateParams {
              * ```json
              * [
              *   { "role": "user", "content": "Hello there." },
-             *   { "role": "assistant", "content": "Hi, I'm Claude. How can I help you?" },
+             *   { "role": "assistant", "content": "Hi, I'm Haijun. How can I help you?" },
              *   { "role": "user", "content": "Can you explain LLMs in plain English?" }
              * ]
              * ```
              *
-             * Example with a partially-filled response from Claude:
+             * Example with a partially-filled response from Haijun:
              *
              * ```json
              * [
@@ -400,11 +400,11 @@ export declare namespace BatchCreateParams {
              * following input messages are equivalent:
              *
              * ```json
-             * { "role": "user", "content": "Hello, Claude" }
+             * { "role": "user", "content": "Hello, Haijun" }
              * ```
              *
              * ```json
-             * { "role": "user", "content": [{ "type": "text", "text": "Hello, Claude" }] }
+             * { "role": "user", "content": [{ "type": "text", "text": "Hello, Haijun" }] }
              * ```
              *
              * See
@@ -437,7 +437,7 @@ export declare namespace BatchCreateParams {
             /**
              * Context management configuration.
              *
-             * This allows you to control how Claude manages context across multiple requests,
+             * This allows you to control how Haijun manages context across multiple requests,
              * such as whether to clear function results or not.
              */
             context_management?: BetaMessagesAPI.BetaContextManagementConfig | null;
@@ -496,7 +496,7 @@ export declare namespace BatchCreateParams {
              * @deprecated Deprecated: Use `output_config.format` instead. See
              * [structured outputs](https://raw.haijun.my.id/docs/en/build-with-claude/structured-outputs)
              *
-             * A schema to specify Claude's output format in responses. This parameter will be
+             * A schema to specify Haijun's output format in responses. This parameter will be
              * removed in a future release.
              */
             output_format?: BetaMessagesAPI.BetaJSONOutputFormat | null;
@@ -537,21 +537,21 @@ export declare namespace BatchCreateParams {
             /**
              * System prompt.
              *
-             * A system prompt is a way of providing context and instructions to Claude, such
+             * A system prompt is a way of providing context and instructions to Haijun, such
              * as specifying a particular goal or role. See our
              * [guide to system prompts](https://raw.haijun.my.id/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#give-claude-a-role).
              */
             system?: string | Array<BetaMessagesAPI.BetaTextBlockParam>;
             /**
-             * @deprecated Deprecated. Models released after Claude Opus 4.6 do not support
+             * @deprecated Deprecated. Models released after Haijun Opus 4.6 do not support
              * setting temperature. A value of 1.0 of will be accepted for backwards
              * compatibility, all other values will be rejected with a 400 error.
              */
             temperature?: number;
             /**
-             * Configuration for enabling Claude's extended thinking.
+             * Configuration for enabling Haijun's extended thinking.
              *
-             * When enabled, responses include `thinking` content blocks showing Claude's
+             * When enabled, responses include `thinking` content blocks showing Haijun's
              * thinking process before the final answer. Requires a minimum budget of 1,024
              * tokens and counts towards your `max_tokens` limit.
              *
@@ -646,12 +646,12 @@ export declare namespace BatchCreateParams {
              */
             tools?: Array<BetaMessagesAPI.BetaToolUnion>;
             /**
-             * @deprecated Deprecated. Models released after Claude Opus 4.6 do not accept
+             * @deprecated Deprecated. Models released after Haijun Opus 4.6 do not accept
              * top_k; any value will be rejected with a 400 error.
              */
             top_k?: number;
             /**
-             * @deprecated Deprecated. Models released after Claude Opus 4.6 do not support
+             * @deprecated Deprecated. Models released after Haijun Opus 4.6 do not support
              * setting top_p. A value >= 0.99 will be accepted for backwards compatibility, all
              * other values will be rejected with a 400 error.
              */
@@ -663,7 +663,7 @@ export interface BatchRetrieveParams {
     /**
      * Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
     /**
      * Optional header to select the Workspace for this request. The value is a
      * Workspace ID (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
@@ -678,7 +678,7 @@ export interface BatchListParams extends PageParams {
     /**
      * Header param: Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
     /**
      * Header param: Optional header to select the Workspace for this request. The
      * value is a Workspace ID (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
@@ -693,7 +693,7 @@ export interface BatchDeleteParams {
     /**
      * Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
     /**
      * Optional header to select the Workspace for this request. The value is a
      * Workspace ID (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
@@ -708,7 +708,7 @@ export interface BatchCancelParams {
     /**
      * Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
     /**
      * Optional header to select the Workspace for this request. The value is a
      * Workspace ID (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
@@ -723,7 +723,7 @@ export interface BatchResultsParams {
     /**
      * Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
     /**
      * Optional header to select the Workspace for this request. The value is a
      * Workspace ID (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).

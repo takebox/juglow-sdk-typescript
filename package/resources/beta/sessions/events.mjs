@@ -26,7 +26,7 @@ export class Events extends APIResource {
             headers: buildHeaders([
                 {
                     'juglow-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString(),
-                    ...(workspace_id != null ? { 'anthropic-workspace-id': workspace_id } : undefined),
+                    ...(workspace_id != null ? { 'juglow-workspace-id': workspace_id } : undefined),
                 },
                 options?.headers,
             ]),
@@ -64,7 +64,7 @@ export class Events extends APIResource {
             headers: buildHeaders([
                 {
                     'juglow-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString(),
-                    ...(workspace_id != null ? { 'anthropic-workspace-id': workspace_id } : undefined),
+                    ...(workspace_id != null ? { 'juglow-workspace-id': workspace_id } : undefined),
                 },
                 options?.headers,
             ]),
@@ -89,7 +89,7 @@ export class Events extends APIResource {
             headers: buildHeaders([
                 {
                     'juglow-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString(),
-                    ...(workspace_id != null ? { 'anthropic-workspace-id': workspace_id } : undefined),
+                    ...(workspace_id != null ? { 'juglow-workspace-id': workspace_id } : undefined),
                 },
                 options?.headers,
             ]),
@@ -106,7 +106,7 @@ export class Events extends APIResource {
      *
      * @example
      * ```ts
-     * import { betaAgentToolset20260401 } from '@anthropic-ai/sdk/tools/agent-toolset/node';
+     * import { betaAgentToolset20260401 } from '@takebox-ai/sdk/tools/agent-toolset/node';
      *
      * for await (const call of client.beta.sessions.events.toolRunner(work.data.id, {
      *   tools: [...betaAgentToolset20260401({ workdir }), myTool],

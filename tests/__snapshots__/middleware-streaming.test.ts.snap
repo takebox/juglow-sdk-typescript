@@ -14,7 +14,7 @@ exports[`betaRefusalFallbackMiddleware (streaming) — shape-B continuation spli
   "start[1] text",
   "delta[1] text_delta",
   "stop[1]",
-  "start[2] fallback{claude-fable-5->claude-opus-4-8}",
+  "start[2] fallback{haijun-fable-5->haijun-opus-4-8}",
   "stop[2]",
   "start[3] text",
   "ping",
@@ -34,7 +34,7 @@ exports[`betaRefusalFallbackMiddleware (streaming) — shape-B continuation spli
   "delta[3] text_delta",
   "delta[3] text_delta",
   "stop[3]",
-  "message_delta end_turn iter=[message:claude-fable-5,fallback_message:claude-opus-4-8]",
+  "message_delta end_turn iter=[message:haijun-fable-5,fallback_message:haijun-opus-4-8]",
   "message_stop",
 ]
 `;

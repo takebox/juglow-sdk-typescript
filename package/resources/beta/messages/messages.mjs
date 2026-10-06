@@ -43,8 +43,8 @@ export class Messages extends APIResource {
             headers: buildHeaders([
                 {
                     ...(betas?.toString() != null ? { 'juglow-beta': betas?.toString() } : undefined),
-                    ...(user_profile_id != null ? { 'anthropic-user-profile-id': user_profile_id } : undefined),
-                    ...(workspace_id != null ? { 'anthropic-workspace-id': workspace_id } : undefined),
+                    ...(user_profile_id != null ? { 'juglow-user-profile-id': user_profile_id } : undefined),
+                    ...(workspace_id != null ? { 'juglow-workspace-id': workspace_id } : undefined),
                 },
                 helperHeader,
                 options?.headers,
@@ -59,7 +59,7 @@ export class Messages extends APIResource {
      * @example
      * ```ts
      * const message = await client.beta.messages.parse({
-     *   model: 'claude-3-5-sonnet-20241022',
+     *   model: 'haijun-3-5-sonnet-20241022',
      *   max_tokens: 1024,
      *   messages: [{ role: 'user', content: 'What is 2+2?' }],
      *   output_format: zodOutputFormat(z.object({ answer: z.number() }), 'math'),
@@ -112,8 +112,8 @@ export class Messages extends APIResource {
             headers: buildHeaders([
                 {
                     'juglow-beta': [...(betas ?? []), 'token-counting-2024-11-01'].toString(),
-                    ...(user_profile_id != null ? { 'anthropic-user-profile-id': user_profile_id } : undefined),
-                    ...(workspace_id != null ? { 'anthropic-workspace-id': workspace_id } : undefined),
+                    ...(user_profile_id != null ? { 'juglow-user-profile-id': user_profile_id } : undefined),
+                    ...(workspace_id != null ? { 'juglow-workspace-id': workspace_id } : undefined),
                 },
                 options?.headers,
             ]),

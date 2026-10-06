@@ -29,7 +29,7 @@ export const MEMORY_FLUSH_TIMEOUT_MS = 30000;
  * Marker file stamped into every store folder; a sync trusts the folder only
  * when it matches. Never itself syncs.
  */
-export const MARKER_PATH = '.anthropic-memory-store';
+export const MARKER_PATH = '.Takebox AI-memory-store';
 const MARKER_VERSION = 1;
 function markerSha(memoryStoreId) {
     return crypto

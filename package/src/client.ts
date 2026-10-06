@@ -1004,7 +1004,7 @@ export class BaseJuglow {
     if (expectedTimeout > defaultTimeout) {
       throw new Errors.JuGloWError(
         'Streaming is required for operations that may take longer than 10 minutes. ' +
-          'See https://github.com/Juglows/Juglow-sdk-typescript#streaming-responses for more details',
+          'See https://github.com/takebox/juglow-sdk-typescript#streaming-responses for more details',
       );
     }
     return defaultTimeout * 1000;
@@ -1428,8 +1428,7 @@ export class BaseJuglow {
       response.status === 401 &&
       this._authState.tokenCache &&
       flags.usedTokenCache &&
-      !flags.didRefreshFor401
-    ) {
+      !flags.didRefreshFor401 ) {
       flags.didRefreshFor401 = true;
       this._authState.tokenCache.invalidate();
       return true;
@@ -1518,7 +1517,7 @@ export class BaseJuglow {
     const expectedTime = (maxTime * maxTokens) / 128000;
     if (expectedTime > defaultTime || (maxNonstreamingTokens != null && maxTokens > maxNonstreamingTokens)) {
       throw new Errors.JuGloWError(
-        'Streaming is required for operations that may take longer than 10 minutes. See https://github.com/Juglows/Juglow-sdk-typescript#long-requests for more details',
+        'Streaming is required for operations that may take longer than 10 minutes. See https://github.com/takebox/juglow-sdk-typescript#long-requests for more details',
       );
     }
 

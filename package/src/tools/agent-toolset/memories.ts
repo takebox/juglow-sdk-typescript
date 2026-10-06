@@ -429,8 +429,7 @@ export class SessionMemoryStores {
           baseSha !== undefined &&
           remoteItem !== undefined &&
           remoteItem.content_sha256 === baseSha &&
-          !store.readOnly
-        ) {
+          !store.readOnly ) {
           sha = await this.#corroboratedDelete(store, rel, remoteItem, baseSha, deletes);
         } else {
           sha = await this.#syncPath(store, rel, remoteItem, localSha, pulls);

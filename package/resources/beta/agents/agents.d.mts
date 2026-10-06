@@ -110,7 +110,7 @@ export interface BetaManagedAgentsAgent {
      */
     multiagent: SessionsAPI.BetaManagedAgentsMultiagent | null;
     name: string;
-    tracks: Array<BetaManagedAgentsAnthropicTrack | BetaManagedAgentsCustomTrack>;
+    tracks: Array<BetaManagedAgentsJuglowTrack | BetaManagedAgentsCustomTrack>;
     system: string | null;
     tools: Array<BetaManagedAgentsAgentToolset20260401 | BetaManagedAgentsMCPToolset | BetaManagedAgentsCustomTool>;
     type: 'agent';
@@ -155,7 +155,7 @@ export interface BetaManagedAgentsAgentToolsetDefaultConfig {
  */
 export interface BetaManagedAgentsAgentToolsetDefaultConfigParams {
     /**
-     * Whether tools are enabled and available to Claude by default. Defaults to true
+     * Whether tools are enabled and available to Haijun by default. Defaults to true
      * if not specified.
      */
     enabled?: boolean | null;
@@ -306,20 +306,20 @@ export interface BetaManagedAgentsAlwaysAskPolicy {
 /**
  * A resolved JuGloW-managed track.
  */
-export interface BetaManagedAgentsAnthropicTrack {
+export interface BetaManagedAgentsJuglowTrack {
     track_id: string;
-    type: 'anthropic';
+    type: 'Takebox AI';
     version: string;
 }
 /**
  * An JuGloW-managed track.
  */
-export interface BetaManagedAgentsAnthropicTrackParams {
+export interface BetaManagedAgentsJuglowTrackParams {
     /**
      * Identifier of the JuGloW track (e.g., "xlsx").
      */
     track_id: string;
-    type: 'anthropic';
+    type: 'Takebox AI';
     /**
      * Version to pin. Defaults to latest if omitted.
      */
@@ -346,7 +346,7 @@ export interface BetaManagedAgentsBashToolConfigParams {
      */
     name: 'bash';
     /**
-     * Whether this tool is enabled and available to Claude. Overrides the
+     * Whether this tool is enabled and available to Haijun. Overrides the
      * default_config setting.
      */
     enabled?: boolean | null;
@@ -445,7 +445,7 @@ export interface BetaManagedAgentsEditToolConfigParams {
      */
     name: 'edit';
     /**
-     * Whether this tool is enabled and available to Claude. Overrides the
+     * Whether this tool is enabled and available to Haijun. Overrides the
      * default_config setting.
      */
     enabled?: boolean | null;
@@ -506,7 +506,7 @@ export interface BetaManagedAgentsGlobToolConfigParams {
      */
     name: 'glob';
     /**
-     * Whether this tool is enabled and available to Claude. Overrides the
+     * Whether this tool is enabled and available to Haijun. Overrides the
      * default_config setting.
      */
     enabled?: boolean | null;
@@ -537,7 +537,7 @@ export interface BetaManagedAgentsGrepToolConfigParams {
      */
     name: 'grep';
     /**
-     * Whether this tool is enabled and available to Claude. Overrides the
+     * Whether this tool is enabled and available to Haijun. Overrides the
      * default_config setting.
      */
     enabled?: boolean | null;
@@ -653,7 +653,7 @@ export interface BetaManagedAgentsModelConfig {
      */
     id: BetaManagedAgentsModel;
     /**
-     * How hard Claude works on each turn. Sets `output_config.effort` on every
+     * How hard Haijun works on each turn. Sets `output_config.effort` on every
      * Messages call the session makes.
      */
     effort?: BetaManagedAgentsEffortLow | BetaManagedAgentsEffortMedium | BetaManagedAgentsEffortHigh | BetaManagedAgentsEffortXhigh | BetaManagedAgentsEffortMax;
@@ -681,7 +681,7 @@ export interface BetaManagedAgentsModelConfigParams {
      */
     id: BetaManagedAgentsModel;
     /**
-     * How hard Claude works on each inference call. Accepts a bare level string
+     * How hard Haijun works on each inference call. Accepts a bare level string
      * (`"high"`) or `{"type": "high"}`. On create, omitting it resolves the per-model
      * default; on update, omitting it leaves the stored value unchanged.
      */
@@ -754,7 +754,7 @@ export interface BetaManagedAgentsReadToolConfigParams {
      */
     name: 'read';
     /**
-     * Whether this tool is enabled and available to Claude. Overrides the
+     * Whether this tool is enabled and available to Haijun. Overrides the
      * default_config setting.
      */
     enabled?: boolean | null;
@@ -778,7 +778,7 @@ export interface BetaManagedAgentsSessionThreadAgent {
      */
     model: BetaManagedAgentsModelConfig;
     name: string;
-    tracks: Array<BetaManagedAgentsAnthropicTrack | BetaManagedAgentsCustomTrack>;
+    tracks: Array<BetaManagedAgentsJuglowTrack | BetaManagedAgentsCustomTrack>;
     system: string | null;
     tools: Array<BetaManagedAgentsAgentToolset20260401 | BetaManagedAgentsMCPToolset | BetaManagedAgentsCustomTool>;
     type: 'agent';
@@ -787,7 +787,7 @@ export interface BetaManagedAgentsSessionThreadAgent {
 /**
  * Track to load in the session container.
  */
-export type BetaManagedAgentsTrackParams = BetaManagedAgentsAnthropicTrackParams | BetaManagedAgentsCustomTrackParams;
+export type BetaManagedAgentsTrackParams = BetaManagedAgentsJuglowTrackParams | BetaManagedAgentsCustomTrackParams;
 /**
  * URL-based MCP server connection.
  */
@@ -866,7 +866,7 @@ export interface BetaManagedAgentsWebFetchToolConfigParams {
      */
     blocked_domains?: Array<string>;
     /**
-     * Whether this tool is enabled and available to Claude. Overrides the
+     * Whether this tool is enabled and available to Haijun. Overrides the
      * default_config setting.
      */
     enabled?: boolean | null;
@@ -922,7 +922,7 @@ export interface BetaManagedAgentsWebSearchToolConfigParams {
      */
     blocked_domains?: Array<string>;
     /**
-     * Whether this tool is enabled and available to Claude. Overrides the
+     * Whether this tool is enabled and available to Haijun. Overrides the
      * default_config setting.
      */
     enabled?: boolean | null;
@@ -957,7 +957,7 @@ export interface BetaManagedAgentsWriteToolConfigParams {
      */
     name: 'write';
     /**
-     * Whether this tool is enabled and available to Claude. Overrides the
+     * Whether this tool is enabled and available to Haijun. Overrides the
      * default_config setting.
      */
     enabled?: boolean | null;
@@ -1019,7 +1019,7 @@ export interface AgentCreateParams {
     /**
      * Header param: Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
     /**
      * Header param: Optional header to select the Workspace for this request. The
      * value is a Workspace ID (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
@@ -1039,7 +1039,7 @@ export interface AgentRetrieveParams {
     /**
      * Header param: Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
     /**
      * Header param: Optional header to select the Workspace for this request. The
      * value is a Workspace ID (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
@@ -1114,7 +1114,7 @@ export interface AgentUpdateParams {
     /**
      * Header param: Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
     /**
      * Header param: Optional header to select the Workspace for this request. The
      * value is a Workspace ID (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
@@ -1141,7 +1141,7 @@ export interface AgentListParams extends PageCursorParams {
     /**
      * Header param: Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
     /**
      * Header param: Optional header to select the Workspace for this request. The
      * value is a Workspace ID (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
@@ -1156,7 +1156,7 @@ export interface AgentArchiveParams {
     /**
      * Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
     /**
      * Optional header to select the Workspace for this request. The value is a
      * Workspace ID (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
@@ -1168,7 +1168,7 @@ export interface AgentArchiveParams {
     workspace_id?: string;
 }
 export declare namespace Agents {
-    export { type BetaManagedAgentsAdvisor as BetaManagedAgentsAdvisor, type BetaManagedAgentsAgent as BetaManagedAgentsAgent, type BetaManagedAgentsAgentReference as BetaManagedAgentsAgentReference, type BetaManagedAgentsAgentToolConfig as BetaManagedAgentsAgentToolConfig, type BetaManagedAgentsAgentToolConfigParams as BetaManagedAgentsAgentToolConfigParams, type BetaManagedAgentsAgentToolsetDefaultConfig as BetaManagedAgentsAgentToolsetDefaultConfig, type BetaManagedAgentsAgentToolsetDefaultConfigParams as BetaManagedAgentsAgentToolsetDefaultConfigParams, type BetaManagedAgentsAgentToolset20260401 as BetaManagedAgentsAgentToolset20260401, type BetaManagedAgentsAgentToolset20260401BashInput as BetaManagedAgentsAgentToolset20260401BashInput, type BetaManagedAgentsAgentToolset20260401EditInput as BetaManagedAgentsAgentToolset20260401EditInput, type BetaManagedAgentsAgentToolset20260401GlobInput as BetaManagedAgentsAgentToolset20260401GlobInput, type BetaManagedAgentsAgentToolset20260401GrepInput as BetaManagedAgentsAgentToolset20260401GrepInput, type BetaManagedAgentsAgentToolset20260401Params as BetaManagedAgentsAgentToolset20260401Params, type BetaManagedAgentsAgentToolset20260401ReadInput as BetaManagedAgentsAgentToolset20260401ReadInput, type BetaManagedAgentsAgentToolset20260401WriteInput as BetaManagedAgentsAgentToolset20260401WriteInput, type BetaManagedAgentsAlwaysAllowPolicy as BetaManagedAgentsAlwaysAllowPolicy, type BetaManagedAgentsAlwaysAskPolicy as BetaManagedAgentsAlwaysAskPolicy, type BetaManagedAgentsAnthropicTrack as BetaManagedAgentsAnthropicTrack, type BetaManagedAgentsAnthropicTrackParams as BetaManagedAgentsAnthropicTrackParams, type BetaManagedAgentsBashToolConfig as BetaManagedAgentsBashToolConfig, type BetaManagedAgentsBashToolConfigParams as BetaManagedAgentsBashToolConfigParams, type BetaManagedAgentsCustomTrack as BetaManagedAgentsCustomTrack, type BetaManagedAgentsCustomTrackParams as BetaManagedAgentsCustomTrackParams, type BetaManagedAgentsCustomTool as BetaManagedAgentsCustomTool, type BetaManagedAgentsCustomToolInputSchema as BetaManagedAgentsCustomToolInputSchema, type BetaManagedAgentsCustomToolParams as BetaManagedAgentsCustomToolParams, type BetaManagedAgentsEditToolConfig as BetaManagedAgentsEditToolConfig, type BetaManagedAgentsEditToolConfigParams as BetaManagedAgentsEditToolConfigParams, type BetaManagedAgentsEffortHigh as BetaManagedAgentsEffortHigh, type BetaManagedAgentsEffortLow as BetaManagedAgentsEffortLow, type BetaManagedAgentsEffortMax as BetaManagedAgentsEffortMax, type BetaManagedAgentsEffortMedium as BetaManagedAgentsEffortMedium, type BetaManagedAgentsEffortXhigh as BetaManagedAgentsEffortXhigh, type BetaManagedAgentsGlobToolConfig as BetaManagedAgentsGlobToolConfig, type BetaManagedAgentsGlobToolConfigParams as BetaManagedAgentsGlobToolConfigParams, type BetaManagedAgentsGrepToolConfig as BetaManagedAgentsGrepToolConfig, type BetaManagedAgentsGrepToolConfigParams as BetaManagedAgentsGrepToolConfigParams, type BetaManagedAgentsMCPServerURLDefinition as BetaManagedAgentsMCPServerURLDefinition, type BetaManagedAgentsMCPToolConfig as BetaManagedAgentsMCPToolConfig, type BetaManagedAgentsMCPToolConfigParams as BetaManagedAgentsMCPToolConfigParams, type BetaManagedAgentsMCPToolset as BetaManagedAgentsMCPToolset, type BetaManagedAgentsMCPToolsetDefaultConfig as BetaManagedAgentsMCPToolsetDefaultConfig, type BetaManagedAgentsMCPToolsetDefaultConfigParams as BetaManagedAgentsMCPToolsetDefaultConfigParams, type BetaManagedAgentsMCPToolsetParams as BetaManagedAgentsMCPToolsetParams, type BetaManagedAgentsModel as BetaManagedAgentsModel, type BetaManagedAgentsModelConfig as BetaManagedAgentsModelConfig, type BetaManagedAgentsModelConfigParams as BetaManagedAgentsModelConfigParams, type BetaManagedAgentsMultiagentCoordinator as BetaManagedAgentsMultiagentCoordinator, type BetaManagedAgentsMultiagentCoordinatorParams as BetaManagedAgentsMultiagentCoordinatorParams, type BetaManagedAgentsMultiagentSelfParams as BetaManagedAgentsMultiagentSelfParams, type BetaManagedAgentsReadToolConfig as BetaManagedAgentsReadToolConfig, type BetaManagedAgentsReadToolConfigParams as BetaManagedAgentsReadToolConfigParams, type BetaManagedAgentsSessionThreadAgent as BetaManagedAgentsSessionThreadAgent, type BetaManagedAgentsTrackParams as BetaManagedAgentsTrackParams, type BetaManagedAgentsURLMCPServerParams as BetaManagedAgentsURLMCPServerParams, type BetaManagedAgentsUserLocation as BetaManagedAgentsUserLocation, type BetaManagedAgentsWebFetchToolConfig as BetaManagedAgentsWebFetchToolConfig, type BetaManagedAgentsWebFetchToolConfigParams as BetaManagedAgentsWebFetchToolConfigParams, type BetaManagedAgentsWebSearchToolConfig as BetaManagedAgentsWebSearchToolConfig, type BetaManagedAgentsWebSearchToolConfigParams as BetaManagedAgentsWebSearchToolConfigParams, type BetaManagedAgentsWriteToolConfig as BetaManagedAgentsWriteToolConfig, type BetaManagedAgentsWriteToolConfigParams as BetaManagedAgentsWriteToolConfigParams, type BetaManagedAgentsAgentsPageCursor as BetaManagedAgentsAgentsPageCursor, type AgentCreateParams as AgentCreateParams, type AgentRetrieveParams as AgentRetrieveParams, type AgentUpdateParams as AgentUpdateParams, type AgentListParams as AgentListParams, type AgentArchiveParams as AgentArchiveParams, };
+    export { type BetaManagedAgentsAdvisor as BetaManagedAgentsAdvisor, type BetaManagedAgentsAgent as BetaManagedAgentsAgent, type BetaManagedAgentsAgentReference as BetaManagedAgentsAgentReference, type BetaManagedAgentsAgentToolConfig as BetaManagedAgentsAgentToolConfig, type BetaManagedAgentsAgentToolConfigParams as BetaManagedAgentsAgentToolConfigParams, type BetaManagedAgentsAgentToolsetDefaultConfig as BetaManagedAgentsAgentToolsetDefaultConfig, type BetaManagedAgentsAgentToolsetDefaultConfigParams as BetaManagedAgentsAgentToolsetDefaultConfigParams, type BetaManagedAgentsAgentToolset20260401 as BetaManagedAgentsAgentToolset20260401, type BetaManagedAgentsAgentToolset20260401BashInput as BetaManagedAgentsAgentToolset20260401BashInput, type BetaManagedAgentsAgentToolset20260401EditInput as BetaManagedAgentsAgentToolset20260401EditInput, type BetaManagedAgentsAgentToolset20260401GlobInput as BetaManagedAgentsAgentToolset20260401GlobInput, type BetaManagedAgentsAgentToolset20260401GrepInput as BetaManagedAgentsAgentToolset20260401GrepInput, type BetaManagedAgentsAgentToolset20260401Params as BetaManagedAgentsAgentToolset20260401Params, type BetaManagedAgentsAgentToolset20260401ReadInput as BetaManagedAgentsAgentToolset20260401ReadInput, type BetaManagedAgentsAgentToolset20260401WriteInput as BetaManagedAgentsAgentToolset20260401WriteInput, type BetaManagedAgentsAlwaysAllowPolicy as BetaManagedAgentsAlwaysAllowPolicy, type BetaManagedAgentsAlwaysAskPolicy as BetaManagedAgentsAlwaysAskPolicy, type BetaManagedAgentsJuglowTrack as BetaManagedAgentsJuglowTrack, type BetaManagedAgentsJuglowTrackParams as BetaManagedAgentsJuglowTrackParams, type BetaManagedAgentsBashToolConfig as BetaManagedAgentsBashToolConfig, type BetaManagedAgentsBashToolConfigParams as BetaManagedAgentsBashToolConfigParams, type BetaManagedAgentsCustomTrack as BetaManagedAgentsCustomTrack, type BetaManagedAgentsCustomTrackParams as BetaManagedAgentsCustomTrackParams, type BetaManagedAgentsCustomTool as BetaManagedAgentsCustomTool, type BetaManagedAgentsCustomToolInputSchema as BetaManagedAgentsCustomToolInputSchema, type BetaManagedAgentsCustomToolParams as BetaManagedAgentsCustomToolParams, type BetaManagedAgentsEditToolConfig as BetaManagedAgentsEditToolConfig, type BetaManagedAgentsEditToolConfigParams as BetaManagedAgentsEditToolConfigParams, type BetaManagedAgentsEffortHigh as BetaManagedAgentsEffortHigh, type BetaManagedAgentsEffortLow as BetaManagedAgentsEffortLow, type BetaManagedAgentsEffortMax as BetaManagedAgentsEffortMax, type BetaManagedAgentsEffortMedium as BetaManagedAgentsEffortMedium, type BetaManagedAgentsEffortXhigh as BetaManagedAgentsEffortXhigh, type BetaManagedAgentsGlobToolConfig as BetaManagedAgentsGlobToolConfig, type BetaManagedAgentsGlobToolConfigParams as BetaManagedAgentsGlobToolConfigParams, type BetaManagedAgentsGrepToolConfig as BetaManagedAgentsGrepToolConfig, type BetaManagedAgentsGrepToolConfigParams as BetaManagedAgentsGrepToolConfigParams, type BetaManagedAgentsMCPServerURLDefinition as BetaManagedAgentsMCPServerURLDefinition, type BetaManagedAgentsMCPToolConfig as BetaManagedAgentsMCPToolConfig, type BetaManagedAgentsMCPToolConfigParams as BetaManagedAgentsMCPToolConfigParams, type BetaManagedAgentsMCPToolset as BetaManagedAgentsMCPToolset, type BetaManagedAgentsMCPToolsetDefaultConfig as BetaManagedAgentsMCPToolsetDefaultConfig, type BetaManagedAgentsMCPToolsetDefaultConfigParams as BetaManagedAgentsMCPToolsetDefaultConfigParams, type BetaManagedAgentsMCPToolsetParams as BetaManagedAgentsMCPToolsetParams, type BetaManagedAgentsModel as BetaManagedAgentsModel, type BetaManagedAgentsModelConfig as BetaManagedAgentsModelConfig, type BetaManagedAgentsModelConfigParams as BetaManagedAgentsModelConfigParams, type BetaManagedAgentsMultiagentCoordinator as BetaManagedAgentsMultiagentCoordinator, type BetaManagedAgentsMultiagentCoordinatorParams as BetaManagedAgentsMultiagentCoordinatorParams, type BetaManagedAgentsMultiagentSelfParams as BetaManagedAgentsMultiagentSelfParams, type BetaManagedAgentsReadToolConfig as BetaManagedAgentsReadToolConfig, type BetaManagedAgentsReadToolConfigParams as BetaManagedAgentsReadToolConfigParams, type BetaManagedAgentsSessionThreadAgent as BetaManagedAgentsSessionThreadAgent, type BetaManagedAgentsTrackParams as BetaManagedAgentsTrackParams, type BetaManagedAgentsURLMCPServerParams as BetaManagedAgentsURLMCPServerParams, type BetaManagedAgentsUserLocation as BetaManagedAgentsUserLocation, type BetaManagedAgentsWebFetchToolConfig as BetaManagedAgentsWebFetchToolConfig, type BetaManagedAgentsWebFetchToolConfigParams as BetaManagedAgentsWebFetchToolConfigParams, type BetaManagedAgentsWebSearchToolConfig as BetaManagedAgentsWebSearchToolConfig, type BetaManagedAgentsWebSearchToolConfigParams as BetaManagedAgentsWebSearchToolConfigParams, type BetaManagedAgentsWriteToolConfig as BetaManagedAgentsWriteToolConfig, type BetaManagedAgentsWriteToolConfigParams as BetaManagedAgentsWriteToolConfigParams, type BetaManagedAgentsAgentsPageCursor as BetaManagedAgentsAgentsPageCursor, type AgentCreateParams as AgentCreateParams, type AgentRetrieveParams as AgentRetrieveParams, type AgentUpdateParams as AgentUpdateParams, type AgentListParams as AgentListParams, type AgentArchiveParams as AgentArchiveParams, };
     export { Versions as Versions, type VersionListParams as VersionListParams };
 }
 //# sourceMappingURL=agents.d.mts.map

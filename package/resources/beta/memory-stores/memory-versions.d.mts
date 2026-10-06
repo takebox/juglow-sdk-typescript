@@ -197,7 +197,7 @@ export interface MemoryVersionRetrieveParams {
     /**
      * Header param: Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
     /**
      * Header param: Optional header to select the Workspace for this request. The
      * value is a Workspace ID (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
@@ -244,7 +244,7 @@ export interface MemoryVersionListParams extends PageCursorParams {
     /**
      * Header param: Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
     /**
      * Header param: Optional header to select the Workspace for this request. The
      * value is a Workspace ID (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
@@ -263,7 +263,7 @@ export interface MemoryVersionRedactParams {
     /**
      * Header param: Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
     /**
      * Header param: Optional header to select the Workspace for this request. The
      * value is a Workspace ID (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).

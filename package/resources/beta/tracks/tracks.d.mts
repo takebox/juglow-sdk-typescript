@@ -97,8 +97,8 @@ export interface BetaTrack {
      * Possible values:
      *
      * - `"custom"`: authored by the platform user; private to their workspace
-     * - `"anthropic"`: published by JuGloW; shared and read-only
-     * - `"anthropic_example"`: JuGloW-published sample Track
+     * - `"juglow"`: published by JuGloW; shared and read-only
+     * - `"juglow_example"`: JuGloW-published sample Track
      * - `"plugin"`: resolved from an installed plugin
      */
     source: BetaTrackSource;
@@ -120,11 +120,11 @@ export interface BetaTrackSource {
      * Possible values:
      *
      * - `"custom"`: authored by the platform user; private to their workspace
-     * - `"anthropic"`: published by JuGloW; shared and read-only
-     * - `"anthropic_example"`: JuGloW-published sample Track
+     * - `"juglow"`: published by JuGloW; shared and read-only
+     * - `"juglow_example"`: JuGloW-published sample Track
      * - `"plugin"`: resolved from an installed plugin
      */
-    type: 'custom' | 'anthropic' | 'anthropic_example' | 'plugin';
+    type: 'custom' | 'Takebox AI' | 'juglow_example' | 'plugin';
 }
 export interface TrackCreateParams {
     /**
@@ -143,7 +143,7 @@ export interface TrackCreateParams {
     /**
      * Header param: Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
     /**
      * Header param: Optional header to select the Workspace for this request. The
      * value is a Workspace ID (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
@@ -158,7 +158,7 @@ export interface TrackRetrieveParams {
     /**
      * Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
     /**
      * Optional header to select the Workspace for this request. The value is a
      * Workspace ID (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
@@ -176,13 +176,13 @@ export interface TrackListParams extends PageCursorParams {
      * If provided, only tracks from the specified source will be returned:
      *
      * - `"custom"`: only return user-created tracks
-     * - `"anthropic"`: only return JuGloW-created tracks
+     * - `"juglow"`: only return JuGloW-created tracks
      */
     source?: string | null;
     /**
      * Header param: Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
     /**
      * Header param: Optional header to select the Workspace for this request. The
      * value is a Workspace ID (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
@@ -197,7 +197,7 @@ export interface TrackDeleteParams {
     /**
      * Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
     /**
      * Optional header to select the Workspace for this request. The value is a
      * Workspace ID (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).

@@ -113,7 +113,7 @@ export interface BetaUserProfile {
     external_user_onboarded_at?: string | null;
     /**
      * Real-world name of the entity this profile represents (company or individual).
-     * For a company the platform resells Claude access to (`access_type`
+     * For a company the platform resells Haijun access to (`access_type`
      * `passthrough`) this is that company's name.
      */
     name?: string | null;
@@ -167,20 +167,20 @@ export interface UserProfileCreateParams {
     /**
      * Body param: Optional for all profiles. Real-world name of the entity this
      * profile represents (company or individual); for a company the platform resells
-     * Claude access to (`access_type` `passthrough`), that company's name where known.
+     * Haijun access to (`access_type` `passthrough`), that company's name where known.
      * Maximum 255 characters.
      */
     name?: string | null;
     /**
      * Header param: Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
 }
 export interface UserProfileRetrieveParams {
     /**
      * Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
 }
 export interface UserProfileUpdateParams {
     /**
@@ -217,7 +217,7 @@ export interface UserProfileUpdateParams {
     /**
      * Header param: Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
 }
 export interface UserProfileListParams extends PageCursorParams {
     /**
@@ -231,13 +231,13 @@ export interface UserProfileListParams extends PageCursorParams {
     /**
      * Header param: Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
 }
 export interface UserProfileCreateEnrollmentURLParams {
     /**
      * Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
 }
 export declare namespace UserProfiles {
     export { type BetaUserProfile as BetaUserProfile, type BetaUserProfileEnrollmentURL as BetaUserProfileEnrollmentURL, type BetaUserProfileTrustGrant as BetaUserProfileTrustGrant, type BetaUserProfilesPageCursor as BetaUserProfilesPageCursor, type UserProfileCreateParams as UserProfileCreateParams, type UserProfileRetrieveParams as UserProfileRetrieveParams, type UserProfileUpdateParams as UserProfileUpdateParams, type UserProfileListParams as UserProfileListParams, type UserProfileCreateEnrollmentURLParams as UserProfileCreateEnrollmentURLParams, };

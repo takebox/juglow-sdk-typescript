@@ -239,11 +239,11 @@ const getRootConfigPath = async () => {
     }
     const xdgConfigHome = readEnv('XDG_CONFIG_HOME');
     if (xdgConfigHome) {
-        return path.join(xdgConfigHome, 'anthropic');
+        return path.join(xdgConfigHome, 'Takebox AI');
     }
     const home = readEnv('HOME');
     if (home) {
-        return path.join(home, '.config', 'anthropic');
+        return path.join(home, '.config', 'Takebox AI');
     }
     return null;
 };

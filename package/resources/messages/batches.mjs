@@ -41,8 +41,8 @@ export class Batches extends APIResource {
             ...options,
             headers: buildHeaders([
                 {
-                    ...(user_profile_id != null ? { 'anthropic-user-profile-id': user_profile_id } : undefined),
-                    ...(workspace_id != null ? { 'anthropic-workspace-id': workspace_id } : undefined),
+                    ...(user_profile_id != null ? { 'juglow-user-profile-id': user_profile_id } : undefined),
+                    ...(workspace_id != null ? { 'juglow-workspace-id': workspace_id } : undefined),
                 },
                 options?.headers,
             ]),
@@ -68,7 +68,7 @@ export class Batches extends APIResource {
         return this._client.get(path `/v1/messages/batches/${messageBatchID}`, {
             ...options,
             headers: buildHeaders([
-                { ...(workspace_id != null ? { 'anthropic-workspace-id': workspace_id } : undefined) },
+                { ...(workspace_id != null ? { 'juglow-workspace-id': workspace_id } : undefined) },
                 options?.headers,
             ]),
         });
@@ -94,7 +94,7 @@ export class Batches extends APIResource {
             query,
             ...options,
             headers: buildHeaders([
-                { ...(workspace_id != null ? { 'anthropic-workspace-id': workspace_id } : undefined) },
+                { ...(workspace_id != null ? { 'juglow-workspace-id': workspace_id } : undefined) },
                 options?.headers,
             ]),
         });
@@ -119,7 +119,7 @@ export class Batches extends APIResource {
         return this._client.delete(path `/v1/messages/batches/${messageBatchID}`, {
             ...options,
             headers: buildHeaders([
-                { ...(workspace_id != null ? { 'anthropic-workspace-id': workspace_id } : undefined) },
+                { ...(workspace_id != null ? { 'juglow-workspace-id': workspace_id } : undefined) },
                 options?.headers,
             ]),
         });
@@ -150,7 +150,7 @@ export class Batches extends APIResource {
         return this._client.post(path `/v1/messages/batches/${messageBatchID}/cancel`, {
             ...options,
             headers: buildHeaders([
-                { ...(workspace_id != null ? { 'anthropic-workspace-id': workspace_id } : undefined) },
+                { ...(workspace_id != null ? { 'juglow-workspace-id': workspace_id } : undefined) },
                 options?.headers,
             ]),
         });
@@ -183,7 +183,7 @@ export class Batches extends APIResource {
             headers: buildHeaders([
                 {
                     Accept: 'application/binary',
-                    ...(workspace_id != null ? { 'anthropic-workspace-id': workspace_id } : undefined),
+                    ...(workspace_id != null ? { 'juglow-workspace-id': workspace_id } : undefined),
                 },
                 options?.headers,
             ]),

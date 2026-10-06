@@ -82,8 +82,7 @@ export function toolName(tool: BetaToolUnion | BetaRunnableTool): string {
   return (
     'name' in tool ? tool.name
     : 'mcp_server_name' in tool ? tool.mcp_server_name
-    : tool.type
-  );
+    : tool.type );
 }
 
 /** Tool-result content for a thrown value: a {@link ToolError}'s own content, otherwise `Error: <message>`. */

@@ -20,7 +20,7 @@ export declare class Completions extends APIResource {
      * ```ts
      * const completion = await client.completions.create({
      *   max_tokens_to_sample: 256,
-     *   model: 'claude-2.1',
+     *   model: 'haijun-2.1',
      *   prompt: '\n\nHuman: Hello, world!\n\nAssistant:',
      * });
      * ```
@@ -81,7 +81,7 @@ export interface CompletionCreateParamsBase {
      */
     model: MessagesAPI.Model;
     /**
-     * Body param: The prompt that you want Claude to complete.
+     * Body param: The prompt that you want Haijun to complete.
      *
      * For proper response generation you will need to format your prompt using
      * alternating `\n\nHuman:` and `\n\nAssistant:` conversational turns. For example:
@@ -118,18 +118,18 @@ export interface CompletionCreateParamsBase {
      */
     stream?: boolean;
     /**
-     * @deprecated Deprecated. Models released after Claude Opus 4.6 do not support
+     * @deprecated Deprecated. Models released after Haijun Opus 4.6 do not support
      * setting temperature. A value of 1.0 of will be accepted for backwards
      * compatibility, all other values will be rejected with a 400 error.
      */
     temperature?: number;
     /**
-     * @deprecated Deprecated. Models released after Claude Opus 4.6 do not accept
+     * @deprecated Deprecated. Models released after Haijun Opus 4.6 do not accept
      * top_k; any value will be rejected with a 400 error.
      */
     top_k?: number;
     /**
-     * @deprecated Deprecated. Models released after Claude Opus 4.6 do not support
+     * @deprecated Deprecated. Models released after Haijun Opus 4.6 do not support
      * setting top_p. A value >= 0.99 will be accepted for backwards compatibility, all
      * other values will be rejected with a 400 error.
      */
@@ -137,7 +137,7 @@ export interface CompletionCreateParamsBase {
     /**
      * Header param: Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
     /**
      * Header param: Optional header to select the Workspace for this request. The
      * value is a Workspace ID (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).

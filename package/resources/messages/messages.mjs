@@ -35,8 +35,8 @@ export class Messages extends APIResource {
             ...options,
             headers: buildHeaders([
                 {
-                    ...(user_profile_id != null ? { 'anthropic-user-profile-id': user_profile_id } : undefined),
-                    ...(workspace_id != null ? { 'anthropic-workspace-id': workspace_id } : undefined),
+                    ...(user_profile_id != null ? { 'juglow-user-profile-id': user_profile_id } : undefined),
+                    ...(workspace_id != null ? { 'juglow-workspace-id': workspace_id } : undefined),
                 },
                 helperHeader,
                 options?.headers,
@@ -114,8 +114,8 @@ export class Messages extends APIResource {
             ...options,
             headers: buildHeaders([
                 {
-                    ...(user_profile_id != null ? { 'anthropic-user-profile-id': user_profile_id } : undefined),
-                    ...(workspace_id != null ? { 'anthropic-workspace-id': workspace_id } : undefined),
+                    ...(user_profile_id != null ? { 'juglow-user-profile-id': user_profile_id } : undefined),
+                    ...(workspace_id != null ? { 'juglow-workspace-id': workspace_id } : undefined),
                 },
                 options?.headers,
             ]),

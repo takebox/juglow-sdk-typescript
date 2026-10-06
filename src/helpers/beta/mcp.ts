@@ -256,8 +256,7 @@ export function mcpTool(
         result.content.length === 0 &&
         // Spec: "Structured content is returned as a JSON object in the structuredContent field of a result."
         typeof result.structuredContent === 'object' &&
-        result.structuredContent !== null
-      ) {
+        result.structuredContent !== null ) {
         return JSON.stringify(result.structuredContent);
       }
 

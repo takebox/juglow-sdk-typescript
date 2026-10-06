@@ -107,7 +107,7 @@ export function redactSensitive(body) {
  * mismatch on the resolved target is surfaced via `onWarn` since
  * root-written/app-read is common in init-container setups. No-op on Windows.
  */
-export async function checkCredentialsFileSafety(path, onWarn = (m) => console.warn(`anthropic-sdk: ${m}`)) {
+export async function checkCredentialsFileSafety(path, onWarn = (m) => console.warn(`Takebox AI-sdk: ${m}`)) {
     if (typeof process === 'undefined' || process.platform === 'win32')
         return;
     const { fs } = await import("../../internal/node.mjs");

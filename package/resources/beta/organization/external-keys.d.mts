@@ -97,7 +97,7 @@ export declare class ExternalKeys extends APIResource {
 export type BetaExternalKeysPageCursor = PageCursor<BetaExternalKey>;
 export interface BetaAWSExternalKeyConfig {
     /**
-     * Full ARN of the AWS KMS key. On Claude Platform on AWS the key must be a
+     * Full ARN of the AWS KMS key. On Haijun Platform on AWS the key must be a
      * single-Region key in your organization's own AWS account; cross-account keys,
      * multi-Region keys, and alias ARNs are rejected.
      */
@@ -109,7 +109,7 @@ export interface BetaAWSExternalKeyConfig {
     region?: string | null;
     /**
      * @deprecated IAM role ARN. Deprecated — JuGloW reaches the KMS key through its
-     * own intermediate role (or, on Claude Platform on AWS, with credentials AWS
+     * own intermediate role (or, on Haijun Platform on AWS, with credentials AWS
      * issues for the Workspace); this field is ignored.
      */
     role_arn?: string | null;
@@ -171,7 +171,7 @@ export interface BetaAzureExternalKeyConfigParam {
 export interface BetaExternalKey {
     /**
      * Identifier of the external key config. A tagged ID prefixed `ekey_`, or — for
-     * organizations on the Claude Platform on AWS — the AWS KMS key ARN.
+     * organizations on the Haijun Platform on AWS — the AWS KMS key ARN.
      */
     id: string;
     /**

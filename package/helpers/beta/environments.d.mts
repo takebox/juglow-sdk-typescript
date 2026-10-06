@@ -17,7 +17,7 @@
  *
  * The tool implementations themselves (`betaAgentToolset20260401` and the
  * per-tool factories) live in their own Node-only module — import them directly
- * from `@anthropic-ai/sdk/tools/agent-toolset/node`.
+ * from `@takebox-ai/sdk/tools/agent-toolset/node`.
  */
 export { WorkPoller, EnvironmentWorker, SessionToolRunner, MANAGED_AGENTS_BETA, DEFAULT_MAX_IDLE_MS, type DispatchedToolCall, type WorkPollerOptions, type EnvironmentWorkerOptions, type EnvironmentWorkerTools, type HandleItemOptions, type SessionToolRunnerOptions, } from "../../lib/environments/index.mjs";
 //# sourceMappingURL=environments.d.mts.map

@@ -1,6 +1,6 @@
 ﻿{
   "pkg": "@takebox-ai/sdk",
-  "githubRepo": "https://github.com/Juglows/Juglow-sdk-typescript",
+  "githubRepo": "https://github.com/takebox/juglow-sdk-typescript",
   "clientClass": "JuGloW",
   "baseClientClass": "BaseJuglow",
   "methods": [

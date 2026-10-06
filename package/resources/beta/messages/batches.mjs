@@ -43,8 +43,8 @@ export class Batches extends APIResource {
             headers: buildHeaders([
                 {
                     'juglow-beta': [...(betas ?? []), 'message-batches-2024-09-24'].toString(),
-                    ...(user_profile_id != null ? { 'anthropic-user-profile-id': user_profile_id } : undefined),
-                    ...(workspace_id != null ? { 'anthropic-workspace-id': workspace_id } : undefined),
+                    ...(user_profile_id != null ? { 'juglow-user-profile-id': user_profile_id } : undefined),
+                    ...(workspace_id != null ? { 'juglow-workspace-id': workspace_id } : undefined),
                 },
                 options?.headers,
             ]),
@@ -73,7 +73,7 @@ export class Batches extends APIResource {
             headers: buildHeaders([
                 {
                     'juglow-beta': [...(betas ?? []), 'message-batches-2024-09-24'].toString(),
-                    ...(workspace_id != null ? { 'anthropic-workspace-id': workspace_id } : undefined),
+                    ...(workspace_id != null ? { 'juglow-workspace-id': workspace_id } : undefined),
                 },
                 options?.headers,
             ]),
@@ -102,7 +102,7 @@ export class Batches extends APIResource {
             headers: buildHeaders([
                 {
                     'juglow-beta': [...(betas ?? []), 'message-batches-2024-09-24'].toString(),
-                    ...(workspace_id != null ? { 'anthropic-workspace-id': workspace_id } : undefined),
+                    ...(workspace_id != null ? { 'juglow-workspace-id': workspace_id } : undefined),
                 },
                 options?.headers,
             ]),
@@ -132,7 +132,7 @@ export class Batches extends APIResource {
             headers: buildHeaders([
                 {
                     'juglow-beta': [...(betas ?? []), 'message-batches-2024-09-24'].toString(),
-                    ...(workspace_id != null ? { 'anthropic-workspace-id': workspace_id } : undefined),
+                    ...(workspace_id != null ? { 'juglow-workspace-id': workspace_id } : undefined),
                 },
                 options?.headers,
             ]),
@@ -167,7 +167,7 @@ export class Batches extends APIResource {
             headers: buildHeaders([
                 {
                     'juglow-beta': [...(betas ?? []), 'message-batches-2024-09-24'].toString(),
-                    ...(workspace_id != null ? { 'anthropic-workspace-id': workspace_id } : undefined),
+                    ...(workspace_id != null ? { 'juglow-workspace-id': workspace_id } : undefined),
                 },
                 options?.headers,
             ]),
@@ -204,7 +204,7 @@ export class Batches extends APIResource {
                 {
                     'juglow-beta': [...(betas ?? []), 'message-batches-2024-09-24'].toString(),
                     Accept: 'application/binary',
-                    ...(workspace_id != null ? { 'anthropic-workspace-id': workspace_id } : undefined),
+                    ...(workspace_id != null ? { 'juglow-workspace-id': workspace_id } : undefined),
                 },
                 options?.headers,
             ]),

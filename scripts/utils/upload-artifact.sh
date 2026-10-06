@@ -20,7 +20,7 @@ UPLOAD_RESPONSE=$(curl -v -X PUT \
 
 if echo "$UPLOAD_RESPONSE" | grep -q "HTTP/[0-9.]* 200"; then
   echo -e "\033[32mUploaded build to Stainless storage.\033[0m"
-  echo -e "\033[32mInstallation: npm install 'https://pkg.stainless.com/s/anthropic-typescript/$SHA'\033[0m"
+  echo -e "\033[32mInstallation: npm install ''\033[0m"
 else
   echo -e "\033[31mFailed to upload artifact.\033[0m"
   exit 1
@@ -47,7 +47,7 @@ AWS_UPLOAD_RESPONSE=$(curl -v -X PUT \
 
 if echo "$AWS_UPLOAD_RESPONSE" | grep -q "HTTP/[0-9.]* 200"; then
   echo -e "\033[32mUploaded aws-sdk build to Stainless storage.\033[0m"
-  echo -e "\033[32mInstallation: npm install 'https://pkg.stainless.com/s/anthropic-typescript/$SHA?subpackage=aws'\033[0m"
+  echo -e "\033[32mInstallation: npm install '?subpackage=aws'\033[0m"
 else
   echo -e "\033[31mFailed to upload aws-sdk artifact.\033[0m"
   exit 1
@@ -74,7 +74,7 @@ AWS_UPLOAD_RESPONSE=$(curl -v -X PUT \
 
 if echo "$AWS_UPLOAD_RESPONSE" | grep -q "HTTP/[0-9.]* 200"; then
   echo -e "\033[32mUploaded bedrock-sdk build to Stainless storage.\033[0m"
-  echo -e "\033[32mInstallation: npm install 'https://pkg.stainless.com/s/anthropic-typescript/$SHA?subpackage=bedrock'\033[0m"
+  echo -e "\033[32mInstallation: npm install '?subpackage=bedrock'\033[0m"
 else
   echo -e "\033[31mFailed to upload bedrock-sdk artifact.\033[0m"
   exit 1

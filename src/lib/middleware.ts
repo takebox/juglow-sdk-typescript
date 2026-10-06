@@ -202,8 +202,7 @@ export function betaRefusalFallbackMiddleware(
       path !== '/v1/messages' ||
       new URLSearchParams(query).get('beta') !== 'true' ||
       typeof ctx.options.body !== 'object' ||
-      ctx.options.body == null
-    ) {
+      ctx.options.body == null ) {
       return next(request);
     }
 

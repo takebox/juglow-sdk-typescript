@@ -194,8 +194,7 @@ export class BetaToolRunner<Stream extends boolean> {
         try {
           if (
             this.#state.params.max_iterations &&
-            this.#iterationCount >= this.#state.params.max_iterations
-          ) {
+            this.#iterationCount >= this.#state.params.max_iterations ) {
             break;
           }
 

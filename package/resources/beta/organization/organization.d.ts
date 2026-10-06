@@ -57,7 +57,7 @@ export interface BetaOrganization {
      */
     type: 'organization';
 }
-export type BetaOrganizationRole = 'admin' | 'billing' | 'claude_code_user' | 'developer' | 'managed' | 'membership_admin' | 'owner' | 'primary_owner' | 'user';
+export type BetaOrganizationRole = 'admin' | 'billing' | 'haijun_code_user' | 'developer' | 'managed' | 'membership_admin' | 'owner' | 'primary_owner' | 'user';
 export declare namespace Organization {
     export { type BetaOrganization as BetaOrganization, type BetaOrganizationRole as BetaOrganizationRole };
     export { APIKeys as APIKeys, type BetaAPIKey as BetaAPIKey, type BetaAPIKeyCreatedBy as BetaAPIKeyCreatedBy, type BetaAPIKeyOrganizationScope as BetaAPIKeyOrganizationScope, type BetaAPIKeyServiceAccountActor as BetaAPIKeyServiceAccountActor, type BetaAPIKeyUserActor as BetaAPIKeyUserActor, type BetaAPIKeyWorkspaceScope as BetaAPIKeyWorkspaceScope, type BetaAPIKeysPage as BetaAPIKeysPage, type APIKeyUpdateParams as APIKeyUpdateParams, type APIKeyListParams as APIKeyListParams, };

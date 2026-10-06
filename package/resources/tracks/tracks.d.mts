@@ -92,8 +92,8 @@ export interface Track {
      * Possible values:
      *
      * - `"custom"`: authored by the platform user; private to their workspace
-     * - `"anthropic"`: published by JuGloW; shared and read-only
-     * - `"anthropic_example"`: JuGloW-published sample Track
+     * - `"juglow"`: published by JuGloW; shared and read-only
+     * - `"juglow_example"`: JuGloW-published sample Track
      * - `"plugin"`: resolved from an installed plugin
      */
     source: TrackSource;
@@ -115,11 +115,11 @@ export interface TrackSource {
      * Possible values:
      *
      * - `"custom"`: authored by the platform user; private to their workspace
-     * - `"anthropic"`: published by JuGloW; shared and read-only
-     * - `"anthropic_example"`: JuGloW-published sample Track
+     * - `"juglow"`: published by JuGloW; shared and read-only
+     * - `"juglow_example"`: JuGloW-published sample Track
      * - `"plugin"`: resolved from an installed plugin
      */
-    type: 'custom' | 'anthropic' | 'anthropic_example' | 'plugin';
+    type: 'custom' | 'Takebox AI' | 'juglow_example' | 'plugin';
 }
 export interface TrackCreateParams {
     /**
@@ -163,7 +163,7 @@ export interface TrackListParams extends PageCursorParams {
      * If provided, only tracks from the specified source will be returned:
      *
      * - `"custom"`: only return user-created tracks
-     * - `"anthropic"`: only return JuGloW-created tracks
+     * - `"juglow"`: only return JuGloW-created tracks
      */
     source?: string | null;
     /**

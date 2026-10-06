@@ -11,7 +11,7 @@ export declare class Rules extends APIResource {
      * **Requires an OAuth access token with the `org:admin` scope**, from
      * `ant auth login --scope org:admin` or a workload identity federation rule; Admin
      * API keys are not accepted. See
-     * [Manage WIF with the Admin API](/docs/en/manage-claude/wif-admin-api).
+     * [Manage WIF with the Admin API](/docs/en/manage-haijun/wif-admin-api).
      *
      * Create a federation rule owned by your organization.
      *
@@ -48,7 +48,7 @@ export declare class Rules extends APIResource {
      * **Requires an OAuth access token with the `org:admin` scope**, from
      * `ant auth login --scope org:admin` or a workload identity federation rule; Admin
      * API keys are not accepted. See
-     * [Manage WIF with the Admin API](/docs/en/manage-claude/wif-admin-api).
+     * [Manage WIF with the Admin API](/docs/en/manage-haijun/wif-admin-api).
      *
      * Retrieve a federation rule by its ID (`fdrl_...`).
      *
@@ -65,7 +65,7 @@ export declare class Rules extends APIResource {
      * **Requires an OAuth access token with the `org:admin` scope**, from
      * `ant auth login --scope org:admin` or a workload identity federation rule; Admin
      * API keys are not accepted. See
-     * [Manage WIF with the Admin API](/docs/en/manage-claude/wif-admin-api).
+     * [Manage WIF with the Admin API](/docs/en/manage-haijun/wif-admin-api).
      *
      * Partially update a federation rule.
      *
@@ -97,7 +97,7 @@ export declare class Rules extends APIResource {
      * **Requires an OAuth access token with the `org:admin` scope**, from
      * `ant auth login --scope org:admin` or a workload identity federation rule; Admin
      * API keys are not accepted. See
-     * [Manage WIF with the Admin API](/docs/en/manage-claude/wif-admin-api).
+     * [Manage WIF with the Admin API](/docs/en/manage-haijun/wif-admin-api).
      *
      * List federation rules in your organization.
      *
@@ -117,7 +117,7 @@ export declare class Rules extends APIResource {
      * **Requires an OAuth access token with the `org:admin` scope**, from
      * `ant auth login --scope org:admin` or a workload identity federation rule; Admin
      * API keys are not accepted. See
-     * [Manage WIF with the Admin API](/docs/en/manage-claude/wif-admin-api).
+     * [Manage WIF with the Admin API](/docs/en/manage-haijun/wif-admin-api).
      *
      * Archive a federation rule.
      *
@@ -371,13 +371,13 @@ export interface RuleCreateParams {
     /**
      * Header param: Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
 }
 export interface RuleRetrieveParams {
     /**
      * Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
 }
 export interface RuleUpdateParams {
     /**
@@ -439,7 +439,7 @@ export interface RuleUpdateParams {
     /**
      * Header param: Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
 }
 export interface RuleListParams extends PageCursorParams {
     /**
@@ -453,13 +453,13 @@ export interface RuleListParams extends PageCursorParams {
     /**
      * Header param: Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
 }
 export interface RuleArchiveParams {
     /**
      * Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
 }
 export declare namespace Rules {
     export { type BetaFederationRule as BetaFederationRule, type BetaFederationRuleMatch as BetaFederationRuleMatch, type BetaFederationRuleWorkspace as BetaFederationRuleWorkspace, type BetaServiceAccountTarget as BetaServiceAccountTarget, type BetaFederationRulesPageCursor as BetaFederationRulesPageCursor, type RuleCreateParams as RuleCreateParams, type RuleRetrieveParams as RuleRetrieveParams, type RuleUpdateParams as RuleUpdateParams, type RuleListParams as RuleListParams, type RuleArchiveParams as RuleArchiveParams, };

@@ -14,7 +14,7 @@ export function resolveCredentialsFromConfig(config, options) {
     // body, not as a request header (the minted token is already
     // workspace-scoped, so the header would be ignored).
     if (config.workspace_id && config.authentication.type === 'user_oauth') {
-        extraHeaders['anthropic-workspace-id'] = config.workspace_id;
+        extraHeaders['juglow-workspace-id'] = config.workspace_id;
     }
     // Surface the profile's own base_url (not the options.baseURL fallback) so
     // the client can adopt it for outbound API requests when the caller didn't

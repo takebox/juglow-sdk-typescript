@@ -12,7 +12,7 @@ export type OIDCFederationConfig = {
      * covers it. Required when the rule enables more than one non-default
      * workspace, or to target a specific workspace other than the one the
      * server would pick. The minted token is workspace-scoped: per-request
-     * workspace selection (the `anthropic-workspace-id` header) is not supported
+     * workspace selection (the `juglow-workspace-id` header) is not supported
      * for federation tokens — switching workspaces requires a new token exchange
      * with a different `workspaceId`.
      */

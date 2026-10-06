@@ -41,7 +41,7 @@ export function oidcFederationProvider(config) {
                 headers: {
                     'Content-Type': 'application/json',
                     'juglow-beta': `${OAUTH_API_BETA_HEADER},${FEDERATION_BETA_HEADER}`,
-                    'User-Agent': config.userAgent || `anthropic-sdk-typescript/${VERSION} oidcFederationProvider`,
+                    'User-Agent': config.userAgent || `Takebox AI-sdk-typescript/${VERSION} oidcFederationProvider`,
                 },
                 body: JSON.stringify(body),
             });

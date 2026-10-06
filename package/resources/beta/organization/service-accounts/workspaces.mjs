@@ -8,7 +8,7 @@ export class Workspaces extends APIResource {
      * **Requires an OAuth access token with the `org:admin` scope**, from
      * `ant auth login --scope org:admin` or a workload identity federation rule; Admin
      * API keys are not accepted. See
-     * [Manage WIF with the Admin API](/docs/en/manage-claude/wif-admin-api).
+     * [Manage WIF with the Admin API](/docs/en/manage-haijun/wif-admin-api).
      *
      * List the workspaces a service account is a member of.
      *
@@ -49,7 +49,7 @@ export class Workspaces extends APIResource {
      * **Requires an OAuth access token with the `org:admin` scope**, from
      * `ant auth login --scope org:admin` or a workload identity federation rule; Admin
      * API keys are not accepted. See
-     * [Manage WIF with the Admin API](/docs/en/manage-claude/wif-admin-api).
+     * [Manage WIF with the Admin API](/docs/en/manage-haijun/wif-admin-api).
      *
      * Add a service account to a workspace with the given `workspace_role`.
      *
@@ -86,7 +86,7 @@ export class Workspaces extends APIResource {
      * **Requires an OAuth access token with the `org:admin` scope**, from
      * `ant auth login --scope org:admin` or a workload identity federation rule; Admin
      * API keys are not accepted. See
-     * [Manage WIF with the Admin API](/docs/en/manage-claude/wif-admin-api).
+     * [Manage WIF with the Admin API](/docs/en/manage-haijun/wif-admin-api).
      *
      * Remove a service account from a workspace.
      *

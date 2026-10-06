@@ -25,7 +25,7 @@ export class Versions extends APIResource {
             headers: buildHeaders([
                 {
                     'juglow-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString(),
-                    ...(workspace_id != null ? { 'anthropic-workspace-id': workspace_id } : undefined),
+                    ...(workspace_id != null ? { 'juglow-workspace-id': workspace_id } : undefined),
                 },
                 options?.headers,
             ]),

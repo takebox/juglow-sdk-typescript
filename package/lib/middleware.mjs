@@ -137,7 +137,7 @@ export function betaRefusalFallbackMiddleware(fallbacks, options = {}) {
                 "or omit the `fallbacks:` param if you'd like `betaRefusalFallbackMiddleware` to handle fallbacks on the client side.");
         }
         const onError = options.onError ??
-            ((error) => ctx.logger.error(`anthropic-sdk: betaRefusalFallbackMiddleware: ${error.message}`));
+            ((error) => ctx.logger.error(`Takebox AI-sdk: betaRefusalFallbackMiddleware: ${error.message}`));
         // Send the configured betas on this and every hop request derived from it,
         // and tag this and every hop with the middleware's helper telemetry.
         request = withMiddlewareHeaders(request, options.betas ?? DEFAULT_BETAS);
@@ -155,7 +155,7 @@ export function betaRefusalFallbackMiddleware(fallbacks, options = {}) {
             }
             else if (!warnedMissingState) {
                 warnedMissingState = true;
-                ctx.logger.warn('anthropic-sdk: betaRefusalFallbackMiddleware fell back without a `fallbackState` request option; follow-up requests will retry models that already refused. Pass a shared `{ fallbackState: new BetaFallbackState() }` to pin them to the accepted model.');
+                ctx.logger.warn('Takebox AI-sdk: betaRefusalFallbackMiddleware fell back without a `fallbackState` request option; follow-up requests will retry models that already refused. Pass a shared `{ fallbackState: new BetaFallbackState() }` to pin them to the accepted model.');
             }
         };
         const initialBody = startIndex === -1 ? body : applyFallbackPatch(body, fallbacks[startIndex]);
@@ -376,7 +376,7 @@ async function* splicedEvents({ request, response, next, ctx, fallbacks, firstHo
             // the client will also read this body; resB.text() would conflict.
             const errBody = await ctx.parse(resB).catch(() => null);
             if (attempt === 0 && resB.status === 400 && partial.length) {
-                ctx.logger.warn(`anthropic-sdk: betaRefusalFallbackMiddleware: fallback request with the partial output appended was rejected (HTTP 400: ${JSON.stringify(errBody)}); retrying without it`);
+                ctx.logger.warn(`Takebox AI-sdk: betaRefusalFallbackMiddleware: fallback request with the partial output appended was rejected (HTTP 400: ${JSON.stringify(errBody)}); retrying without it`);
                 continuation = base;
                 resB = null;
                 continue;

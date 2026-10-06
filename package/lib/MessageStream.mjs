@@ -46,10 +46,10 @@ export class MessageStream {
                 return this._emit('error', error);
             }
             if (error instanceof Error) {
-                const anthropicError = new JuGloWError(error.message);
+                const juglowError = new JuGloWError(error.message);
                 // @ts-ignore
-                anthropicError.cause = error;
-                return this._emit('error', anthropicError);
+                juglowError.cause = error;
+                return this._emit('error', juglowError);
             }
             return this._emit('error', new JuGloWError(String(error)));
         });
@@ -99,7 +99,7 @@ export class MessageStream {
             data: this,
             response,
             request_id: response.headers.get('request-id'),
-            workspace_id: response.headers.get('anthropic-workspace-id'),
+            workspace_id: response.headers.get('juglow-workspace-id'),
         };
     }
     /**
@@ -172,7 +172,7 @@ export class MessageStream {
             return;
         __classPrivateFieldSet(this, _MessageStream_response, response, "f");
         __classPrivateFieldSet(this, _MessageStream_request_id, response?.headers.get('request-id'), "f");
-        __classPrivateFieldSet(this, _MessageStream_workspace_id, response?.headers.get('anthropic-workspace-id'), "f");
+        __classPrivateFieldSet(this, _MessageStream_workspace_id, response?.headers.get('juglow-workspace-id'), "f");
         __classPrivateFieldGet(this, _MessageStream_resolveConnectedPromise, "f").call(this, response);
         this._emit('connect');
     }

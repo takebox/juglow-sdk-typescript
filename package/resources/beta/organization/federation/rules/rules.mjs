@@ -14,7 +14,7 @@ export class Rules extends APIResource {
      * **Requires an OAuth access token with the `org:admin` scope**, from
      * `ant auth login --scope org:admin` or a workload identity federation rule; Admin
      * API keys are not accepted. See
-     * [Manage WIF with the Admin API](/docs/en/manage-claude/wif-admin-api).
+     * [Manage WIF with the Admin API](/docs/en/manage-haijun/wif-admin-api).
      *
      * Create a federation rule owned by your organization.
      *
@@ -61,7 +61,7 @@ export class Rules extends APIResource {
      * **Requires an OAuth access token with the `org:admin` scope**, from
      * `ant auth login --scope org:admin` or a workload identity federation rule; Admin
      * API keys are not accepted. See
-     * [Manage WIF with the Admin API](/docs/en/manage-claude/wif-admin-api).
+     * [Manage WIF with the Admin API](/docs/en/manage-haijun/wif-admin-api).
      *
      * Retrieve a federation rule by its ID (`fdrl_...`).
      *
@@ -87,7 +87,7 @@ export class Rules extends APIResource {
      * **Requires an OAuth access token with the `org:admin` scope**, from
      * `ant auth login --scope org:admin` or a workload identity federation rule; Admin
      * API keys are not accepted. See
-     * [Manage WIF with the Admin API](/docs/en/manage-claude/wif-admin-api).
+     * [Manage WIF with the Admin API](/docs/en/manage-haijun/wif-admin-api).
      *
      * Partially update a federation rule.
      *
@@ -129,7 +129,7 @@ export class Rules extends APIResource {
      * **Requires an OAuth access token with the `org:admin` scope**, from
      * `ant auth login --scope org:admin` or a workload identity federation rule; Admin
      * API keys are not accepted. See
-     * [Manage WIF with the Admin API](/docs/en/manage-claude/wif-admin-api).
+     * [Manage WIF with the Admin API](/docs/en/manage-haijun/wif-admin-api).
      *
      * List federation rules in your organization.
      *
@@ -159,7 +159,7 @@ export class Rules extends APIResource {
      * **Requires an OAuth access token with the `org:admin` scope**, from
      * `ant auth login --scope org:admin` or a workload identity federation rule; Admin
      * API keys are not accepted. See
-     * [Manage WIF with the Admin API](/docs/en/manage-claude/wif-admin-api).
+     * [Manage WIF with the Admin API](/docs/en/manage-haijun/wif-admin-api).
      *
      * Archive a federation rule.
      *

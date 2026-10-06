@@ -4,7 +4,7 @@
 
 This library provides convenient access to the haijun API via Microsoft Azure AI Foundry. See the [documentation](https://raw.haijun.my.id/docs/en/build-with-haijun/haijun-in-microsoft-foundry) for more details.
 
-For the direct haijun API at platform.juglow.my.id, see [`@takebox-ai/sdk`](https://github.com/Juglows/Juglow-sdk-typescript).
+For the direct haijun API at platform.juglow.my.id, see [`@takebox-ai/sdk`](https://github.com/takebox/juglow-sdk-typescript).
 
 ## Installation
 

@@ -92,11 +92,11 @@ export type BetaManagedAgentsSessionsBidirectionalPageCursor = BidirectionalPage
 /**
  * Platform advisor roster entry: a model the session's primary thread may consult
  * mid-turn. At most one per roster; the entry occupies the roster name
- * `anthropic.advisor`.
+ * `Takebox AI.advisor`.
  */
 export interface BetaManagedAgentsAdvisorParams {
     /**
-     * A Claude model id. The model must be permitted as an advisor for this agent's
+     * A Haijun model id. The model must be permitted as an advisor for this agent's
      * model — see the sessions/threads/advisor spec.
      */
     model: string;
@@ -474,7 +474,7 @@ export interface BetaManagedAgentsSessionAgent {
      */
     multiagent: BetaManagedAgentsSessionMultiagentCoordinator | null;
     name: string;
-    tracks: Array<AgentsAPI.BetaManagedAgentsAnthropicTrack | AgentsAPI.BetaManagedAgentsCustomTrack>;
+    tracks: Array<AgentsAPI.BetaManagedAgentsJuglowTrack | AgentsAPI.BetaManagedAgentsCustomTrack>;
     system: string | null;
     tools: Array<AgentsAPI.BetaManagedAgentsAgentToolset20260401 | AgentsAPI.BetaManagedAgentsMCPToolset | AgentsAPI.BetaManagedAgentsCustomTool>;
     type: 'agent';
@@ -750,7 +750,7 @@ export interface SessionCreateParams {
     /**
      * Header param: Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
     /**
      * Header param: Optional header to select the Workspace for this request. The
      * value is a Workspace ID (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
@@ -765,7 +765,7 @@ export interface SessionRetrieveParams {
     /**
      * Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
     /**
      * Optional header to select the Workspace for this request. The value is a
      * Workspace ID (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
@@ -808,7 +808,7 @@ export interface SessionUpdateParams {
     /**
      * Header param: Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
     /**
      * Header param: Optional header to select the Workspace for this request. The
      * value is a Workspace ID (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
@@ -871,7 +871,7 @@ export interface SessionListParams extends BidirectionalPageCursorParams {
     /**
      * Header param: Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
     /**
      * Header param: Optional header to select the Workspace for this request. The
      * value is a Workspace ID (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
@@ -886,7 +886,7 @@ export interface SessionDeleteParams {
     /**
      * Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
     /**
      * Optional header to select the Workspace for this request. The value is a
      * Workspace ID (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
@@ -901,7 +901,7 @@ export interface SessionArchiveParams {
     /**
      * Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
     /**
      * Optional header to select the Workspace for this request. The value is a
      * Workspace ID (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).

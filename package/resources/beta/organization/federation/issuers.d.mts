@@ -8,7 +8,7 @@ export declare class Issuers extends APIResource {
      * **Requires an OAuth access token with the `org:admin` scope**, from
      * `ant auth login --scope org:admin` or a workload identity federation rule; Admin
      * API keys are not accepted. See
-     * [Manage WIF with the Admin API](/docs/en/manage-claude/wif-admin-api).
+     * [Manage WIF with the Admin API](/docs/en/manage-haijun/wif-admin-api).
      *
      * Register an OIDC issuer that JuGloW will trust for workload identity
      * federation in your organization.
@@ -36,7 +36,7 @@ export declare class Issuers extends APIResource {
      * **Requires an OAuth access token with the `org:admin` scope**, from
      * `ant auth login --scope org:admin` or a workload identity federation rule; Admin
      * API keys are not accepted. See
-     * [Manage WIF with the Admin API](/docs/en/manage-claude/wif-admin-api).
+     * [Manage WIF with the Admin API](/docs/en/manage-haijun/wif-admin-api).
      *
      * Retrieve a federation issuer by its ID (`fdis_...`).
      *
@@ -53,7 +53,7 @@ export declare class Issuers extends APIResource {
      * **Requires an OAuth access token with the `org:admin` scope**, from
      * `ant auth login --scope org:admin` or a workload identity federation rule; Admin
      * API keys are not accepted. See
-     * [Manage WIF with the Admin API](/docs/en/manage-claude/wif-admin-api).
+     * [Manage WIF with the Admin API](/docs/en/manage-haijun/wif-admin-api).
      *
      * Partially update a federation issuer.
      *
@@ -76,7 +76,7 @@ export declare class Issuers extends APIResource {
      * **Requires an OAuth access token with the `org:admin` scope**, from
      * `ant auth login --scope org:admin` or a workload identity federation rule; Admin
      * API keys are not accepted. See
-     * [Manage WIF with the Admin API](/docs/en/manage-claude/wif-admin-api).
+     * [Manage WIF with the Admin API](/docs/en/manage-haijun/wif-admin-api).
      *
      * List federation issuers in your organization.
      *
@@ -95,7 +95,7 @@ export declare class Issuers extends APIResource {
      * **Requires an OAuth access token with the `org:admin` scope**, from
      * `ant auth login --scope org:admin` or a workload identity federation rule; Admin
      * API keys are not accepted. See
-     * [Manage WIF with the Admin API](/docs/en/manage-claude/wif-admin-api).
+     * [Manage WIF with the Admin API](/docs/en/manage-haijun/wif-admin-api).
      *
      * Archive a federation issuer.
      *
@@ -283,13 +283,13 @@ export interface IssuerCreateParams {
     /**
      * Header param: Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
 }
 export interface IssuerRetrieveParams {
     /**
      * Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
 }
 export interface IssuerUpdateParams {
     /**
@@ -329,7 +329,7 @@ export interface IssuerUpdateParams {
     /**
      * Header param: Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
 }
 export interface IssuerListParams extends PageCursorParams {
     /**
@@ -339,13 +339,13 @@ export interface IssuerListParams extends PageCursorParams {
     /**
      * Header param: Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
 }
 export interface IssuerArchiveParams {
     /**
      * Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
 }
 export declare namespace Issuers {
     export { type BetaFederationIssuer as BetaFederationIssuer, type BetaFederationIssuerPollStatus as BetaFederationIssuerPollStatus, type BetaJWKSDiscovery as BetaJWKSDiscovery, type BetaJWKSExplicitURL as BetaJWKSExplicitURL, type BetaJWKSInline as BetaJWKSInline, type BetaFederationIssuersPageCursor as BetaFederationIssuersPageCursor, type IssuerCreateParams as IssuerCreateParams, type IssuerRetrieveParams as IssuerRetrieveParams, type IssuerUpdateParams as IssuerUpdateParams, type IssuerListParams as IssuerListParams, type IssuerArchiveParams as IssuerArchiveParams, };

@@ -9,7 +9,7 @@ on:
 jobs:
   release:
     name: release
-    if: github.ref == 'refs/heads/main' && github.repository == 'anthropics/anthropic-sdk-typescript'
+    if: github.ref == 'refs/heads/main' && github.repository == 'takebox/Takebox AI-sdk-typescript'
     runs-on: ubuntu-latest
     environment: production-release
     permissions:

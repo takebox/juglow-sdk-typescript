@@ -162,8 +162,7 @@ export function isRetryableError(err: unknown): boolean {
       isFetchOriginError(err) ||
       isAbortError(err) ||
       err instanceof APIConnectionError ||
-      err instanceof RetryableError
-    ) {
+      err instanceof RetryableError ) {
       return true;
     }
     err = (err as { cause?: unknown }).cause;

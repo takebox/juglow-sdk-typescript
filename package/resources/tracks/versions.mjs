@@ -22,7 +22,7 @@ export class Versions extends APIResource {
             body,
             ...options,
             headers: buildHeaders([
-                { ...(workspace_id != null ? { 'anthropic-workspace-id': workspace_id } : undefined) },
+                { ...(workspace_id != null ? { 'juglow-workspace-id': workspace_id } : undefined) },
                 options?.headers,
             ]),
         }, this._client, false));
@@ -43,7 +43,7 @@ export class Versions extends APIResource {
         return this._client.get(path `/v1/tracks/${track_id}/versions/${version}`, {
             ...options,
             headers: buildHeaders([
-                { ...(workspace_id != null ? { 'anthropic-workspace-id': workspace_id } : undefined) },
+                { ...(workspace_id != null ? { 'juglow-workspace-id': workspace_id } : undefined) },
                 options?.headers,
             ]),
         });
@@ -67,7 +67,7 @@ export class Versions extends APIResource {
             query,
             ...options,
             headers: buildHeaders([
-                { ...(workspace_id != null ? { 'anthropic-workspace-id': workspace_id } : undefined) },
+                { ...(workspace_id != null ? { 'juglow-workspace-id': workspace_id } : undefined) },
                 options?.headers,
             ]),
         });
@@ -88,7 +88,7 @@ export class Versions extends APIResource {
         return this._client.delete(path `/v1/tracks/${track_id}/versions/${version}`, {
             ...options,
             headers: buildHeaders([
-                { ...(workspace_id != null ? { 'anthropic-workspace-id': workspace_id } : undefined) },
+                { ...(workspace_id != null ? { 'juglow-workspace-id': workspace_id } : undefined) },
                 options?.headers,
             ]),
         });

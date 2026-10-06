@@ -12,7 +12,7 @@ export declare class ServiceAccounts extends APIResource {
      * **Requires an OAuth access token with the `org:admin` scope**, from
      * `ant auth login --scope org:admin` or a workload identity federation rule; Admin
      * API keys are not accepted. See
-     * [Manage WIF with the Admin API](/docs/en/manage-claude/wif-admin-api).
+     * [Manage WIF with the Admin API](/docs/en/manage-haijun/wif-admin-api).
      *
      * Create a service account.
      *
@@ -36,7 +36,7 @@ export declare class ServiceAccounts extends APIResource {
      * **Requires an OAuth access token with the `org:admin` scope**, from
      * `ant auth login --scope org:admin` or a workload identity federation rule; Admin
      * API keys are not accepted. See
-     * [Manage WIF with the Admin API](/docs/en/manage-claude/wif-admin-api).
+     * [Manage WIF with the Admin API](/docs/en/manage-haijun/wif-admin-api).
      *
      * Retrieve a service account by its ID (`svac_...`).
      *
@@ -53,7 +53,7 @@ export declare class ServiceAccounts extends APIResource {
      * **Requires an OAuth access token with the `org:admin` scope**, from
      * `ant auth login --scope org:admin` or a workload identity federation rule; Admin
      * API keys are not accepted. See
-     * [Manage WIF with the Admin API](/docs/en/manage-claude/wif-admin-api).
+     * [Manage WIF with the Admin API](/docs/en/manage-haijun/wif-admin-api).
      *
      * Update a service account.
      *
@@ -75,7 +75,7 @@ export declare class ServiceAccounts extends APIResource {
      * **Requires an OAuth access token with the `org:admin` scope**, from
      * `ant auth login --scope org:admin` or a workload identity federation rule; Admin
      * API keys are not accepted. See
-     * [Manage WIF with the Admin API](/docs/en/manage-claude/wif-admin-api).
+     * [Manage WIF with the Admin API](/docs/en/manage-haijun/wif-admin-api).
      *
      * List service accounts in the caller's organization.
      *
@@ -96,7 +96,7 @@ export declare class ServiceAccounts extends APIResource {
      * **Requires an OAuth access token with the `org:admin` scope**, from
      * `ant auth login --scope org:admin` or a workload identity federation rule; Admin
      * API keys are not accepted. See
-     * [Manage WIF with the Admin API](/docs/en/manage-claude/wif-admin-api).
+     * [Manage WIF with the Admin API](/docs/en/manage-haijun/wif-admin-api).
      *
      * Archive a service account.
      *
@@ -212,13 +212,13 @@ export interface ServiceAccountCreateParams {
     /**
      * Header param: Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
 }
 export interface ServiceAccountRetrieveParams {
     /**
      * Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
 }
 export interface ServiceAccountUpdateParams {
     /**
@@ -233,7 +233,7 @@ export interface ServiceAccountUpdateParams {
     /**
      * Header param: Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
 }
 export interface ServiceAccountListParams extends PageCursorParams {
     /**
@@ -243,13 +243,13 @@ export interface ServiceAccountListParams extends PageCursorParams {
     /**
      * Header param: Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
 }
 export interface ServiceAccountArchiveParams {
     /**
      * Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
 }
 export declare namespace ServiceAccounts {
     export { type BetaServiceAccount as BetaServiceAccount, type BetaServiceAccountWorkspaceMember as BetaServiceAccountWorkspaceMember, type BetaServiceAccountsPageCursor as BetaServiceAccountsPageCursor, type ServiceAccountCreateParams as ServiceAccountCreateParams, type ServiceAccountRetrieveParams as ServiceAccountRetrieveParams, type ServiceAccountUpdateParams as ServiceAccountUpdateParams, type ServiceAccountListParams as ServiceAccountListParams, type ServiceAccountArchiveParams as ServiceAccountArchiveParams, };

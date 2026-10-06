@@ -1,5 +1,5 @@
 import type { Middleware } from "../core/middleware.mjs";
-import type { AnthropicBeta } from "../resources/beta/beta.mjs";
+import type { JuglowBeta } from "../resources/beta/beta.mjs";
 import type { BetaFallbackParam, BetaRawMessageDeltaEvent } from "../resources/beta/messages/messages.mjs";
 export { BetaFallbackState } from "../internal/request-options.mjs";
 /** Why {@link BetaRefusalFallbackOptions.onError} fired. */
@@ -33,7 +33,7 @@ export interface BetaRefusalFallbackOptions {
      * refusals only carry a `fallback_credit_token` when the beta is enabled.
      * Defaults to `['fallback-credit-2026-07-01']`; pass `[]` to send none.
      */
-    betas?: readonly AnthropicBeta[] | undefined;
+    betas?: readonly JuglowBeta[] | undefined;
     /**
      * Called when a refusal is surfaced to the client rather than retried —
      * it carries no `fallback_credit_token`, no fallback entries remain, or a

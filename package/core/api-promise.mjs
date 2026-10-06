@@ -54,7 +54,7 @@ export class APIPromise extends Promise {
             data,
             response,
             request_id: response.headers.get('request-id'),
-            workspace_id: response.headers.get('anthropic-workspace-id'),
+            workspace_id: response.headers.get('juglow-workspace-id'),
         };
     }
     parse() {

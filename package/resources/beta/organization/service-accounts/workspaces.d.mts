@@ -11,7 +11,7 @@ export declare class Workspaces extends APIResource {
      * **Requires an OAuth access token with the `org:admin` scope**, from
      * `ant auth login --scope org:admin` or a workload identity federation rule; Admin
      * API keys are not accepted. See
-     * [Manage WIF with the Admin API](/docs/en/manage-claude/wif-admin-api).
+     * [Manage WIF with the Admin API](/docs/en/manage-haijun/wif-admin-api).
      *
      * List the workspaces a service account is a member of.
      *
@@ -42,7 +42,7 @@ export declare class Workspaces extends APIResource {
      * **Requires an OAuth access token with the `org:admin` scope**, from
      * `ant auth login --scope org:admin` or a workload identity federation rule; Admin
      * API keys are not accepted. See
-     * [Manage WIF with the Admin API](/docs/en/manage-claude/wif-admin-api).
+     * [Manage WIF with the Admin API](/docs/en/manage-haijun/wif-admin-api).
      *
      * Add a service account to a workspace with the given `workspace_role`.
      *
@@ -69,7 +69,7 @@ export declare class Workspaces extends APIResource {
      * **Requires an OAuth access token with the `org:admin` scope**, from
      * `ant auth login --scope org:admin` or a workload identity federation rule; Admin
      * API keys are not accepted. See
-     * [Manage WIF with the Admin API](/docs/en/manage-claude/wif-admin-api).
+     * [Manage WIF with the Admin API](/docs/en/manage-haijun/wif-admin-api).
      *
      * Remove a service account from a workspace.
      *
@@ -108,7 +108,7 @@ export interface WorkspaceListParams extends PageCursorParams {
     /**
      * Header param: Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
 }
 export interface WorkspaceAddParams {
     /**
@@ -122,7 +122,7 @@ export interface WorkspaceAddParams {
     /**
      * Header param: Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
 }
 export interface WorkspaceRemoveParams {
     /**
@@ -132,7 +132,7 @@ export interface WorkspaceRemoveParams {
     /**
      * Header param: Optional header to specify the beta version(s) you want to use.
      */
-    betas?: Array<BetaAPI.AnthropicBeta>;
+    betas?: Array<BetaAPI.JuglowBeta>;
 }
 export declare namespace Workspaces {
     export { type WorkspaceRemoveResponse as WorkspaceRemoveResponse, type WorkspaceListParams as WorkspaceListParams, type WorkspaceAddParams as WorkspaceAddParams, type WorkspaceRemoveParams as WorkspaceRemoveParams, };

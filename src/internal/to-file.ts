@@ -129,8 +129,7 @@ async function getBytes(value: BlobLikePart | AsyncIterable<BlobLikePart>): Prom
   if (
     typeof value === 'string' ||
     ArrayBuffer.isView(value) || // includes Uint8Array, Buffer, etc.
-    value instanceof ArrayBuffer
-  ) {
+    value instanceof ArrayBuffer ) {
     parts.push(value);
   } else if (isBlobLike(value)) {
     parts.push(value instanceof Blob ? value : await value.arrayBuffer());

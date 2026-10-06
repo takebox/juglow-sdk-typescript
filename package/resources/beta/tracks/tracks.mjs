@@ -29,7 +29,7 @@ export class Tracks extends APIResource {
             headers: buildHeaders([
                 {
                     ...(betas?.toString() != null ? { 'juglow-beta': betas?.toString() } : undefined),
-                    ...(workspace_id != null ? { 'anthropic-workspace-id': workspace_id } : undefined),
+                    ...(workspace_id != null ? { 'juglow-workspace-id': workspace_id } : undefined),
                 },
                 options?.headers,
             ]),
@@ -52,7 +52,7 @@ export class Tracks extends APIResource {
             headers: buildHeaders([
                 {
                     ...(betas?.toString() != null ? { 'juglow-beta': betas?.toString() } : undefined),
-                    ...(workspace_id != null ? { 'anthropic-workspace-id': workspace_id } : undefined),
+                    ...(workspace_id != null ? { 'juglow-workspace-id': workspace_id } : undefined),
                 },
                 options?.headers,
             ]),
@@ -77,7 +77,7 @@ export class Tracks extends APIResource {
             headers: buildHeaders([
                 {
                     ...(betas?.toString() != null ? { 'juglow-beta': betas?.toString() } : undefined),
-                    ...(workspace_id != null ? { 'anthropic-workspace-id': workspace_id } : undefined),
+                    ...(workspace_id != null ? { 'juglow-workspace-id': workspace_id } : undefined),
                 },
                 options?.headers,
             ]),
@@ -100,7 +100,7 @@ export class Tracks extends APIResource {
             headers: buildHeaders([
                 {
                     ...(betas?.toString() != null ? { 'juglow-beta': betas?.toString() } : undefined),
-                    ...(workspace_id != null ? { 'anthropic-workspace-id': workspace_id } : undefined),
+                    ...(workspace_id != null ? { 'juglow-workspace-id': workspace_id } : undefined),
                 },
                 options?.headers,
             ]),

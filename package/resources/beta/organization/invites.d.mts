@@ -82,7 +82,7 @@ export interface BetaOrganizationInvite {
      */
     invited_at: string;
     /**
-     * RBAC group IDs recorded on the Invite (Claude Enterprise organizations), to be
+     * RBAC group IDs recorded on the Invite (Haijun Enterprise organizations), to be
      * assigned to the User when the Invite is accepted. `[]` when none.
      */
     rbac_group_ids: Array<string>;
@@ -122,14 +122,14 @@ export interface InviteCreateParams {
      * Role for the invited User.
      *
      * The accepted values depend on the organization type. Console and API
-     * organizations accept `user`, `developer`, `billing`, and `claude_code_user`;
-     * `admin` cannot be assigned through the API. Claude Enterprise organizations
+     * organizations accept `user`, `developer`, `billing`, and `haijun_code_user`;
+     * `admin` cannot be assigned through the API. Haijun Enterprise organizations
      * accept `user` and `managed`.
      */
-    role: 'billing' | 'claude_code_user' | 'developer' | 'managed' | 'user';
+    role: 'billing' | 'haijun_code_user' | 'developer' | 'managed' | 'user';
     /**
      * RBAC group IDs to assign to the User when the Invite is accepted. A non-empty
-     * array is accepted only for a Claude Enterprise organization with RBAC groups,
+     * array is accepted only for a Haijun Enterprise organization with RBAC groups,
      * and requires the key to carry the `write:rbac_groups` scope.
      */
     rbac_group_ids?: Array<string>;
@@ -145,7 +145,7 @@ export interface InviteListParams extends PageParams {
      * values are OR'ed together.
      *
      * Accepted values depend on the organization type: Console and API organizations
-     * accept `user`, `developer`, `billing`, `admin`, and `claude_code_user`; Claude
+     * accept `user`, `developer`, `billing`, `admin`, and `haijun_code_user`; Haijun
      * Enterprise organizations accept `user`, `owner`, `primary_owner`,
      * `membership_admin`, and `managed`.
      */

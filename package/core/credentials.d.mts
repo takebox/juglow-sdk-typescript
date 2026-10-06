@@ -38,14 +38,14 @@ export type AuthenticationInfo = {
     /** Console URL the profile was created against. Display-only. */
     console_url?: string | undefined;
 });
-export type AnthropicConfig = {
+export type JuglowConfig = {
     version?: string;
     authentication: AuthenticationInfo;
     base_url?: string | undefined;
     organization_id?: string | undefined;
     workspace_id?: string | undefined;
 };
-export type AnthropicCredentials = {
+export type JuglowCredentials = {
     version?: string;
     type: 'oauth_token';
     access_token: string;
@@ -83,7 +83,7 @@ export type AnthropicCredentials = {
  *     entirely from environment variables when both `HAIJUN_FEDERATION_RULE_ID`
  *     and `HAIJUN_ORGANIZATION_ID` are set.
  */
-export declare const loadConfig: (profile?: string) => Promise<AnthropicConfig | null>;
+export declare const loadConfig: (profile?: string) => Promise<JuglowConfig | null>;
 /**
  * Source-tagged result of {@link loadConfigWithSource}. `fromFile` is `true`
  * when `<config_dir>/configs/<profile>.json` exists on disk; `false` when the
@@ -94,7 +94,7 @@ export declare const loadConfig: (profile?: string) => Promise<AnthropicConfig |
  * `<config_dir>/credentials/<profile>.json`, env-only configs do not.
  */
 export type LoadedConfig = {
-    config: AnthropicConfig;
+    config: JuglowConfig;
     fromFile: boolean;
 };
 /**
@@ -118,7 +118,7 @@ export declare const loadConfigWithSource: (profile?: string) => Promise<LoadedC
  *   1. `authentication.credentials_path` from the active profile's config (via {@link loadConfig})
  *   2. `<config_dir>/credentials/<profile>.json`
  */
-export declare const loadCredentials: () => Promise<AnthropicCredentials | null>;
+export declare const loadCredentials: () => Promise<JuglowCredentials | null>;
 /**
  * Resolves the credentials file path for the given config.
  *
@@ -127,5 +127,5 @@ export declare const loadCredentials: () => Promise<AnthropicCredentials | null>
  *
  * Returns `null` when running in a browser or the path cannot be resolved.
  */
-export declare const getCredentialsPath: (config: AnthropicConfig | null, profile?: string) => Promise<string | null>;
+export declare const getCredentialsPath: (config: JuglowConfig | null, profile?: string) => Promise<string | null>;
 //# sourceMappingURL=credentials.d.mts.map

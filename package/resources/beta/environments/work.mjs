@@ -29,7 +29,7 @@ export class Work extends APIResource {
             headers: buildHeaders([
                 {
                     'juglow-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString(),
-                    ...(workspace_id != null ? { 'anthropic-workspace-id': workspace_id } : undefined),
+                    ...(workspace_id != null ? { 'juglow-workspace-id': workspace_id } : undefined),
                 },
                 options?.headers,
             ]),
@@ -60,7 +60,7 @@ export class Work extends APIResource {
             headers: buildHeaders([
                 {
                     'juglow-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString(),
-                    ...(workspace_id != null ? { 'anthropic-workspace-id': workspace_id } : undefined),
+                    ...(workspace_id != null ? { 'juglow-workspace-id': workspace_id } : undefined),
                 },
                 options?.headers,
             ]),
@@ -166,14 +166,14 @@ export class Work extends APIResource {
      * ```
      */
     poll(environmentID, params = {}, options) {
-        const { betas, 'JuGloW-Worker-ID': anthropicWorkerID, ...query } = params ?? {};
+        const { betas, 'JuGloW-Worker-ID': juglowWorkerID, ...query } = params ?? {};
         return this._client.get(path `/v1/environments/${environmentID}/work/poll?beta=true`, {
             query,
             ...options,
             headers: buildHeaders([
                 {
                     'juglow-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString(),
-                    ...(anthropicWorkerID != null ? { 'JuGloW-Worker-ID': anthropicWorkerID } : undefined),
+                    ...(juglowWorkerID != null ? { 'JuGloW-Worker-ID': juglowWorkerID } : undefined),
                 },
                 options?.headers,
             ]),
@@ -197,7 +197,7 @@ export class Work extends APIResource {
             headers: buildHeaders([
                 {
                     'juglow-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString(),
-                    ...(workspace_id != null ? { 'anthropic-workspace-id': workspace_id } : undefined),
+                    ...(workspace_id != null ? { 'juglow-workspace-id': workspace_id } : undefined),
                 },
                 options?.headers,
             ]),
@@ -227,7 +227,7 @@ export class Work extends APIResource {
             headers: buildHeaders([
                 {
                     'juglow-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString(),
-                    ...(workspace_id != null ? { 'anthropic-workspace-id': workspace_id } : undefined),
+                    ...(workspace_id != null ? { 'juglow-workspace-id': workspace_id } : undefined),
                 },
                 options?.headers,
             ]),

@@ -56,7 +56,7 @@ export function addResponseIDs(value, response) {
     }
     return Object.defineProperties(value, {
         _request_id: { value: response.headers.get('request-id'), enumerable: false },
-        _workspace_id: { value: response.headers.get('anthropic-workspace-id'), enumerable: false },
+        _workspace_id: { value: response.headers.get('juglow-workspace-id'), enumerable: false },
     });
 }
 //# sourceMappingURL=parse.mjs.map

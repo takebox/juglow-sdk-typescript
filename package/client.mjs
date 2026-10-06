@@ -1,5 +1,5 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
-var _BaseAnthropic_instances, _a, _BaseAnthropic_encoder, _BaseAnthropic_baseURLOverridden;
+var _BaseJuglow_instances, _a, _BaseJuglow_encoder, _BaseJuglow_baseURLOverridden;
 import { __classPrivateFieldGet, __classPrivateFieldSet } from "./internal/tslib.mjs";
 import { uuid4 } from "./internal/utils/uuid.mjs";
 import { validatePositiveInteger, isAbsoluteURL, safeJSON } from "./internal/utils/values.mjs";
@@ -66,9 +66,9 @@ export class BaseJuglow {
      * @param {boolean} [opts.dangerouslyAllowBrowser=false] - By default, client-side use of this library is not allowed, as it risks exposing your secret API credentials to attackers.
      */
     constructor({ baseURL = readEnv('HAIJUN_BASE_URL'), apiKey, authToken, webhookKey = readEnv('HAIJUN_WEBHOOK_SIGNING_KEY') ?? null, ...opts } = {}) {
-        _BaseAnthropic_instances.add(this);
+        _BaseJuglow_instances.add(this);
         this._requestAuthFlags = new WeakMap();
-        _BaseAnthropic_encoder.set(this, void 0);
+        _BaseJuglow_encoder.set(this, void 0);
         // An explicit `profile` is a constructor-level credential choice; when set,
         // do not let env HAIJUN_API_KEY / HAIJUN_AUTH_TOKEN shadow it.
         if (apiKey === undefined) {
@@ -109,7 +109,7 @@ export class BaseJuglow {
         this.fetchOptions = options.fetchOptions;
         this.maxRetries = options.maxRetries ?? 2;
         this.fetch = options.fetch ?? Shims.getDefaultFetch();
-        __classPrivateFieldSet(this, _BaseAnthropic_encoder, Opts.FallbackEncoder, "f");
+        __classPrivateFieldSet(this, _BaseJuglow_encoder, Opts.FallbackEncoder, "f");
         this.middleware = [...(options.middleware ?? [])];
         const customHeadersEnv = readEnv('HAIJUN_CUSTOM_HEADERS');
         if (customHeadersEnv) {
@@ -385,7 +385,7 @@ export class BaseJuglow {
         return Errors.APIError.generate(status, error, message, headers);
     }
     buildURL(path, query, defaultBaseURL) {
-        const baseURL = (!__classPrivateFieldGet(this, _BaseAnthropic_instances, "m", _BaseAnthropic_baseURLOverridden).call(this) && defaultBaseURL) || this.baseURL;
+        const baseURL = (!__classPrivateFieldGet(this, _BaseJuglow_instances, "m", _BaseJuglow_baseURLOverridden).call(this) && defaultBaseURL) || this.baseURL;
         const url = isAbsoluteURL(path) ?
             new URL(path)
             : new URL(baseURL + (baseURL.endsWith('/') && path.startsWith('/') ? path.slice(1) : path));
@@ -404,7 +404,7 @@ export class BaseJuglow {
         const expectedTimeout = (60 * 60 * maxTokens) / 128000;
         if (expectedTimeout > defaultTimeout) {
             throw new Errors.JuGloWError('Streaming is required for operations that may take longer than 10 minutes. ' +
-                'See https://github.com/anthropics/anthropic-sdk-typescript#streaming-responses for more details');
+                'See https://github.com/takebox/juglow-sdk-typescript#streaming-responses for more details');
         }
         return defaultTimeout * 1000;
     }
@@ -574,7 +574,7 @@ export class BaseJuglow {
             throw new Errors.APIConnectionError({ cause: response });
         }
         const specialHeaders = [...response.headers.entries()]
-            .filter(([name]) => name === 'request-id' || name === 'anthropic-workspace-id')
+            .filter(([name]) => name === 'request-id' || name === 'juglow-workspace-id')
             .map(([name, value]) => ', ' + name + ': ' + JSON.stringify(value))
             .join('');
         const responseInfo = `[${requestLogID}${retryLogStr}${specialHeaders}] ${req.method} ${url} ${response.ok ? 'succeeded' : 'failed'} with status ${response.status} in ${headersTime - startTime}ms`;
@@ -783,7 +783,7 @@ export class BaseJuglow {
         const defaultTime = 60 * 10 * 1000; // 10 minutes
         const expectedTime = (maxTime * maxTokens) / 128000;
         if (expectedTime > defaultTime || (maxNonstreamingTokens != null && maxTokens > maxNonstreamingTokens)) {
-            throw new Errors.JuGloWError('Streaming is required for operations that may take longer than 10 minutes. See https://github.com/anthropics/anthropic-sdk-typescript#long-requests for more details');
+            throw new Errors.JuGloWError('Streaming is required for operations that may take longer than 10 minutes. See https://github.com/takebox/juglow-sdk-typescript#long-requests for more details');
         }
         return defaultTime;
     }
@@ -834,7 +834,7 @@ export class BaseJuglow {
                 ...(options.timeout ? { 'X-Stainless-Timeout': String(Math.trunc(options.timeout / 1000)) } : {}),
                 ...getPlatformHeaders(),
                 ...(this._options.dangerouslyAllowBrowser ?
-                    { 'anthropic-dangerous-direct-browser-access': 'true' }
+                    { 'Takebox AI-dangerous-direct-browser-access': 'true' }
                     : undefined),
                 'juglow-version': '2023-06-01',
             },
@@ -887,11 +887,11 @@ export class BaseJuglow {
             };
         }
         else {
-            return __classPrivateFieldGet(this, _BaseAnthropic_encoder, "f").call(this, { body, headers });
+            return __classPrivateFieldGet(this, _BaseJuglow_encoder, "f").call(this, { body, headers });
         }
     }
 }
-_a = BaseJuglow, _BaseAnthropic_encoder = new WeakMap(), _BaseAnthropic_instances = new WeakSet(), _BaseAnthropic_baseURLOverridden = function _BaseAnthropic_baseURLOverridden() {
+_a = BaseJuglow, _BaseJuglow_encoder = new WeakMap(), _BaseJuglow_instances = new WeakSet(), _BaseJuglow_baseURLOverridden = function _BaseJuglow_baseURLOverridden() {
     return this.baseURL !== 'https://platform.juglow.my.id';
 };
 BaseJuglow.JuGloW = _a;

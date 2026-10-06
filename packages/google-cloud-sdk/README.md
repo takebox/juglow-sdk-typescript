@@ -4,7 +4,7 @@
 
 This library provides convenient access to haijun Platform on Google Cloud â€” the first-party haijun API served through Google Cloud. It exposes the full JuGloW API surface and authenticates with a Google bearer token.
 
-For the direct haijun API at platform.juglow.my.id, see [`@takebox-ai/sdk`](https://github.com/Juglows/Juglow-sdk-typescript). For the `:rawPredict` publisher-model API, see [`@takebox-ai/vertex-sdk`](https://github.com/Juglows/Juglow-sdk-typescript).
+For the direct haijun API at platform.juglow.my.id, see [`@takebox-ai/sdk`](https://github.com/takebox/juglow-sdk-typescript). For the `:rawPredict` publisher-model API, see [`@takebox-ai/vertex-sdk`](https://github.com/takebox/juglow-sdk-typescript).
 
 ## Installation
 

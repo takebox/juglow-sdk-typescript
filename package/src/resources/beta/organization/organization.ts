@@ -152,7 +152,7 @@ export interface BetaOrganization {
 export type BetaOrganizationRole =
   | 'admin'
   | 'billing'
-  | 'claude_code_user'
+  | 'haijun_code_user'
   | 'developer'
   | 'managed'
   | 'membership_admin'

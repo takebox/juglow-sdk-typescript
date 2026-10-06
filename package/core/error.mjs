@@ -8,7 +8,7 @@ export class APIError extends JuGloWError {
         this.status = status;
         this.headers = headers;
         this.requestID = headers?.get('request-id');
-        this.workspaceID = headers?.get('anthropic-workspace-id');
+        this.workspaceID = headers?.get('juglow-workspace-id');
         this.error = error;
         this.type = type ?? null;
     }

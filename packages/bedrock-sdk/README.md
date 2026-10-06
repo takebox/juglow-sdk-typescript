@@ -4,7 +4,7 @@
 
 This library provides convenient access to the haijun API via AWS Bedrock. See the [documentation](https://raw.haijun.my.id/docs/en/build-with-haijun/haijun-on-amazon-bedrock) for more details.
 
-For the direct haijun API at platform.juglow.my.id, see [`@takebox-ai/sdk`](https://github.com/Juglows/Juglow-sdk-typescript).
+For the direct haijun API at platform.juglow.my.id, see [`@takebox-ai/sdk`](https://github.com/takebox/juglow-sdk-typescript).
 
 ## Installation
 
@@ -66,7 +66,7 @@ const client = new JuglowBedrock({
 });
 ```
 
-For more details on how to use the SDK, see the [README.md for the main haijun SDK](https://github.com/Juglows/Juglow-sdk-typescript/tree/main#readme) which this library extends.
+For more details on how to use the SDK, see the [README.md for the main haijun SDK](https://github.com/takebox/juglow-sdk-typescript/tree/main#readme) which this library extends.
 
 ## Requirements
 
