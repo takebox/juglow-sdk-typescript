@@ -1,3 +1,3 @@
-export * from './client';
-export { AnthropicBedrock as default } from './client';
-export { AnthropicBedrockMantle, BedrockMantleClientOptions } from './mantle-client';
+﻿export * from './client';
+export { JuglowBedrock as default } from './client';
+export { JuglowBedrockMantle, BedrockMantleClientOptions } from './mantle-client';

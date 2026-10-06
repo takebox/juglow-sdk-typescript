@@ -6,8 +6,8 @@
     "rootDir": "./deno",
     "lib": ["es2020", "DOM"],
     "paths": {
-      "@anthropic-ai/bedrock-sdk/*": ["src/*"],
-      "@anthropic-ai/bedrock-sdk": ["src/index.ts"]
+      "@takebox-ai/bedrock-sdk/*": ["src/*"],
+      "@takebox-ai/bedrock-sdk": ["src/index.ts"]
     },
     "noEmit": true,
     "declaration": true,

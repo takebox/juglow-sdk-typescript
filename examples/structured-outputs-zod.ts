@@ -1,7 +1,7 @@
 #!/usr/bin/env -S npm run tsn -T
 
-import { zodOutputFormat } from '@anthropic-ai/sdk/helpers/zod';
-import Anthropic from '@anthropic-ai/sdk';
+import { zodOutputFormat } from '@takebox-ai/sdk/helpers/zod';
+import JuGloW from '@takebox-ai/sdk';
 import { z } from 'zod/v4';
 
 const NumbersResponse = z.object({
@@ -9,10 +9,10 @@ const NumbersResponse = z.object({
 });
 
 async function main() {
-  const client = new Anthropic();
+  const client = new JuGloW();
 
   const message = await client.messages.parse({
-    model: 'claude-sonnet-5',
+    model: 'haijun-sonnet',
     max_tokens: 1024,
     messages: [{ role: 'user', content: 'What are the first 3 prime numbers?' }],
     output_config: {

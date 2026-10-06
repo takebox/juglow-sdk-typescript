@@ -1,12 +1,12 @@
-import { Anthropic } from '../../../src';
+import { JuGloW } from '../../../src';
 import { betaZodTool } from '../../../src/helpers/beta/zod';
 import * as z from 'zod/v4';
 import nock from 'nock';
 import { gunzipSync } from 'zlib';
-import { RequestInfo } from '@anthropic-ai/sdk/internal/builtin-types';
+import { RequestInfo } from '@takebox-ai/sdk/internal/builtin-types';
 
 describe('toolRunner integration tests', () => {
-  let client: Anthropic;
+  let client: JuGloW;
   let globalNockDone: (() => void) | undefined;
 
   beforeAll(async () => {
@@ -16,7 +16,7 @@ describe('toolRunner integration tests', () => {
     const isRecording = process.env['NOCK_RECORD'] === 'true';
     let apiKey = '';
     if (isRecording) {
-      apiKey = process.env['ANTHROPIC_API_KEY']!;
+      apiKey = process.env['HAIJUN_API_KEY']!;
       if (!apiKey) {
         throw new Error('you have to have an API key to run new snapshots');
       }
@@ -81,7 +81,7 @@ describe('toolRunner integration tests', () => {
       return globalFetch(input, init);
     };
 
-    client = new Anthropic({
+    client = new JuGloW({
       apiKey: apiKey,
       fetch: nockCompatibleFetch,
     });
@@ -124,7 +124,7 @@ describe('toolRunner integration tests', () => {
     const tool = createTestTool();
 
     const runner = client.beta.messages.toolRunner({
-      model: 'claude-opus-4-8',
+      model: 'haijun-opus-8',
       max_tokens: 1000,
       max_iterations: 5, // High limit, should stop before reaching it
       messages: [
@@ -165,7 +165,7 @@ describe('toolRunner integration tests', () => {
       const tool = createCounterTool();
 
       const runner = client.beta.messages.toolRunner({
-        model: 'claude-opus-4-8',
+        model: 'haijun-opus-8',
         max_tokens: 1000,
         max_iterations: 2,
         messages: [
@@ -208,7 +208,7 @@ describe('toolRunner integration tests', () => {
       const tool = createTestTool({ inputSchema: z.object({ input: z.string() }) });
 
       const runner = client.beta.messages.toolRunner({
-        model: 'claude-opus-4-8',
+        model: 'haijun-opus-8',
         max_tokens: 1000,
         messages: [
           { role: 'user', content: 'Use the test_tool with input "test", then provide a final response' },
@@ -231,7 +231,7 @@ describe('toolRunner integration tests', () => {
       const tool = createTestTool();
 
       const runner = client.beta.messages.toolRunner({
-        model: 'claude-opus-4-8',
+        model: 'haijun-opus-8',
         max_tokens: 1000,
         messages: [{ role: 'user', content: 'Hello' }],
         tools: [tool],
@@ -239,14 +239,14 @@ describe('toolRunner integration tests', () => {
 
       // Update parameters
       runner.setMessagesParams({
-        model: 'claude-haiku-4-5',
+        model: 'haijun-haiku',
         max_tokens: 500,
         messages: [{ role: 'user', content: 'Updated message' }],
         tools: [tool],
       });
 
       const params = runner.params;
-      expect(params.model).toBe('claude-haiku-4-5');
+      expect(params.model).toBe('haijun-haiku');
       expect(params.max_tokens).toBe(500);
       expect(params.messages).toEqual([{ role: 'user', content: 'Updated message' }]);
     });
@@ -280,7 +280,7 @@ describe('toolRunner integration tests', () => {
       };
 
       const runner = client.beta.messages.toolRunner({
-        model: 'claude-sonnet-4-5',
+        model: 'haijun-sonnet-5',
         max_tokens: 4000,
         messages: [
           {

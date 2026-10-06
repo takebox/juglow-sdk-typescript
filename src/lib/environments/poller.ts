@@ -1,5 +1,5 @@
-import { AnthropicError } from '../../core/error';
-import type { Anthropic } from '../../client';
+import { JuglowError } from '../../core/error';
+import type { Juglow } from '../../client';
 import type { BetaSelfHostedWork } from '../../resources/beta/environments/work';
 import { loggerFor } from '../../internal/utils/log';
 import { sleep } from '../../internal/utils/sleep';
@@ -24,7 +24,7 @@ const POLL_BACKOFF_BASE_MS = 1000;
 const POLL_BACKOFF_CAP_MS = 60_000;
 
 export interface WorkPollerOptions {
-  client: Anthropic;
+  client: Juglow;
   environmentId: string;
   /**
    * The environment key — the single credential for the self-hosted runner. It
@@ -93,7 +93,7 @@ export interface WorkPollerOptions {
  * ```
  */
 export class WorkPoller implements AsyncIterable<BetaSelfHostedWork> {
-  readonly client: Anthropic;
+  readonly client: Juglow;
   readonly environmentId: string;
   readonly environmentKey: string;
   readonly workerId: string;
@@ -102,7 +102,7 @@ export class WorkPoller implements AsyncIterable<BetaSelfHostedWork> {
   // is routed through this so the parent's `X-Api-Key` never lands on the
   // wire alongside the bearer credential. The helper-telemetry header is
   // attached as a default on this client; per-call plumbing is unnecessary.
-  readonly #runnerClient: Anthropic;
+  readonly #runnerClient: Juglow;
   #consumed = false;
   readonly #controller: AbortController;
   readonly #detachExternal: () => void;
@@ -144,7 +144,7 @@ export class WorkPoller implements AsyncIterable<BetaSelfHostedWork> {
 
   async *[Symbol.asyncIterator](): AsyncIterator<BetaSelfHostedWork> {
     if (this.#consumed) {
-      throw new AnthropicError('Cannot iterate over a consumed WorkPoller');
+      throw new JuglowError('Cannot iterate over a consumed WorkPoller');
     }
     this.#consumed = true;
     const log = loggerFor(this.client);
@@ -161,7 +161,7 @@ export class WorkPoller implements AsyncIterable<BetaSelfHostedWork> {
           work = await this.#runnerClient.beta.environments.work.poll(
             this.environmentId,
             {
-              'Anthropic-Worker-ID': this.workerId,
+              'Juglow-Worker-ID': this.workerId,
               ...(this.#blockMs !== null ? { block_ms: this.#blockMs } : {}),
               ...(this.#reclaimOlderThanMs !== null ?
                 { reclaim_older_than_ms: this.#reclaimOlderThanMs }

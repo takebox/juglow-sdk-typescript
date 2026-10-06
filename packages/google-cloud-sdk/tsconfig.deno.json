@@ -6,8 +6,8 @@
     "rootDir": "./deno",
     "lib": ["es2020", "DOM"],
     "paths": {
-      "@anthropic-ai/google-cloud-sdk/*": ["src/*"],
-      "@anthropic-ai/google-cloud-sdk": ["src/index.ts"]
+      "@takebox-ai/google-cloud-sdk/*": ["src/*"],
+      "@takebox-ai/google-cloud-sdk": ["src/index.ts"]
     },
     "noEmit": true,
     "declaration": true,

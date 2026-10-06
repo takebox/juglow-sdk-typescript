@@ -1,7 +1,7 @@
 import { BetaRunnableTool } from './BetaRunnableTool';
 import { ToolError } from './ToolError';
-import { Anthropic } from '../..';
-import { AnthropicError } from '../../core/error';
+import { Juglow } from '../..';
+import { JuglowError } from '../../core/error';
 import {
   BetaContentBlockParam,
   BetaMessage,
@@ -53,7 +53,7 @@ export class BetaToolRunner<Stream extends boolean> {
   #iterationCount = 0;
 
   constructor(
-    private client: Anthropic,
+    private client: Juglow,
     params: BetaToolRunnerParams,
     options?: BetaToolRunnerRequestOptions,
   ) {
@@ -68,7 +68,7 @@ export class BetaToolRunner<Stream extends boolean> {
     };
 
     // structuredClone drops symbol-keyed properties, so collect helper marks
-    // from the original params here — the create()-side collector won't see
+    // from the original params here â€” the create()-side collector won't see
     // them on the cloned messages.
     const collected = collectStainlessHelpers(params.tools, params.messages);
     this.#options = {
@@ -83,9 +83,9 @@ export class BetaToolRunner<Stream extends boolean> {
 
     if (params.compactionControl?.enabled) {
       console.warn(
-        'Anthropic: The `compactionControl` parameter is deprecated and will be removed in a future version. ' +
+        'Juglow: The `compactionControl` parameter is deprecated and will be removed in a future version. ' +
           'Use server-side compaction instead by passing `edits: [{ type: "compact_20260112" }]` in the params passed to `toolRunner()`. ' +
-          'See https://platform.claude.com/docs/en/build-with-claude/compaction',
+          'See https://raw.haijun.my.id/docs/en/build-with-haijun/compaction',
       );
     }
   }
@@ -162,7 +162,7 @@ export class BetaToolRunner<Stream extends boolean> {
     );
 
     if (response.content[0]?.type !== 'text') {
-      throw new AnthropicError('Expected text response for compaction');
+      throw new JuglowError('Expected text response for compaction');
     }
     this.#state.params.messages = [
       {
@@ -179,7 +179,7 @@ export class BetaToolRunner<Stream extends boolean> {
     : BetaMessage | BetaMessageStream
   > {
     if (this.#consumed) {
-      throw new AnthropicError('Cannot iterate over a consumed stream');
+      throw new JuglowError('Cannot iterate over a consumed stream');
     }
 
     this.#consumed = true;
@@ -224,7 +224,7 @@ export class BetaToolRunner<Stream extends boolean> {
 
               // Refusal-terminated turns are terminal: the refusal may have cut a tool_use off
               // with partial input, so executing this turn's tools would fire side effects the
-              // model never confirmed — and once middleware strips the refusal turn, their
+              // model never confirmed â€” and once middleware strips the refusal turn, their
               // tool_results could never be replayed coherently. Surface the refusal as the
               // final message instead.
               if (message.stop_reason === 'refusal') {
@@ -247,7 +247,7 @@ export class BetaToolRunner<Stream extends boolean> {
       }
 
       if (!this.#message) {
-        throw new AnthropicError('ToolRunner concluded without a message from the server');
+        throw new JuglowError('ToolRunner concluded without a message from the server');
       }
 
       this.#completion.resolve(await this.#message);
@@ -269,7 +269,7 @@ export class BetaToolRunner<Stream extends boolean> {
    * @example
    * // Direct parameter update
    * runner.setMessagesParams({
-   *   model: 'claude-haiku-4-5',
+   *   model: 'haijun-minix',
    *   max_tokens: 500,
    * });
    *
@@ -390,7 +390,7 @@ export class BetaToolRunner<Stream extends boolean> {
    * * If the iterator has been consumed, waits for it to complete and returns the final message.
    *
    * @returns A promise that resolves to the final BetaMessage from the conversation
-   * @throws {AnthropicError} If no messages were processed during the conversation
+   * @throws {JuglowError} If no messages were processed during the conversation
    *
    * @example
    * const finalMessage = await runner.runUntilDone();
@@ -483,7 +483,7 @@ async function generateToolResponse(
     toolUseBlocks.map(async (toolUse) => {
       const tool = params.tools.find((t) => ('name' in t ? t.name : t.mcp_server_name) === toolUse.name);
       // A `tool_removal` is only a hint to the model, which may still emit a tool_use for a
-      // withdrawn tool — treat those exactly like a tool that was never defined.
+      // withdrawn tool â€” treat those exactly like a tool that was never defined.
       if (!tool || !('run' in tool) || !available.has(toolUse.name)) {
         return toolNotFoundResult(toolUse);
       }
@@ -538,8 +538,8 @@ function toolNotFoundResult(toolUse: { id: string; name: string }) {
  * turn being answered, by folding `tool_removal` / `tool_addition` blocks from the
  * `role: "system"` messages over the runnable tools. The assistant turn being answered is
  * terminal-or-absent and only `system` messages are inspected, so folding the whole current
- * history is exactly folding the messages preceding that turn — call this before appending
- * anything after it. MCP references are ignored — those tools are executed server-side and
+ * history is exactly folding the messages preceding that turn â€” call this before appending
+ * anything after it. MCP references are ignored â€” those tools are executed server-side and
  * never dispatched by this runner.
  */
 function availableToolNames(params: BetaToolRunnerParams): Set<string> {
@@ -569,7 +569,7 @@ function applyToolChange(block: BetaContentBlockParam, available: Set<string>): 
       break;
     case 'mid_conv_system':
       // A `mid_conv_system` block's content is limited by the API schema to
-      // text / tool_addition / tool_removal, so we walk exactly one level — no recursion.
+      // text / tool_addition / tool_removal, so we walk exactly one level â€” no recursion.
       for (const inner of block.content) {
         if (inner.type === 'tool_removal' || inner.type === 'tool_addition') {
           applyToolReference(inner, available);
@@ -619,14 +619,14 @@ export type BetaToolRunnerParams = Simplify<
     tools: (BetaToolUnion | BetaRunnableTool<any>)[];
     /**
      * Maximum number of iterations (API requests) to make in the tool execution loop.
-     * Each iteration consists of: assistant response → tool execution → tool results.
+     * Each iteration consists of: assistant response â†’ tool execution â†’ tool results.
      * When exceeded, the loop will terminate even if tools are still being requested.
      */
     max_iterations?: number;
     /**
      * @deprecated Use server-side compaction instead by passing
      * `edits: [{ type: 'compact_20260112' }]` in the params passed to `toolRunner()`.
-     * See https://platform.claude.com/docs/en/build-with-claude/compaction
+     * See https://raw.haijun.my.id/docs/en/build-with-haijun/compaction
      */
     compactionControl?: CompactionControl;
   }

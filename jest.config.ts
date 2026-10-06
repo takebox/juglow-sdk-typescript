@@ -7,8 +7,8 @@ const config: JestConfigWithTsJest = {
     '^.+\\.(t|j)sx?$': ['@swc/jest', { sourceMaps: 'inline' }],
   },
   moduleNameMapper: {
-    '^@anthropic-ai/sdk$': '<rootDir>/src/index.ts',
-    '^@anthropic-ai/sdk/(.*)$': '<rootDir>/src/$1',
+    '^@takebox-ai/sdk$': '<rootDir>/src/index.ts',
+    '^@takebox-ai/sdk/(.*)$': '<rootDir>/src/$1',
   },
   modulePathIgnorePatterns: [
     '<rootDir>/ecosystem-tests/',

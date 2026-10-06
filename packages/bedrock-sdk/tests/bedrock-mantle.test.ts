@@ -1,5 +1,5 @@
-import { VERSION } from '@anthropic-ai/sdk/version';
-import { AnthropicBedrockMantle } from '../src';
+﻿import { VERSION } from '@takebox-ai/sdk/version';
+import { JuglowBedrockMantle } from '../src';
 import { getAuthHeaders } from '../src/core/aws-auth';
 
 jest.mock('../src/core/aws-auth', () => ({
@@ -23,9 +23,9 @@ const mockFetch = jest.fn().mockImplementation(() => {
 });
 const originalFetch = global.fetch;
 
-const makeRequest = async (client: AnthropicBedrockMantle) => {
+const makeRequest = async (client: JuglowBedrockMantle) => {
   await client.messages.create({
-    model: 'claude-opus-4-8',
+    model: 'haijun-opus-8',
     max_tokens: 1024,
     messages: [{ content: 'Test message', role: 'user' }],
   });
@@ -35,7 +35,7 @@ const getRequestUrl = (): string => {
   return mockFetch.mock.calls[0]![0];
 };
 
-describe('AnthropicBedrockMantle', () => {
+describe('JuglowBedrockMantle', () => {
   const originalEnv = process.env;
 
   beforeEach(() => {
@@ -52,16 +52,16 @@ describe('AnthropicBedrockMantle', () => {
 
   describe('base URL', () => {
     test('derives base URL from region', () => {
-      const client = new AnthropicBedrockMantle({
+      const client = new JuglowBedrockMantle({
         apiKey: 'test-key',
         awsRegion: 'us-east-1',
       });
 
-      expect(client.baseURL).toBe('https://bedrock-mantle.us-east-1.api.aws/anthropic');
+      expect(client.baseURL).toBe('https://bedrock-mantle.us-east-1.api.aws/Juglow');
     });
 
-    test('request URL includes /anthropic base path', async () => {
-      const client = new AnthropicBedrockMantle({
+    test('request URL includes /Juglow base path', async () => {
+      const client = new JuglowBedrockMantle({
         apiKey: 'test-key',
         awsRegion: 'us-west-2',
         maxRetries: 0,
@@ -69,13 +69,13 @@ describe('AnthropicBedrockMantle', () => {
 
       await makeRequest(client);
 
-      expect(getRequestUrl()).toBe('https://bedrock-mantle.us-west-2.api.aws/anthropic/v1/messages');
+      expect(getRequestUrl()).toBe('https://bedrock-mantle.us-west-2.api.aws/Juglow/v1/messages');
     });
 
-    test('uses ANTHROPIC_BEDROCK_MANTLE_BASE_URL env var', () => {
-      process.env['ANTHROPIC_BEDROCK_MANTLE_BASE_URL'] = 'https://custom.mantle.example.com';
+    test('uses HAIJUN_BEDROCK_MANTLE_BASE_URL env var', () => {
+      process.env['HAIJUN_BEDROCK_MANTLE_BASE_URL'] = 'https://custom.mantle.example.com';
 
-      const client = new AnthropicBedrockMantle({
+      const client = new JuglowBedrockMantle({
         apiKey: 'test-key',
       });
 
@@ -83,9 +83,9 @@ describe('AnthropicBedrockMantle', () => {
     });
 
     test('baseURL arg takes precedence over env var', () => {
-      process.env['ANTHROPIC_BEDROCK_MANTLE_BASE_URL'] = 'https://from-env.example.com';
+      process.env['HAIJUN_BEDROCK_MANTLE_BASE_URL'] = 'https://from-env.example.com';
 
-      const client = new AnthropicBedrockMantle({
+      const client = new JuglowBedrockMantle({
         apiKey: 'test-key',
         baseURL: 'https://from-arg.example.com',
       });
@@ -96,7 +96,7 @@ describe('AnthropicBedrockMantle', () => {
 
   describe('SigV4 service name', () => {
     test('uses bedrock-mantle as the SigV4 service name', async () => {
-      const client = new AnthropicBedrockMantle({
+      const client = new JuglowBedrockMantle({
         awsAccessKey: 'my-access-key',
         awsSecretAccessKey: 'my-secret-key',
         awsRegion: 'us-east-1',
@@ -112,7 +112,7 @@ describe('AnthropicBedrockMantle', () => {
 
     test('signs after user middleware, covering the mutated request and hiding the signature from middleware', async () => {
       let middlewareSawSignature: string | null = null;
-      const client = new AnthropicBedrockMantle({
+      const client = new JuglowBedrockMantle({
         awsAccessKey: 'my-access-key',
         awsSecretAccessKey: 'my-secret-key',
         awsRegion: 'us-east-1',
@@ -139,7 +139,7 @@ describe('AnthropicBedrockMantle', () => {
     test('uses AWS_BEARER_TOKEN_BEDROCK env var', () => {
       process.env['AWS_BEARER_TOKEN_BEDROCK'] = 'mantle-api-key';
 
-      const client = new AnthropicBedrockMantle({ baseURL: 'https://example.com' });
+      const client = new JuglowBedrockMantle({ baseURL: 'https://example.com' });
 
       expect(client.apiKey).toBe('mantle-api-key');
     });
@@ -147,7 +147,7 @@ describe('AnthropicBedrockMantle', () => {
 
   describe('bearer token auth', () => {
     test('sends Authorization: Bearer header when using apiKey', async () => {
-      const client = new AnthropicBedrockMantle({
+      const client = new JuglowBedrockMantle({
         apiKey: 'test-bearer-token',
         awsRegion: 'us-east-1',
         maxRetries: 0,
@@ -164,7 +164,7 @@ describe('AnthropicBedrockMantle', () => {
     test('sends Authorization: Bearer header when using AWS_BEARER_TOKEN_BEDROCK env var', async () => {
       process.env['AWS_BEARER_TOKEN_BEDROCK'] = 'env-bearer-token';
 
-      const client = new AnthropicBedrockMantle({
+      const client = new JuglowBedrockMantle({
         awsRegion: 'us-east-1',
         maxRetries: 0,
       });
@@ -178,7 +178,7 @@ describe('AnthropicBedrockMantle', () => {
     });
 
     test('does not send Authorization: Bearer header when using SigV4', async () => {
-      const client = new AnthropicBedrockMantle({
+      const client = new JuglowBedrockMantle({
         awsAccessKey: 'my-access-key',
         awsSecretAccessKey: 'my-secret-key',
         awsRegion: 'us-east-1',
@@ -193,7 +193,7 @@ describe('AnthropicBedrockMantle', () => {
 
   describe('endpoint restrictions', () => {
     test('completions resource is not available', () => {
-      const client = new AnthropicBedrockMantle({
+      const client = new JuglowBedrockMantle({
         apiKey: 'test-key',
         baseURL: 'https://example.com',
       });
@@ -202,7 +202,7 @@ describe('AnthropicBedrockMantle', () => {
     });
 
     test('models resource is not available', () => {
-      const client = new AnthropicBedrockMantle({
+      const client = new JuglowBedrockMantle({
         apiKey: 'test-key',
         baseURL: 'https://example.com',
       });
@@ -211,7 +211,7 @@ describe('AnthropicBedrockMantle', () => {
     });
 
     test('messages resource is available', () => {
-      const client = new AnthropicBedrockMantle({
+      const client = new JuglowBedrockMantle({
         apiKey: 'test-key',
         baseURL: 'https://example.com',
       });
@@ -220,7 +220,7 @@ describe('AnthropicBedrockMantle', () => {
     });
 
     test('beta.messages resource is available', () => {
-      const client = new AnthropicBedrockMantle({
+      const client = new JuglowBedrockMantle({
         apiKey: 'test-key',
         baseURL: 'https://example.com',
       });
@@ -229,7 +229,7 @@ describe('AnthropicBedrockMantle', () => {
     });
 
     test('beta.models is not available', () => {
-      const client = new AnthropicBedrockMantle({
+      const client = new JuglowBedrockMantle({
         apiKey: 'test-key',
         baseURL: 'https://example.com',
       });
@@ -238,7 +238,7 @@ describe('AnthropicBedrockMantle', () => {
     });
 
     test('beta.files is not available', () => {
-      const client = new AnthropicBedrockMantle({
+      const client = new JuglowBedrockMantle({
         apiKey: 'test-key',
         baseURL: 'https://example.com',
       });
@@ -246,30 +246,30 @@ describe('AnthropicBedrockMantle', () => {
       expect((client.beta as any).files).toBeUndefined();
     });
 
-    test('beta.skills is not available', () => {
-      const client = new AnthropicBedrockMantle({
+    test('beta.tracks is not available', () => {
+      const client = new JuglowBedrockMantle({
         apiKey: 'test-key',
         baseURL: 'https://example.com',
       });
 
-      expect((client.beta as any).skills).toBeUndefined();
+      expect((client.beta as any).tracks).toBeUndefined();
     });
   });
 
   test('user agent is a hardcoded string', async () => {
-    const originalName = AnthropicBedrockMantle.name;
+    const originalName = JuglowBedrockMantle.name;
     // Rename the class, as a minifier would, to prove the header isn't derived from it.
-    Object.defineProperty(AnthropicBedrockMantle, 'name', { value: 'MinifiedClient' });
+    Object.defineProperty(JuglowBedrockMantle, 'name', { value: 'MinifiedClient' });
     try {
-      const client = new AnthropicBedrockMantle({
+      const client = new JuglowBedrockMantle({
         apiKey: 'test-key',
         awsRegion: 'us-east-1',
       });
       expect(client.constructor.name).toBe('MinifiedClient');
       const { req } = await client.buildRequest({ path: '/foo', method: 'post' });
-      expect(req.headers.get('user-agent')).toBe(`AnthropicBedrockMantle/JS ${VERSION}`);
+      expect(req.headers.get('user-agent')).toBe(`JuglowBedrockMantle/JS ${VERSION}`);
     } finally {
-      Object.defineProperty(AnthropicBedrockMantle, 'name', { value: originalName });
+      Object.defineProperty(JuglowBedrockMantle, 'name', { value: originalName });
     }
   });
 });

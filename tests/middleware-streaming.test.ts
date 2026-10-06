@@ -1,22 +1,22 @@
-import fs from 'node:fs';
+﻿import fs from 'node:fs';
 import path from 'node:path';
-import type { APIRequest } from '@anthropic-ai/sdk/core/api';
-import type { MiddlewareContext } from '@anthropic-ai/sdk/core/middleware';
-import { Stream } from '@anthropic-ai/sdk/core/streaming';
+import type { APIRequest } from '@takebox-ai/sdk/core/api';
+import type { MiddlewareContext } from '@takebox-ai/sdk/core/middleware';
+import { Stream } from '@takebox-ai/sdk/core/streaming';
 import {
   betaRefusalFallbackMiddleware,
   BetaFallbackState,
   type BetaRefusalFallbackOptions,
-} from '@anthropic-ai/sdk/lib/middleware';
-import type { BetaFallbackParam } from '@anthropic-ai/sdk/resources/beta';
-import { defaultLogger } from '@anthropic-ai/sdk/internal/utils/log';
+} from '@takebox-ai/sdk/lib/middleware';
+import type { BetaFallbackParam } from '@takebox-ai/sdk/resources/beta';
+import { defaultLogger } from '@takebox-ai/sdk/internal/utils/log';
 
 const FIXTURES = path.resolve(__dirname, 'fixtures/fable-fallback');
-const FALLBACK_MODEL = 'claude-opus-4-8';
-const SECOND_MODEL = 'claude-sonnet-4-6';
+const FALLBACK_MODEL = 'haijun-opus-8';
+const SECOND_MODEL = 'haijun-sonnet';
 const FALLBACKS = [{ model: FALLBACK_MODEL }];
 
-// Wire-shaped synthetic capture — the primary refuses after a thinking +
+// Wire-shaped synthetic capture â€” the primary refuses after a thinking +
 // partial-text block and mints a credit token; the fallback then completes
 // the message.
 const STREAM_A = fs.readFileSync(path.join(FIXTURES, 'stream-a-refusal.sse'), 'utf8');
@@ -56,7 +56,7 @@ const messageStart = () =>
       id: 'msg_a',
       type: 'message',
       role: 'assistant',
-      model: 'claude-fable-5',
+      model: 'haijun-opus',
       content: [],
       stop_reason: null,
       stop_sequence: null,
@@ -96,8 +96,8 @@ interface RunResult {
 
 /**
  * Drive the middleware directly: `next` returns the queued responses in order
- * (A, then the fallback B) — an `Error` entry is thrown instead, like a failed
- * fetch — and we collect the spliced output stream.
+ * (A, then the fallback B) â€” an `Error` entry is thrown instead, like a failed
+ * fetch â€” and we collect the spliced output stream.
  */
 async function runMiddleware(
   opts: RunOptions,
@@ -127,9 +127,9 @@ async function runMiddleware(
   };
 
   const requestA: APIRequest = {
-    url: 'https://api.anthropic.com/v1/messages?beta=true',
+    url: 'https://platform.juglow.my.id/v1/messages?beta=true',
     method: 'post',
-    headers: new Headers({ 'anthropic-beta': 'interleaved-thinking-2025-05-14' }),
+    headers: new Headers({ 'Juglow-beta': 'interleaved-thinking-2025-05-14' }),
     body: opts.requestBody ?? JSON.stringify(originalBody),
   };
 
@@ -147,7 +147,7 @@ async function runMiddleware(
   return { out, events, requests };
 }
 
-/** Compact structural skeleton of a spliced stream — no text content. */
+/** Compact structural skeleton of a spliced stream â€” no text content. */
 function skeleton(events: Array<{ event: string | null; data: any }>): string[] {
   return events.map(({ data: d }) => {
     switch (d.type) {
@@ -172,14 +172,14 @@ function skeleton(events: Array<{ event: string | null; data: any }>): string[] 
 }
 
 const ORIGINAL_BODY = {
-  model: 'claude-fable-5',
+  model: 'haijun-opus',
   max_tokens: 1024,
   messages: [{ role: 'user', content: 'Hey claudius! Can you tell me what a solar eclipse is?' }],
 };
 
 // --- happy path -----------------------------------------------------------
 
-describe('betaRefusalFallbackMiddleware (streaming) — shape-B continuation', () => {
+describe('betaRefusalFallbackMiddleware (streaming) â€” shape-B continuation', () => {
   test('splices the fallback onto the refused stream (matches server-side shape)', async () => {
     const { events } = await runMiddleware({ fallbacks: FALLBACKS }, ORIGINAL_BODY, [
       sseResponse(STREAM_A),
@@ -202,12 +202,12 @@ describe('betaRefusalFallbackMiddleware (streaming) — shape-B continuation', (
     const fallback = starts.find((s) => s.content_block.type === 'fallback')!.content_block;
     expect(fallback).toEqual({
       type: 'fallback',
-      from: { model: 'claude-fable-5' },
+      from: { model: 'haijun-opus' },
       to: { model: FALLBACK_MODEL },
       trigger: { type: 'refusal', category: null },
     });
 
-    // Exactly one message_start (A's) and one message_stop reach the client —
+    // Exactly one message_start (A's) and one message_stop reach the client â€”
     // B's message_start is suppressed.
     expect(events.filter((e) => e.data.type === 'message_start')).toHaveLength(1);
     expect(events.filter((e) => e.data.type === 'message_stop')).toHaveLength(1);
@@ -223,7 +223,7 @@ describe('betaRefusalFallbackMiddleware (streaming) — shape-B continuation', (
     const messageDelta = events.find((e) => e.data.type === 'message_delta')!.data;
     expect(messageDelta.delta.stop_reason).toBe('end_turn');
     expect(messageDelta.usage.iterations.map((i: any) => [i.type, i.model])).toEqual([
-      ['message', 'claude-fable-5'],
+      ['message', 'haijun-opus'],
       ['fallback_message', FALLBACK_MODEL],
     ]);
   });
@@ -243,7 +243,7 @@ describe('betaRefusalFallbackMiddleware (streaming) — shape-B continuation', (
     expect(typeof bodyB.fallback_credit_token.token).toBe('string');
     expect(bodyB.fallback_credit_token.token.length).toBeGreaterThan(0);
 
-    // Mutually exclusive with server-side fallback — both spellings stripped.
+    // Mutually exclusive with server-side fallback â€” both spellings stripped.
     expect(bodyB).not.toHaveProperty('fallback');
     expect(bodyB).not.toHaveProperty('fallbacks');
 
@@ -251,7 +251,7 @@ describe('betaRefusalFallbackMiddleware (streaming) — shape-B continuation', (
     expect(bodyB.max_tokens).toBe(1024);
 
     // Original turn preserved; one assistant turn appended carrying the
-    // [thinking, text] partial output as-is — the prefill claim authorizes
+    // [thinking, text] partial output as-is â€” the prefill claim authorizes
     // it verbatim, so no client-side filtering or trimming.
     expect(bodyB.messages).toHaveLength(2);
     expect(bodyB.messages[0]).toEqual(ORIGINAL_BODY.messages[0]);
@@ -268,7 +268,7 @@ describe('betaRefusalFallbackMiddleware (streaming) — shape-B continuation', (
       sseResponse(STREAM_B),
     ]);
 
-    expect(requests.map((r) => r.headers.get('anthropic-beta'))).toEqual([
+    expect(requests.map((r) => r.headers.get('Juglow-beta'))).toEqual([
       'interleaved-thinking-2025-05-14, fallback-credit-2026-07-01',
       'interleaved-thinking-2025-05-14, fallback-credit-2026-07-01',
     ]);
@@ -281,7 +281,7 @@ describe('betaRefusalFallbackMiddleware (streaming) — shape-B continuation', (
       [sseResponse(STREAM_A), sseResponse(STREAM_B)],
     );
 
-    expect(requests.map((r) => r.headers.get('anthropic-beta'))).toEqual([
+    expect(requests.map((r) => r.headers.get('Juglow-beta'))).toEqual([
       'interleaved-thinking-2025-05-14, fallback-credit-2027-01-01',
       'interleaved-thinking-2025-05-14, fallback-credit-2027-01-01',
     ]);
@@ -290,9 +290,9 @@ describe('betaRefusalFallbackMiddleware (streaming) — shape-B continuation', (
 
 // --- edge cases -----------------------------------------------------------
 
-describe('betaRefusalFallbackMiddleware (streaming) — edge cases', () => {
+describe('betaRefusalFallbackMiddleware (streaming) â€” edge cases', () => {
   test('a refusal without a prefill claim falls back to shape-A (no appended turn)', async () => {
-    // fallback_has_prefill_claim: false — the partial output may not be
+    // fallback_has_prefill_claim: false â€” the partial output may not be
     // resent, so the middleware omits the prefill and resends the original
     // body with just the token attached.
     const noClaim = [
@@ -302,7 +302,7 @@ describe('betaRefusalFallbackMiddleware (streaming) — edge cases', () => {
           id: 'msg_a',
           type: 'message',
           role: 'assistant',
-          model: 'claude-fable-5',
+          model: 'haijun-opus',
           content: [],
           stop_reason: null,
           stop_sequence: null,
@@ -336,7 +336,7 @@ describe('betaRefusalFallbackMiddleware (streaming) — edge cases', () => {
 
     const bodyB = JSON.parse(requests[1]!.body as string);
     expect(bodyB.fallback_credit_token).toEqual({ token: 'tok_abc', mode: 'best_effort' });
-    // No appended assistant turn — identical body (shape-A).
+    // No appended assistant turn â€” identical body (shape-A).
     expect(bodyB.messages).toEqual(ORIGINAL_BODY.messages);
   });
 
@@ -348,7 +348,7 @@ describe('betaRefusalFallbackMiddleware (streaming) — edge cases', () => {
       sseResponse(noToken),
     ]);
 
-    // Only the original request was made — no fallback.
+    // Only the original request was made â€” no fallback.
     expect(requests).toHaveLength(1);
     expect(onError).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -406,7 +406,7 @@ describe('betaRefusalFallbackMiddleware (streaming) — edge cases', () => {
       jsonResponse({ type: 'error', error: { type: 'invalid_request_error', message: 'nope' } }, 400),
     ]);
 
-    // The prefill form 400s, the same-body retry 400s too — only then does
+    // The prefill form 400s, the same-body retry 400s too â€” only then does
     // the hop count as failed.
     expect(requests).toHaveLength(3);
     expect(onError).toHaveBeenCalledTimes(1);
@@ -428,8 +428,8 @@ describe('betaRefusalFallbackMiddleware (streaming) — edge cases', () => {
     expect(messageDelta.delta.stop_reason).toBe('refusal');
     expect(events[events.length - 1]!.data.type).toBe('message_stop');
 
-    // The held refusal is surfaced verbatim — category/explanation and the
-    // still-unredeemed credit token — with recommended_model pointing at the
+    // The held refusal is surfaced verbatim â€” category/explanation and the
+    // still-unredeemed credit token â€” with recommended_model pointing at the
     // last hop we tried.
     const stopDetails = messageDelta.delta.stop_details;
     expect(stopDetails.category).toBe('safety');
@@ -456,7 +456,7 @@ describe('betaRefusalFallbackMiddleware (streaming) — edge cases', () => {
     );
 
     // The stream still closes cleanly: boundary block, then a synthetic
-    // refusal message_delta + message_stop — not a hard stream error.
+    // refusal message_delta + message_stop â€” not a hard stream error.
     const messageDelta = events.find((e) => e.data.type === 'message_delta')!.data;
     expect(messageDelta.delta.stop_reason).toBe('refusal');
     expect(events[events.length - 1]!.data.type).toBe('message_stop');
@@ -486,7 +486,7 @@ describe('betaRefusalFallbackMiddleware (streaming) — edge cases', () => {
         id: 'msg_1',
         type: 'message',
         role: 'assistant',
-        model: 'claude-fable-5',
+        model: 'haijun-opus',
         content: [],
         stop_reason: 'refusal',
         stop_sequence: null,
@@ -538,7 +538,7 @@ describe('betaRefusalFallbackMiddleware (streaming) — edge cases', () => {
           id: 'msg_a',
           type: 'message',
           role: 'assistant',
-          model: 'claude-fable-5',
+          model: 'haijun-opus',
           content: [],
           stop_reason: null,
           stop_sequence: null,
@@ -558,7 +558,7 @@ describe('betaRefusalFallbackMiddleware (streaming) — edge cases', () => {
       parse: async <T>(r: Response): Promise<T> => JSON.parse(await r.clone().text()) as T,
     };
     const requestA: APIRequest = {
-      url: 'https://api.anthropic.com/v1/messages?beta=true',
+      url: 'https://platform.juglow.my.id/v1/messages?beta=true',
       method: 'post',
       headers: new Headers(),
       body: JSON.stringify(ORIGINAL_BODY),
@@ -576,7 +576,7 @@ describe('betaRefusalFallbackMiddleware (streaming) — edge cases', () => {
           id: 'msg_a',
           type: 'message',
           role: 'assistant',
-          model: 'claude-fable-5',
+          model: 'haijun-opus',
           content: [],
           stop_reason: null,
           stop_sequence: null,
@@ -625,7 +625,7 @@ describe('betaRefusalFallbackMiddleware (streaming) — edge cases', () => {
         id: 'msg_1',
         type: 'message',
         role: 'assistant',
-        model: 'claude-fable-5',
+        model: 'haijun-opus',
         content: [],
         stop_reason: 'refusal',
         stop_sequence: null,
@@ -664,7 +664,7 @@ describe('betaRefusalFallbackMiddleware (streaming) — edge cases', () => {
     const bodyB = JSON.parse(requests[1]!.body as string);
     expect(bodyB.model).toBe(FALLBACK_MODEL);
     expect(bodyB.fallback_credit_token).toEqual({ token: 'tok_json', mode: 'best_effort' });
-    // The seam block is prepended ahead of the serving hop's own content —
+    // The seam block is prepended ahead of the serving hop's own content â€”
     // non-empty content distinguishes prepend from replace.
     const served: any = await out.json();
     expect(served.content).toEqual([
@@ -701,12 +701,12 @@ describe('betaRefusalFallbackMiddleware (streaming) — edge cases', () => {
     const { out, requests } = await runMiddleware(
       { fallbacks: FALLBACKS },
       ORIGINAL_BODY,
-      [jsonResponse(refusalBody('claude-fable-5'), 200), jsonResponse(lastRefusal, 200)],
+      [jsonResponse(refusalBody('haijun-opus'), 200), jsonResponse(lastRefusal, 200)],
       { stream: false },
     );
 
     expect(requests).toHaveLength(2);
-    // No seam block is added to a refusal — the last hop's body is byte-for-
+    // No seam block is added to a refusal â€” the last hop's body is byte-for-
     // byte the stubbed refusal.
     const final: any = await out.json();
     expect(final).toEqual(lastRefusal);
@@ -715,7 +715,7 @@ describe('betaRefusalFallbackMiddleware (streaming) — edge cases', () => {
 
 // --- fallbackState pinning --------------------------------------------------
 
-describe('betaRefusalFallbackMiddleware (streaming) — fallbackState', () => {
+describe('betaRefusalFallbackMiddleware (streaming) â€” fallbackState', () => {
   test('pins the state to the hop that served', async () => {
     const fallbackState = new BetaFallbackState();
     await runMiddleware({ fallbacks: FALLBACKS, fallbackState }, ORIGINAL_BODY, [
@@ -754,7 +754,7 @@ describe('betaRefusalFallbackMiddleware (streaming) — fallbackState', () => {
       parse: async <T>(r: Response): Promise<T> => JSON.parse(await r.clone().text()) as T,
     };
     const requestA: APIRequest = {
-      url: 'https://api.anthropic.com/v1/messages?beta=true',
+      url: 'https://platform.juglow.my.id/v1/messages?beta=true',
       method: 'post',
       headers: new Headers(),
       body: JSON.stringify(ORIGINAL_BODY),
@@ -774,7 +774,7 @@ describe('betaRefusalFallbackMiddleware (streaming) — fallbackState', () => {
 
 // --- fallback chain ---------------------------------------------------------
 
-describe('betaRefusalFallbackMiddleware (streaming) — fallback chain', () => {
+describe('betaRefusalFallbackMiddleware (streaming) â€” fallback chain', () => {
   // A fallback hop that contributes one text block, then refuses with a fresh token.
   const hopRefusal = [
     messageStart(),
@@ -808,7 +808,7 @@ describe('betaRefusalFallbackMiddleware (streaming) — fallback chain', () => {
     ]);
 
     // One continuous message: A's blocks, boundary, hop 1's partial, boundary,
-    // hop 2's blocks — indices stay monotonic across all three streams.
+    // hop 2's blocks â€” indices stay monotonic across all three streams.
     const starts = events.filter((e) => e.data.type === 'content_block_start').map((e) => e.data);
     expect(starts.map((s) => [s.index, s.content_block.type])).toEqual([
       [0, 'thinking'],
@@ -820,7 +820,7 @@ describe('betaRefusalFallbackMiddleware (streaming) — fallback chain', () => {
     ]);
     expect(starts[2]!.content_block).toEqual({
       type: 'fallback',
-      from: { model: 'claude-fable-5' },
+      from: { model: 'haijun-opus' },
       to: { model: FALLBACK_MODEL },
       trigger: { type: 'refusal', category: null },
     });
@@ -836,7 +836,7 @@ describe('betaRefusalFallbackMiddleware (streaming) — fallback chain', () => {
     expect(deltas).toHaveLength(1);
     expect(deltas[0]!.data.delta.stop_reason).toBe('end_turn');
     expect(deltas[0]!.data.usage.iterations.map((i: any) => [i.type, i.model])).toEqual([
-      ['message', 'claude-fable-5'],
+      ['message', 'haijun-opus'],
       ['message', FALLBACK_MODEL],
       ['fallback_message', SECOND_MODEL],
     ]);
@@ -863,8 +863,8 @@ describe('betaRefusalFallbackMiddleware (streaming) — fallback chain', () => {
     const body1 = JSON.parse(requests[1]!.body as string);
     const body2 = JSON.parse(requests[2]!.body as string);
     expect(body2.fallback_credit_token).toEqual({ token: 'tok_b', mode: 'best_effort' });
-    // Hop 2 redeems the fresh token against the body it was minted for —
-    // hop 1's request, including its appended turn — without hop 1's own
+    // Hop 2 redeems the fresh token against the body it was minted for â€”
+    // hop 1's request, including its appended turn â€” without hop 1's own
     // (unclaimed) partial output.
     expect(body2.messages).toEqual(body1.messages);
   });
@@ -891,27 +891,27 @@ describe('betaRefusalFallbackMiddleware (streaming) — fallback chain', () => {
     );
     expect(requests).toHaveLength(3);
 
-    // Same token and continuation — the failed hop never redeemed them.
+    // Same token and continuation â€” the failed hop never redeemed them.
     const body1 = JSON.parse(requests[1]!.body as string);
     const body2 = JSON.parse(requests[2]!.body as string);
     expect(body2.model).toBe(SECOND_MODEL);
     expect(body2.fallback_credit_token).toEqual(body1.fallback_credit_token);
     expect(body2.messages).toEqual(body1.messages);
 
-    // Both boundaries are from A — the failed hop contributed no output.
+    // Both boundaries are from A â€” the failed hop contributed no output.
     const boundaries = events
       .filter((e) => e.data.type === 'content_block_start' && e.data.content_block.type === 'fallback')
       .map((e) => e.data.content_block);
     expect(boundaries).toEqual([
       {
         type: 'fallback',
-        from: { model: 'claude-fable-5' },
+        from: { model: 'haijun-opus' },
         to: { model: FALLBACK_MODEL },
         trigger: { type: 'refusal', category: null },
       },
       {
         type: 'fallback',
-        from: { model: 'claude-fable-5' },
+        from: { model: 'haijun-opus' },
         to: { model: SECOND_MODEL },
         trigger: { type: 'refusal', category: null },
       },
@@ -921,7 +921,7 @@ describe('betaRefusalFallbackMiddleware (streaming) — fallback chain', () => {
     const delta = events.find((e) => e.data.type === 'message_delta')!.data;
     expect(delta.delta.stop_reason).toBe('end_turn');
     expect(delta.usage.iterations.map((i: any) => [i.type, i.model])).toEqual([
-      ['message', 'claude-fable-5'],
+      ['message', 'haijun-opus'],
       ['fallback_message', SECOND_MODEL],
     ]);
   });
@@ -940,7 +940,7 @@ describe('betaRefusalFallbackMiddleware (streaming) — fallback chain', () => {
     // The fresh token reaches the client for a manual retry.
     expect(delta.delta.stop_details.fallback_credit_token).toBe('tok_b');
     expect(delta.usage.iterations.map((i: any) => [i.type, i.model])).toEqual([
-      ['message', 'claude-fable-5'],
+      ['message', 'haijun-opus'],
       ['fallback_message', FALLBACK_MODEL],
     ]);
   });
@@ -970,7 +970,7 @@ describe('betaRefusalFallbackMiddleware (streaming) — fallback chain', () => {
     const resA = sseResponse(STREAM_A);
     const { out, events, requests } = await runMiddleware({ fallbacks: [], onError }, ORIGINAL_BODY, [resA]);
 
-    // With nothing to hop to, the response isn't even wrapped — no per-event
+    // With nothing to hop to, the response isn't even wrapped â€” no per-event
     // decode/re-encode overhead, and no error: this is the steady state of an
     // exhausted or fully-pinned chain.
     expect(requests).toHaveLength(1);
@@ -992,7 +992,7 @@ describe('betaRefusalFallbackMiddleware (streaming) — fallback chain', () => {
     );
     expect(requests).toHaveLength(3);
 
-    // Same token — the thrown hop never redeemed it.
+    // Same token â€” the thrown hop never redeemed it.
     const body1 = JSON.parse(requests[1]!.body as string);
     const body2 = JSON.parse(requests[2]!.body as string);
     expect(body2.model).toBe(SECOND_MODEL);
@@ -1002,7 +1002,7 @@ describe('betaRefusalFallbackMiddleware (streaming) — fallback chain', () => {
     const delta = events.find((e) => e.data.type === 'message_delta')!.data;
     expect(delta.delta.stop_reason).toBe('end_turn');
     expect(delta.usage.iterations.map((i: any) => [i.type, i.model])).toEqual([
-      ['message', 'claude-fable-5'],
+      ['message', 'haijun-opus'],
       ['fallback_message', SECOND_MODEL],
     ]);
   });
@@ -1010,7 +1010,7 @@ describe('betaRefusalFallbackMiddleware (streaming) — fallback chain', () => {
 
 // --- cancellation -----------------------------------------------------------
 
-describe('betaRefusalFallbackMiddleware (streaming) — cancellation', () => {
+describe('betaRefusalFallbackMiddleware (streaming) â€” cancellation', () => {
   test('cancelling the spliced body aborts an in-flight fallback request', async () => {
     let hopSignal: AbortSignal | null | undefined;
     let call = 0;
@@ -1033,7 +1033,7 @@ describe('betaRefusalFallbackMiddleware (streaming) — cancellation', () => {
       parse: async <T>(r: Response): Promise<T> => JSON.parse(await r.clone().text()) as T,
     };
     const requestA: APIRequest = {
-      url: 'https://api.anthropic.com/v1/messages?beta=true',
+      url: 'https://platform.juglow.my.id/v1/messages?beta=true',
       method: 'post',
       headers: new Headers(),
       body: JSON.stringify(ORIGINAL_BODY),
@@ -1078,7 +1078,7 @@ describe('betaRefusalFallbackMiddleware (streaming) — cancellation', () => {
 
 const TOOL_USE_ID = 'srvtoolu_01';
 
-describe('betaRefusalFallbackMiddleware (streaming) — tool-use refusals', () => {
+describe('betaRefusalFallbackMiddleware (streaming) â€” tool-use refusals', () => {
   test('refusal after a completed server tool: continuation carries [thinking, server_tool_use, result, text]', async () => {
     const streamA = [
       messageStart(),
@@ -1202,7 +1202,7 @@ describe('betaRefusalFallbackMiddleware (streaming) — tool-use refusals', () =
   });
 
   test('mid-loop refusal ending in thinking is appended as-is when the claim allows it', async () => {
-    // [server_tool_use, result, thinking] — the server granted a prefill
+    // [server_tool_use, result, thinking] â€” the server granted a prefill
     // claim, so the middleware appends the whole partial output verbatim,
     // trailing thinking block included; deciding prefillability is the
     // server's job now.

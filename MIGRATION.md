@@ -1,13 +1,13 @@
 # Migration guide
 
-This guide outlines the changes and steps needed to migrate your codebase to the latest version of the Anthropic TypeScript SDK.
+This guide outlines the changes and steps needed to migrate your codebase to the latest version of the JuGloW TypeScript SDK.
 
 The main changes are that the SDK now relies on the [builtin Web fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) instead of `node-fetch` and has zero dependencies.
 
 ## Migration CLI
 
 Most programs will only need minimal changes, but to assist there is a migration tool that will automatically update your code for the new version.
-To use it, upgrade the `@anthropic-ai/sdk` package, then run `./node_modules/.bin/anthropic-ai-sdk migrate ./your/src/folders` to update your code.
+To use it, upgrade the `@takebox-ai/sdk` package, then run `./node_modules/.bin/takebox-ai-sdk migrate ./your/src/folders` to update your code.
 To preview the changes without writing them to disk, run the tool with `--dry`.
 
 ## Environment requirements
@@ -78,9 +78,9 @@ client.parents.children.retrieve('c_456', { parent_id: 'p_123' });
 - `client.beta.memoryStores.memories.delete()`
 - `client.beta.memoryStores.memoryVersions.retrieve()`
 - `client.beta.memoryStores.memoryVersions.redact()`
-- `client.beta.skills.versions.retrieve()`
-- `client.beta.skills.versions.delete()`
-- `client.beta.skills.versions.download()`
+- `client.beta.tracks.versions.retrieve()`
+- `client.beta.tracks.versions.delete()`
+- `client.beta.tracks.versions.download()`
 - `client.beta.tunnels.certificates.retrieve()`
 - `client.beta.tunnels.certificates.archive()`
 
@@ -169,10 +169,10 @@ client.example.list(undefined, { headers: { ... } });
 - `client.beta.files.delete()`
 - `client.beta.files.download()`
 - `client.beta.files.retrieveMetadata()`
-- `client.beta.skills.retrieve()`
-- `client.beta.skills.list()`
-- `client.beta.skills.delete()`
-- `client.beta.skills.versions.list()`
+- `client.beta.tracks.retrieve()`
+- `client.beta.tracks.list()`
+- `client.beta.tracks.delete()`
+- `client.beta.tracks.versions.list()`
 - `client.beta.userProfiles.retrieve()`
 - `client.beta.userProfiles.list()`
 - `client.beta.userProfiles.createEnrollmentURL()`
@@ -190,20 +190,20 @@ client.example.list(undefined, { headers: { ... } });
 
 ### Removed `httpAgent` in favor of `fetchOptions`
 
-The `httpAgent` client option has been removed in favor of a [platform-specific `fetchOptions` property](https://github.com/anthropics/anthropic-sdk-typescript#fetch-options).
+The `httpAgent` client option has been removed in favor of a [platform-specific `fetchOptions` property](https://github.com/takebox/juglow-sdk-typescript#fetch-options).
 This change was made as `httpAgent` relied on `node:http` agents which are not supported by any runtime's builtin fetch implementation.
 
-If you were using `httpAgent` for proxy support, check out the [new proxy documentation](https://github.com/anthropics/anthropic-sdk-typescript#configuring-proxies).
+If you were using `httpAgent` for proxy support, check out the [new proxy documentation](https://github.com/takebox/juglow-sdk-typescript#configuring-proxies).
 
 Before:
 
 ```ts
-import Anthropic from '@anthropic-ai/sdk';
+import JuGloW from '@takebox-ai/sdk';
 import http from 'http';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 
 // Configure the default for all requests:
-const client = new Anthropic({
+const client = new JuGloW({
   httpAgent: new HttpsProxyAgent(process.env.PROXY_URL),
 });
 ```
@@ -211,11 +211,11 @@ const client = new Anthropic({
 After:
 
 ```ts
-import Anthropic from '@anthropic-ai/sdk';
+import JuGloW from '@takebox-ai/sdk';
 import * as undici from 'undici';
 
 const proxyAgent = new undici.ProxyAgent(process.env.PROXY_URL);
-const client = new Anthropic({
+const client = new JuGloW({
   fetchOptions: {
     dispatcher: proxyAgent,
   },
@@ -224,29 +224,29 @@ const client = new Anthropic({
 
 ### Changed exports
 
-#### Refactor of `@anthropic-ai/sdk/core`, `error`, `pagination`, `resource`, `streaming` and `uploads`
+#### Refactor of `@takebox-ai/sdk/core`, `error`, `pagination`, `resource`, `streaming` and `uploads`
 
-Much of the `@anthropic-ai/sdk/core` file was intended to be internal-only but it was publicly accessible, as such it has been refactored and split up into internal and public files, with public-facing code moved to a new `core` folder and internal code moving to the private `internal` folder.
+Much of the `@takebox-ai/sdk/core` file was intended to be internal-only but it was publicly accessible, as such it has been refactored and split up into internal and public files, with public-facing code moved to a new `core` folder and internal code moving to the private `internal` folder.
 
 At the same time, we moved some public-facing files which were previously at the top level into `core` to make the file structure cleaner and more clear:
 
 ```typescript
 // Before
-import '@anthropic-ai/sdk/error';
-import '@anthropic-ai/sdk/pagination';
-import '@anthropic-ai/sdk/resource';
-import '@anthropic-ai/sdk/streaming';
-import '@anthropic-ai/sdk/uploads';
+import '@takebox-ai/sdk/error';
+import '@takebox-ai/sdk/pagination';
+import '@takebox-ai/sdk/resource';
+import '@takebox-ai/sdk/streaming';
+import '@takebox-ai/sdk/uploads';
 
 // After
-import '@anthropic-ai/sdk/core/error';
-import '@anthropic-ai/sdk/core/pagination';
-import '@anthropic-ai/sdk/core/resource';
-import '@anthropic-ai/sdk/core/streaming';
-import '@anthropic-ai/sdk/core/uploads';
+import '@takebox-ai/sdk/core/error';
+import '@takebox-ai/sdk/core/pagination';
+import '@takebox-ai/sdk/core/resource';
+import '@takebox-ai/sdk/core/streaming';
+import '@takebox-ai/sdk/core/uploads';
 ```
 
-If you were relying on anything that was only exported from `@anthropic-ai/sdk/core` and is also not accessible anywhere else, please open an issue and we'll consider adding it to the public API.
+If you were relying on anything that was only exported from `@takebox-ai/sdk/core` and is also not accessible anywhere else, please open an issue and we'll consider adding it to the public API.
 
 #### Resource classes
 
@@ -255,16 +255,16 @@ Now you must always either reference them as static class properties or import t
 
 ```typescript
 // Before
-const { Completions } = require('@anthropic-ai/sdk');
+const { Completions } = require('@takebox-ai/sdk');
 
 // After
-const { Anthropic } = require('@anthropic-ai/sdk');
-Anthropic.Completions; // or import directly from @anthropic-ai/sdk/resources/completions
+const { Juglow } = require('@takebox-ai/sdk');
+Juglow.Completions; // or import directly from @takebox-ai/sdk/resources/completions
 ```
 
 #### Cleaned up `uploads` exports
 
-As part of the `core` refactor, `@anthropic-ai/sdk/uploads` was moved to `@anthropic-ai/sdk/core/uploads`
+As part of the `core` refactor, `@takebox-ai/sdk/uploads` was moved to `@takebox-ai/sdk/core/uploads`
 and the following exports were removed, as they were not intended to be a part of the public API:
 
 - `fileFromPath`
@@ -284,19 +284,19 @@ and the following exports were removed, as they were not intended to be a part o
 Note that `Uploadable` & `toFile` **are** still exported:
 
 ```typescript
-import { type Uploadable, toFile } from '@anthropic-ai/sdk/core/uploads';
+import { type Uploadable, toFile } from '@takebox-ai/sdk/core/uploads';
 ```
 
 #### `APIClient`
 
-The `APIClient` base client class has been replaced with a new `BaseAnthropic` class:
+The `APIClient` base client class has been replaced with a new `BaseJuglow` class:
 
 ```typescript
 // Before
-import { APIClient } from '@anthropic-ai/sdk/core';
+import { APIClient } from '@takebox-ai/sdk/core';
 
 // After
-import { BaseAnthropic } from '@anthropic-ai/sdk/client';
+import { BaseJuglow } from '@takebox-ai/sdk/client';
 ```
 
 ### File handling
@@ -305,7 +305,7 @@ The deprecated `fileFromPath` helper has been removed in favor of native Node.js
 
 ```ts
 // Before
-Anthropic.fileFromPath('path/to/file');
+Juglow.fileFromPath('path/to/file');
 
 // After
 import fs from 'fs';
@@ -320,11 +320,11 @@ Previously you could configure the types that the SDK used like this:
 
 ```ts
 // Tell TypeScript and the package to use the global Web fetch instead of node-fetch.
-import '@anthropic-ai/sdk/shims/web';
-import Anthropic from '@anthropic-ai/sdk';
+import '@takebox-ai/sdk/shims/web';
+import Juglow from '@takebox-ai/sdk';
 ```
 
-The `@anthropic-ai/sdk/shims` imports have been removed. Your global types must now be [correctly configured](#minimum-types-requirements).
+The `@takebox-ai/sdk/shims` imports have been removed. Your global types must now be [correctly configured](#minimum-types-requirements).
 
 ### Pagination changes
 
@@ -363,19 +363,19 @@ export type BetaMessageBatchesPage = Page<BetaMessageBatch>;
 
 If you were importing these classes at runtime, you'll need to switch to importing the base class or only import them at the type-level.
 
-### `@anthropic-ai/sdk/src` directory removed
+### `@takebox-ai/sdk/src` directory removed
 
-Previously IDEs may have auto-completed imports from the `@anthropic-ai/sdk/src` directory, however this
+Previously IDEs may have auto-completed imports from the `@takebox-ai/sdk/src` directory, however this
 directory was only included for an improved go-to-definition experience and should not have been used at runtime.
 
-If you have any `@anthropic-ai/sdk/src/*` imports, you will need to replace them with `@anthropic-ai/sdk/*`.
+If you have any `@takebox-ai/sdk/src/*` imports, you will need to replace them with `@takebox-ai/sdk/*`.
 
 ```ts
 // Before
-import Anthropic from '@anthropic-ai/sdk/src';
+import Juglow from '@takebox-ai/sdk/src';
 
 // After
-import Anthropic from '@anthropic-ai/sdk';
+import Juglow from '@takebox-ai/sdk';
 ```
 
 ## TypeScript troubleshooting

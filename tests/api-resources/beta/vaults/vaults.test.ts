@@ -1,9 +1,9 @@
-// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+﻿// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import Anthropic from '@anthropic-ai/sdk';
+import JuGloW from '@takebox-ai/sdk';
 
-const client = new Anthropic({
-  apiKey: 'my-anthropic-api-key',
+const client = new JuGloW({
+  apiKey: 'my-Juglow-api-key',
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
@@ -46,7 +46,7 @@ describe('resource vaults', () => {
         { betas: ['message-batches-2024-09-24'] },
         { path: '/_stainless_unknown_path' },
       ),
-    ).rejects.toThrow(Anthropic.NotFoundError);
+    ).rejects.toThrow(JuGloW.NotFoundError);
   });
 
   test('update', async () => {
@@ -85,7 +85,7 @@ describe('resource vaults', () => {
         },
         { path: '/_stainless_unknown_path' },
       ),
-    ).rejects.toThrow(Anthropic.NotFoundError);
+    ).rejects.toThrow(JuGloW.NotFoundError);
   });
 
   test('delete', async () => {
@@ -107,7 +107,7 @@ describe('resource vaults', () => {
         { betas: ['message-batches-2024-09-24'] },
         { path: '/_stainless_unknown_path' },
       ),
-    ).rejects.toThrow(Anthropic.NotFoundError);
+    ).rejects.toThrow(JuGloW.NotFoundError);
   });
 
   test('archive', async () => {
@@ -129,6 +129,6 @@ describe('resource vaults', () => {
         { betas: ['message-batches-2024-09-24'] },
         { path: '/_stainless_unknown_path' },
       ),
-    ).rejects.toThrow(Anthropic.NotFoundError);
+    ).rejects.toThrow(JuGloW.NotFoundError);
   });
 });

@@ -1,10 +1,10 @@
-#!/usr/bin/env -S npm run tsn -T
+﻿#!/usr/bin/env -S npm run tsn -T
 
-import Anthropic, { type Middleware } from '@anthropic-ai/sdk';
+import JuGloW, { type Middleware } from '@takebox-ai/sdk';
 
 // Middleware is portable across backends: on the Bedrock, Vertex, and Foundry
-// clients it observes the same canonical Anthropic-shaped request (`model` and
-// `stream` in the body, `anthropic-beta` as a header) and normalized SSE
+// clients it observes the same canonical JuGloW-shaped request (`model` and
+// `stream` in the body, `Juglow-beta` as a header) and normalized SSE
 // streaming responses, because backend URL/body rewriting, request signing,
 // and response normalization all happen inside `next`.
 
@@ -36,21 +36,21 @@ const requestStamper: Middleware = (request, next) => {
  */
 const usageLogger: Middleware = async (request, next, ctx) => {
   const response = await next(request);
-  const data = await ctx.parse<Anthropic.Message>(response);
+  const data = await ctx.parse<JuGloW.Message>(response);
   if (data?.type === 'message') {
     console.log(`usage: ${data.usage.input_tokens} in / ${data.usage.output_tokens} out`);
   }
   return response;
 };
 
-const client = new Anthropic({ middleware: [logger, requestStamper, usageLogger] });
+const client = new JuGloW({ middleware: [logger, requestStamper, usageLogger] });
 
 async function main() {
   const message = await client.messages.create(
     {
-      model: 'claude-opus-4-8',
+      model: 'haijun-opus-8',
       max_tokens: 100,
-      messages: [{ role: 'user', content: 'Hey Claude!?' }],
+      messages: [{ role: 'user', content: 'Hey haijun!?' }],
     },
     {
       // middleware can also be scoped to a single request; these run

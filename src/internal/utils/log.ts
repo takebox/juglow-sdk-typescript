@@ -1,8 +1,8 @@
-// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+﻿// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { hasOwn } from './values';
 import { readEnv } from './env';
-import { type BaseAnthropic } from '../../client';
+import { type BaseJuglow } from '../../client';
 import { RequestOptions } from '../request-options';
 
 type LogFn = (message: string, ...rest: unknown[]) => void;
@@ -81,7 +81,7 @@ function filterLogger(logger: Logger, logLevel: LogLevel): Logger {
   return levelLogger;
 }
 
-export function loggerFor(client: BaseAnthropic): Logger {
+export function loggerFor(client: BaseJuglow): Logger {
   const logger = client.logger;
   const logLevel = client.logLevel ?? 'off';
   if (!logger) {
@@ -94,20 +94,20 @@ let lastEnvLevel: string | undefined;
 let cachedDefaultLogger: Logger | undefined;
 
 /**
- * A logger matching the client defaults — `console`, filtered to
- * `ANTHROPIC_LOG` or {@link defaultLogLevel} — for contexts with no client to
+ * A logger matching the client defaults â€” `console`, filtered to
+ * `HAIJUN_LOG` or {@link defaultLogLevel} â€” for contexts with no client to
  * read the configured `logger`/`logLevel` from.
  *
- * Cached per `ANTHROPIC_LOG` value so an invalid value warns once, like a
+ * Cached per `HAIJUN_LOG` value so an invalid value warns once, like a
  * client construction does, rather than on every request.
  */
 export function defaultLogger(): Logger {
-  const envLevel = readEnv('ANTHROPIC_LOG');
+  const envLevel = readEnv('HAIJUN_LOG');
   if (!cachedDefaultLogger || envLevel !== lastEnvLevel) {
     lastEnvLevel = envLevel;
     cachedDefaultLogger = filterLogger(
       console,
-      parseLogLevel(envLevel, "process.env['ANTHROPIC_LOG']", filterLogger(console, defaultLogLevel)) ??
+      parseLogLevel(envLevel, "process.env['HAIJUN_LOG']", filterLogger(console, defaultLogLevel)) ??
         defaultLogLevel,
     );
   }

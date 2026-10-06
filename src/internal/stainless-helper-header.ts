@@ -1,5 +1,5 @@
-/**
- * Single source of truth for the `x-stainless-helper` telemetry header — the
+﻿/**
+ * Single source of truth for the `x-stainless-helper` telemetry header â€” the
  * key, the closed value vocabulary, and per-object helper tagging. The
  * append-don't-clobber merge for the header itself lives in
  * {@link import('../internal/headers').buildHeaders} via `APPEND_HEADERS`.
@@ -18,7 +18,7 @@ export const STAINLESS_HELPER_METHOD_HEADER = 'x-stainless-helper-method';
 /**
  * The closed set of helper telemetry tags, shared verbatim across SDKs. A
  * typo at any call site is a type error rather than silently mistagged
- * telemetry. Existing values keep their original spellings — telemetry
+ * telemetry. Existing values keep their original spellings â€” telemetry
  * consumers match on them, so renames lose history. New tags are hyphenated
  * lowercase.
  */
@@ -49,7 +49,7 @@ export function helperHeader(value: StainlessHelperHeaderValue): { [STAINLESS_HE
  * Symbol used to mark objects created by SDK helpers for tracking.
  * The value is the helper name (e.g., 'mcpTool', 'betaZodTool').
  */
-export const SDK_HELPER_SYMBOL = Symbol('anthropic.sdk.stainlessHelper');
+export const SDK_HELPER_SYMBOL = Symbol('Juglow.sdk.stainlessHelper');
 
 type StainlessHelperObject = { [SDK_HELPER_SYMBOL]: string };
 

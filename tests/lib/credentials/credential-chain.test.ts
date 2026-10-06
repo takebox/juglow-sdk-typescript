@@ -1,9 +1,9 @@
-import fs from 'node:fs';
+﻿import fs from 'node:fs';
 import path from 'node:path';
 import { mkdtempSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import type { Fetch } from '@anthropic-ai/sdk/internal/builtin-types';
-import { defaultCredentials } from '@anthropic-ai/sdk/lib/credentials/credential-chain';
+import type { Fetch } from '@takebox-ai/sdk/internal/builtin-types';
+import { defaultCredentials } from '@takebox-ai/sdk/lib/credentials/credential-chain';
 
 const NOW_IN_SECONDS = 1700000000;
 
@@ -27,16 +27,16 @@ describe('defaultCredentials', () => {
   const originalEnv: Record<string, string | undefined> = {};
 
   const envVars = [
-    'ANTHROPIC_BASE_URL',
-    'ANTHROPIC_CONFIG_DIR',
-    'ANTHROPIC_FEDERATION_RULE_ID',
-    'ANTHROPIC_IDENTITY_TOKEN',
-    'ANTHROPIC_IDENTITY_TOKEN_FILE',
-    'ANTHROPIC_ORGANIZATION_ID',
-    'ANTHROPIC_PROFILE',
-    'ANTHROPIC_SCOPE',
-    'ANTHROPIC_SERVICE_ACCOUNT_ID',
-    'ANTHROPIC_WORKSPACE_ID',
+    'HAIJUN_BASE_URL',
+    'HAIJUN_CONFIG_DIR',
+    'HAIJUN_FEDERATION_RULE_ID',
+    'HAIJUN_IDENTITY_TOKEN',
+    'HAIJUN_IDENTITY_TOKEN_FILE',
+    'HAIJUN_ORGANIZATION_ID',
+    'HAIJUN_PROFILE',
+    'HAIJUN_SCOPE',
+    'HAIJUN_SERVICE_ACCOUNT_ID',
+    'HAIJUN_WORKSPACE_ID',
     'APPDATA',
     'HOME',
     'XDG_CONFIG_HOME',
@@ -47,7 +47,7 @@ describe('defaultCredentials', () => {
       originalEnv[name] = process.env[name];
     }
     testDir = mkdtempSync(path.join(tmpdir(), 'chain-test-'));
-    process.env['ANTHROPIC_CONFIG_DIR'] = testDir;
+    process.env['HAIJUN_CONFIG_DIR'] = testDir;
   });
 
   afterEach(() => {
@@ -62,7 +62,7 @@ describe('defaultCredentials', () => {
   });
 
   const baseOptions = {
-    baseURL: 'https://api.anthropic.com',
+    baseURL: 'https://platform.juglow.my.id',
     fetch: jest.fn() as unknown as Fetch,
   };
 
@@ -108,7 +108,7 @@ describe('defaultCredentials', () => {
       expires_at: NOW_IN_SECONDS + 3600,
     });
     const userResult = await defaultCredentials(baseOptions);
-    expect(userResult!.extraHeaders).toEqual({ 'anthropic-workspace-id': 'ws-user' });
+    expect(userResult!.extraHeaders).toEqual({ 'Juglow-workspace-id': 'ws-user' });
 
     const tokenPath = path.join(testDir, 'id-token');
     fs.writeFileSync(tokenPath, 'my-jwt');
@@ -300,15 +300,15 @@ describe('defaultCredentials', () => {
   });
 
   it('resolves oidc_federation from env vars with identity token file', async () => {
-    delete process.env['ANTHROPIC_CONFIG_DIR'];
-    process.env['ANTHROPIC_CONFIG_DIR'] = path.join(testDir, 'nonexistent');
+    delete process.env['HAIJUN_CONFIG_DIR'];
+    process.env['HAIJUN_CONFIG_DIR'] = path.join(testDir, 'nonexistent');
 
     const tokenPath = path.join(testDir, 'id-token');
     fs.writeFileSync(tokenPath, 'env-jwt');
 
-    process.env['ANTHROPIC_FEDERATION_RULE_ID'] = 'fdrl_env';
-    process.env['ANTHROPIC_ORGANIZATION_ID'] = 'org-env';
-    process.env['ANTHROPIC_IDENTITY_TOKEN_FILE'] = tokenPath;
+    process.env['HAIJUN_FEDERATION_RULE_ID'] = 'fdrl_env';
+    process.env['HAIJUN_ORGANIZATION_ID'] = 'org-env';
+    process.env['HAIJUN_IDENTITY_TOKEN_FILE'] = tokenPath;
 
     const mockFetch: Fetch = jest
       .fn()
@@ -322,12 +322,12 @@ describe('defaultCredentials', () => {
   });
 
   it('resolves oidc_federation from env vars with static identity token', async () => {
-    delete process.env['ANTHROPIC_CONFIG_DIR'];
-    process.env['ANTHROPIC_CONFIG_DIR'] = path.join(testDir, 'nonexistent');
+    delete process.env['HAIJUN_CONFIG_DIR'];
+    process.env['HAIJUN_CONFIG_DIR'] = path.join(testDir, 'nonexistent');
 
-    process.env['ANTHROPIC_FEDERATION_RULE_ID'] = 'fdrl_env';
-    process.env['ANTHROPIC_ORGANIZATION_ID'] = 'org-env';
-    process.env['ANTHROPIC_IDENTITY_TOKEN'] = 'static-jwt';
+    process.env['HAIJUN_FEDERATION_RULE_ID'] = 'fdrl_env';
+    process.env['HAIJUN_ORGANIZATION_ID'] = 'org-env';
+    process.env['HAIJUN_IDENTITY_TOKEN'] = 'static-jwt';
 
     const mockFetch: Fetch = jest
       .fn()
@@ -347,14 +347,14 @@ describe('defaultCredentials', () => {
     // No profile file on disk: <testDir>/configs/ does not exist. The chain
     // is synthesized purely from env vars and must stay in-memory only.
     // Before this fix the chain wrote <config_dir>/credentials/default.json
-    // anyway, so a CI run that changed ANTHROPIC_WORKSPACE_ID (or
-    // ANTHROPIC_ORGANIZATION_ID / ANTHROPIC_FEDERATION_RULE_ID) between runs
+    // anyway, so a CI run that changed HAIJUN_WORKSPACE_ID (or
+    // HAIJUN_ORGANIZATION_ID / HAIJUN_FEDERATION_RULE_ID) between runs
     // would re-serve the stale cached token until it expired. The other
     // disk-caching SDKs already skip the cache on the env-only path.
-    process.env['ANTHROPIC_FEDERATION_RULE_ID'] = 'fdrl_env';
-    process.env['ANTHROPIC_ORGANIZATION_ID'] = 'org-env';
-    process.env['ANTHROPIC_IDENTITY_TOKEN'] = 'env-jwt';
-    process.env['ANTHROPIC_WORKSPACE_ID'] = 'wrkspc_env';
+    process.env['HAIJUN_FEDERATION_RULE_ID'] = 'fdrl_env';
+    process.env['HAIJUN_ORGANIZATION_ID'] = 'org-env';
+    process.env['HAIJUN_IDENTITY_TOKEN'] = 'env-jwt';
+    process.env['HAIJUN_WORKSPACE_ID'] = 'wrkspc_env';
 
     const mockFetch: Fetch = jest
       .fn()
@@ -375,12 +375,12 @@ describe('defaultCredentials', () => {
     // ignore it and perform a fresh exchange.
     writeCredentials('default', {
       access_token: 'stale-disk-tok',
-      expires_at: NOW_IN_SECONDS + 3600, // still valid → would be served if cached
+      expires_at: NOW_IN_SECONDS + 3600, // still valid â†’ would be served if cached
     });
 
-    process.env['ANTHROPIC_FEDERATION_RULE_ID'] = 'fdrl_env';
-    process.env['ANTHROPIC_ORGANIZATION_ID'] = 'org-env';
-    process.env['ANTHROPIC_IDENTITY_TOKEN'] = 'env-jwt';
+    process.env['HAIJUN_FEDERATION_RULE_ID'] = 'fdrl_env';
+    process.env['HAIJUN_ORGANIZATION_ID'] = 'org-env';
+    process.env['HAIJUN_IDENTITY_TOKEN'] = 'env-jwt';
 
     const mockFetch: Fetch = jest
       .fn()
@@ -391,19 +391,19 @@ describe('defaultCredentials', () => {
 
     expect(token.token).toBe('fresh-tok');
     expect(mockFetch).toHaveBeenCalledTimes(1);
-    // The stray file is not overwritten either — env-only never touches disk.
+    // The stray file is not overwritten either â€” env-only never touches disk.
     const onDisk = JSON.parse(fs.readFileSync(path.join(testDir, 'credentials', 'default.json'), 'utf-8'));
     expect(onDisk.access_token).toBe('stale-disk-tok');
   });
 
-  it('passes ANTHROPIC_WORKSPACE_ID through the pure-env-var federation chain', async () => {
-    delete process.env['ANTHROPIC_CONFIG_DIR'];
-    process.env['ANTHROPIC_CONFIG_DIR'] = path.join(testDir, 'nonexistent');
+  it('passes HAIJUN_WORKSPACE_ID through the pure-env-var federation chain', async () => {
+    delete process.env['HAIJUN_CONFIG_DIR'];
+    process.env['HAIJUN_CONFIG_DIR'] = path.join(testDir, 'nonexistent');
 
-    process.env['ANTHROPIC_FEDERATION_RULE_ID'] = 'fdrl_01abc';
-    process.env['ANTHROPIC_ORGANIZATION_ID'] = 'org-uuid';
-    process.env['ANTHROPIC_IDENTITY_TOKEN'] = 'literal-jwt';
-    process.env['ANTHROPIC_WORKSPACE_ID'] = 'wrkspc_01abc';
+    process.env['HAIJUN_FEDERATION_RULE_ID'] = 'fdrl_01abc';
+    process.env['HAIJUN_ORGANIZATION_ID'] = 'org-uuid';
+    process.env['HAIJUN_IDENTITY_TOKEN'] = 'literal-jwt';
+    process.env['HAIJUN_WORKSPACE_ID'] = 'wrkspc_01abc';
 
     const mockFetch: Fetch = jest
       .fn()
@@ -417,17 +417,17 @@ describe('defaultCredentials', () => {
     expect(body.workspace_id).toBe('wrkspc_01abc');
   });
 
-  it('treats ANTHROPIC_WORKSPACE_ID="" as unset on the pure-env-var federation chain', async () => {
+  it('treats HAIJUN_WORKSPACE_ID="" as unset on the pure-env-var federation chain', async () => {
     // A defaulted-but-empty CI variable should never put `"workspace_id": ""`
     // on the wire. readEnv coerces empty to undefined, and the body builder's
-    // truthy check skips it — this pins both layers.
-    delete process.env['ANTHROPIC_CONFIG_DIR'];
-    process.env['ANTHROPIC_CONFIG_DIR'] = path.join(testDir, 'nonexistent');
+    // truthy check skips it â€” this pins both layers.
+    delete process.env['HAIJUN_CONFIG_DIR'];
+    process.env['HAIJUN_CONFIG_DIR'] = path.join(testDir, 'nonexistent');
 
-    process.env['ANTHROPIC_FEDERATION_RULE_ID'] = 'fdrl_01abc';
-    process.env['ANTHROPIC_ORGANIZATION_ID'] = 'org-uuid';
-    process.env['ANTHROPIC_IDENTITY_TOKEN'] = 'literal-jwt';
-    process.env['ANTHROPIC_WORKSPACE_ID'] = '';
+    process.env['HAIJUN_FEDERATION_RULE_ID'] = 'fdrl_01abc';
+    process.env['HAIJUN_ORGANIZATION_ID'] = 'org-uuid';
+    process.env['HAIJUN_IDENTITY_TOKEN'] = 'literal-jwt';
+    process.env['HAIJUN_WORKSPACE_ID'] = '';
 
     const mockFetch: Fetch = jest
       .fn()
@@ -441,12 +441,12 @@ describe('defaultCredentials', () => {
     expect(body).not.toHaveProperty('workspace_id');
   });
 
-  it('ANTHROPIC_WORKSPACE_ID fills a missing top-level workspace_id from a profile config', async () => {
+  it('HAIJUN_WORKSPACE_ID fills a missing top-level workspace_id from a profile config', async () => {
     const tokenPath = path.join(testDir, 'id-token');
     fs.writeFileSync(tokenPath, 'my-jwt');
-    process.env['ANTHROPIC_ORGANIZATION_ID'] = 'org_x';
-    process.env['ANTHROPIC_WORKSPACE_ID'] = 'wrkspc_from_env';
-    process.env['ANTHROPIC_IDENTITY_TOKEN_FILE'] = tokenPath;
+    process.env['HAIJUN_ORGANIZATION_ID'] = 'org_x';
+    process.env['HAIJUN_WORKSPACE_ID'] = 'wrkspc_from_env';
+    process.env['HAIJUN_IDENTITY_TOKEN_FILE'] = tokenPath;
 
     // Profile file has oidc_federation auth but no workspace_id.
     writeConfig('default', {
@@ -468,12 +468,12 @@ describe('defaultCredentials', () => {
     expect(body.workspace_id).toBe('wrkspc_from_env');
   });
 
-  it('ANTHROPIC_WORKSPACE_ID fills a missing workspace_id for a user_oauth profile (header)', async () => {
-    // The env var fills `workspace_id` uniformly across profile types — not
+  it('HAIJUN_WORKSPACE_ID fills a missing workspace_id for a user_oauth profile (header)', async () => {
+    // The env var fills `workspace_id` uniformly across profile types â€” not
     // just federation. For user_oauth the filled value surfaces as the
-    // anthropic-workspace-id request header (federation routes it into the
+    // Juglow-workspace-id request header (federation routes it into the
     // exchange body instead).
-    process.env['ANTHROPIC_WORKSPACE_ID'] = 'wrkspc_env';
+    process.env['HAIJUN_WORKSPACE_ID'] = 'wrkspc_env';
     writeConfig('default', { authentication: { type: 'user_oauth' } });
     writeCredentials('default', {
       access_token: 'tok',
@@ -483,17 +483,17 @@ describe('defaultCredentials', () => {
 
     const result = await defaultCredentials(baseOptions);
     expect(result).not.toBeNull();
-    expect(result!.extraHeaders).toEqual({ 'anthropic-workspace-id': 'wrkspc_env' });
+    expect(result!.extraHeaders).toEqual({ 'Juglow-workspace-id': 'wrkspc_env' });
   });
 
-  it('config-file workspace_id beats ANTHROPIC_WORKSPACE_ID env var (precedence)', async () => {
+  it('config-file workspace_id beats HAIJUN_WORKSPACE_ID env var (precedence)', async () => {
     // File values are authoritative; env vars only fill fields the file left
     // unset. This pins the precedence model: profile > env var.
     const tokenPath = path.join(testDir, 'id-token');
     fs.writeFileSync(tokenPath, 'my-jwt');
-    process.env['ANTHROPIC_ORGANIZATION_ID'] = 'org_x';
-    process.env['ANTHROPIC_WORKSPACE_ID'] = 'wrkspc_env';
-    process.env['ANTHROPIC_IDENTITY_TOKEN_FILE'] = tokenPath;
+    process.env['HAIJUN_ORGANIZATION_ID'] = 'org_x';
+    process.env['HAIJUN_WORKSPACE_ID'] = 'wrkspc_env';
+    process.env['HAIJUN_IDENTITY_TOKEN_FILE'] = tokenPath;
 
     writeConfig('default', {
       workspace_id: 'wrkspc_file',
@@ -516,12 +516,12 @@ describe('defaultCredentials', () => {
   });
 
   it('throws clear error for oidc_federation env vars without identity token', async () => {
-    delete process.env['ANTHROPIC_CONFIG_DIR'];
-    process.env['ANTHROPIC_CONFIG_DIR'] = path.join(testDir, 'nonexistent');
+    delete process.env['HAIJUN_CONFIG_DIR'];
+    process.env['HAIJUN_CONFIG_DIR'] = path.join(testDir, 'nonexistent');
 
-    process.env['ANTHROPIC_FEDERATION_RULE_ID'] = 'fdrl_env';
-    process.env['ANTHROPIC_ORGANIZATION_ID'] = 'org-env';
-    // No ANTHROPIC_IDENTITY_TOKEN or ANTHROPIC_IDENTITY_TOKEN_FILE
+    process.env['HAIJUN_FEDERATION_RULE_ID'] = 'fdrl_env';
+    process.env['HAIJUN_ORGANIZATION_ID'] = 'org-env';
+    // No HAIJUN_IDENTITY_TOKEN or HAIJUN_IDENTITY_TOKEN_FILE
 
     await expect(defaultCredentials(baseOptions)).rejects.toThrow('requires an identity token');
   });
@@ -587,7 +587,7 @@ describe('defaultCredentials', () => {
       authentication: {
         type: 'oidc_federation',
         federation_rule_id: 'fdrl_01abc',
-        identity_token: { source: 'gcp_metadata', audience: 'anthropic' },
+        identity_token: { source: 'gcp_metadata', audience: 'Juglow' },
       },
     });
 
@@ -609,8 +609,8 @@ describe('defaultCredentials', () => {
     await expect(defaultCredentials(baseOptions)).rejects.toThrow(/requires a non-empty path/);
   });
 
-  it('uses ANTHROPIC_PROFILE to select config', async () => {
-    process.env['ANTHROPIC_PROFILE'] = 'staging';
+  it('uses HAIJUN_PROFILE to select config', async () => {
+    process.env['HAIJUN_PROFILE'] = 'staging';
     writeConfig('staging', { authentication: { type: 'user_oauth' } });
     writeCredentials('staging', { access_token: 'staging-tok' });
 

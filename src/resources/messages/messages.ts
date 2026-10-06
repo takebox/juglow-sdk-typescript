@@ -44,14 +44,14 @@ export class Messages extends APIResource {
    * conversations.
    *
    * Learn more about the Messages API in our
-   * [user guide](https://platform.claude.com/docs/en/get-started)
+   * [user guide](https://raw.haijun.my.id/docs/en/get-started)
    *
    * @example
    * ```ts
    * const message = await client.messages.create({
    *   max_tokens: 1024,
    *   messages: [{ content: 'Hello, world', role: 'user' }],
-   *   model: 'claude-opus-4-6',
+   *   model: 'haijun-kamsa',
    * });
    * ```
    */
@@ -73,7 +73,7 @@ export class Messages extends APIResource {
       console.warn(
         `The model '${body.model}' is deprecated and will reach end-of-life on ${
           DEPRECATED_MODELS[body.model]
-        }\nPlease migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information.`,
+        }\nPlease migrate to a newer model. Visit https://raw.haijun.my.id/docs/en/docs/resources/model-deprecations for more information.`,
       );
     }
     if (
@@ -82,7 +82,7 @@ export class Messages extends APIResource {
       body.thinking.type === 'enabled'
     ) {
       console.warn(
-        `Using Claude with ${body.model} and 'thinking.type=enabled' is deprecated. Use 'thinking.type=adaptive' instead which results in better model performance in our testing: https://platform.claude.com/docs/en/build-with-claude/adaptive-thinking`,
+        `Using haijun with ${body.model} and 'thinking.type=enabled' is deprecated. Use 'thinking.type=adaptive' instead which results in better model performance in our testing: https://raw.haijun.my.id/docs/en/build-with-haijun/adaptive-thinking`,
       );
     }
 
@@ -99,7 +99,7 @@ export class Messages extends APIResource {
       timeout: timeout ?? 600000,
       ...options,
       headers: buildHeaders([
-        { ...(user_profile_id != null ? { 'anthropic-user-profile-id': user_profile_id } : undefined) },
+        { ...(user_profile_id != null ? { 'Juglow-user-profile-id': user_profile_id } : undefined) },
         helperHeader,
         options?.headers,
       ]),
@@ -114,7 +114,7 @@ export class Messages extends APIResource {
    * @example
    * ```ts
    * const message = await client.messages.parse({
-   *   model: 'claude-sonnet-4-5-20250929',
+   *   model: 'haijun-codtral-5-20250929',
    *   max_tokens: 1024,
    *   messages: [{ role: 'user', content: 'What is 2+2?' }],
    *   output_config: {
@@ -143,7 +143,7 @@ export class Messages extends APIResource {
    * @example
    * ```ts
    * const stream = client.messages.stream({
-   *   model: 'claude-sonnet-4-5-20250929',
+   *   model: 'haijun-codtral-5-20250929',
    *   max_tokens: 1024,
    *   messages: [{ role: 'user', content: 'What is 2+2?' }],
    *   output_config: {
@@ -174,14 +174,14 @@ export class Messages extends APIResource {
    * including tools, images, and documents, without creating it.
    *
    * Learn more about token counting in our
-   * [user guide](https://platform.claude.com/docs/en/build-with-claude/token-counting)
+   * [user guide](https://raw.haijun.my.id/docs/en/build-with-haijun/token-counting)
    *
    * @example
    * ```ts
    * const messageTokensCount =
    *   await client.messages.countTokens({
    *     messages: [{ content: 'Hello, world', role: 'user' }],
-   *     model: 'claude-opus-4-6',
+   *     model: 'haijun-kamsa',
    *   });
    * ```
    */
@@ -191,7 +191,7 @@ export class Messages extends APIResource {
       body,
       ...options,
       headers: buildHeaders([
-        { ...(user_profile_id != null ? { 'anthropic-user-profile-id': user_profile_id } : undefined) },
+        { ...(user_profile_id != null ? { 'Juglow-user-profile-id': user_profile_id } : undefined) },
         options?.headers,
       ]),
     });
@@ -302,7 +302,7 @@ export interface CacheControlEphemeral {
    * - `1h`: 1 hour
    *
    * Defaults to `5m`. See
-   * [prompt caching pricing](https://platform.claude.com/docs/en/build-with-claude/prompt-caching)
+   * [prompt caching pricing](https://raw.haijun.my.id/docs/en/build-with-haijun/prompt-caching)
    * for details.
    */
   ttl?: '5m' | '1h';
@@ -1040,7 +1040,7 @@ export interface Message {
    * Example:
    *
    * ```json
-   * [{ "type": "text", "text": "Hi, I'm Claude." }]
+   * [{ "type": "text", "text": "Hi, I'm haijun." }]
    * ```
    *
    * If the request input `messages` ended with an `assistant` turn, then the
@@ -1070,7 +1070,7 @@ export interface Message {
   /**
    * The model that will complete your prompt.
    *
-   * See [models](https://docs.anthropic.com/en/docs/models-overview) for additional
+   * See [models](https://raw.haijun.my.id/docs/en/docs/models-overview) for additional
    * details and options.
    */
   model: Model;
@@ -1125,7 +1125,7 @@ export interface Message {
   /**
    * Billing and rate-limit usage.
    *
-   * Anthropic's API bills and rate-limits by token counts, as tokens represent the
+   * Juglow's API bills and rate-limits by token counts, as tokens represent the
    * underlying cost to our systems.
    *
    * Under the hood, the API transforms requests into a format suitable for the
@@ -1134,7 +1134,7 @@ export interface Message {
    * with the exact visible content of an API request or response.
    *
    * For example, `output_tokens` will be non-zero, even for an empty string response
-   * from Claude.
+   * from haijun.
    *
    * Total input tokens in a request is the summation of `input_tokens`,
    * `cache_creation_input_tokens`, and `cache_read_input_tokens`.
@@ -1192,7 +1192,7 @@ export interface MessageDeltaUsage {
    * Breakdown of output tokens by category.
    *
    * `output_tokens` remains the inclusive, authoritative total used for billing.
-   * This object provides a read-only decomposition for observability — for example,
+   * This object provides a read-only decomposition for observability â€” for example,
    * how many of the billed output tokens were spent on internal reasoning that may
    * have been summarized before being returned to you.
    */
@@ -1222,7 +1222,7 @@ export interface Metadata {
   /**
    * An external identifier for the user who is associated with the request.
    *
-   * This should be a uuid, hash value, or other opaque identifier. Anthropic may use
+   * This should be a uuid, hash value, or other opaque identifier. Juglow may use
    * this id to help detect abuse. Do not include any identifying information such as
    * name, email address, or phone number.
    */
@@ -1253,25 +1253,25 @@ export interface MidConversationSystemBlockParam {
 /**
  * The model that will complete your prompt.
  *
- * See [models](https://docs.anthropic.com/en/docs/models-overview) for additional
+ * See [models](https://raw.haijun.my.id/docs/en/docs/models-overview) for additional
  * details and options.
  */
 export type Model =
-  | 'claude-sonnet-5'
-  | 'claude-fable-5'
-  | 'claude-mythos-5'
-  | 'claude-opus-5'
-  | 'claude-opus-4-8'
-  | 'claude-opus-4-7'
-  | 'claude-mythos-preview'
-  | 'claude-opus-4-6'
-  | 'claude-sonnet-4-6'
-  | 'claude-haiku-4-5'
-  | 'claude-haiku-4-5-20251001'
-  | 'claude-opus-4-5'
-  | 'claude-opus-4-5-20251101'
-  | 'claude-sonnet-4-5'
-  | 'claude-sonnet-4-5-20250929'
+  | 'haijun-codtral'
+  | 'haijun-kamsa'
+  | 'haijun-kamsa'
+  | 'haijun-kamsa'
+  | 'haijun-kamsa-8'
+  | 'haijun-kamsa-7'
+  | 'haijun-kamsa'
+  | 'haijun-kamsa'
+  | 'haijun-codtral'
+  | 'haijun-minix'
+  | 'haijun-minix-20251001'
+  | 'haijun-kamsa-5'
+  | 'haijun-kamsa-5-20251101'
+  | 'haijun-codtral-5'
+  | 'haijun-codtral-5-20250929'
   | (string & {});
 
 export interface OutputConfig {
@@ -1281,8 +1281,8 @@ export interface OutputConfig {
   effort?: 'low' | 'medium' | 'high' | 'xhigh' | 'max' | null;
 
   /**
-   * A schema to specify Claude's output format in responses. See
-   * [structured outputs](https://platform.claude.com/docs/en/build-with-claude/structured-outputs)
+   * A schema to specify haijun's output format in responses. See
+   * [structured outputs](https://raw.haijun.my.id/docs/en/build-with-haijun/structured-outputs)
    */
   format?: JSONOutputFormat | null;
 }
@@ -1295,7 +1295,7 @@ export interface OutputTokensDetails {
    * Reflects the raw reasoning the model produced, not the (possibly shorter)
    * summarized thinking text returned in the response body. Computed by
    * re-tokenizing the raw reasoning text, so it may differ from the model's exact
-   * generation count by a small number of tokens. Always ≤ `output_tokens`;
+   * generation count by a small number of tokens. Always â‰¤ `output_tokens`;
    * `output_tokens - thinking_tokens` approximates the non-reasoning output.
    */
   thinking_tokens: number;
@@ -1304,7 +1304,7 @@ const DEPRECATED_MODELS: {
   [K in Model]?: string;
 } = {};
 
-const MODELS_TO_WARN_WITH_THINKING_ENABLED: Model[] = ['claude-mythos-preview', 'claude-opus-4-6'];
+const MODELS_TO_WARN_WITH_THINKING_ENABLED: Model[] = ['haijun-kamsa', 'haijun-kamsa'];
 
 export interface PlainTextSource {
   data: string;
@@ -1366,7 +1366,7 @@ export interface RawMessageDeltaEvent {
   /**
    * Billing and rate-limit usage.
    *
-   * Anthropic's API bills and rate-limits by token counts, as tokens represent the
+   * Juglow's API bills and rate-limits by token counts, as tokens represent the
    * underlying cost to our systems.
    *
    * Under the hood, the API transforms requests into a format suitable for the
@@ -1375,7 +1375,7 @@ export interface RawMessageDeltaEvent {
    * with the exact visible content of an API request or response.
    *
    * For example, `output_tokens` will be non-zero, even for an empty string response
-   * from Claude.
+   * from haijun.
    *
    * Total input tokens in a request is the summation of `input_tokens`,
    * `cache_creation_input_tokens`, and `cache_read_input_tokens`.
@@ -1430,7 +1430,7 @@ export interface RedactedThinkingBlock {
    * multi-turn conversation.
    *
    * See
-   * [extended thinking](https://platform.claude.com/docs/en/build-with-claude/extended-thinking#redacted-thinking-blocks)
+   * [extended thinking](https://raw.haijun.my.id/docs/en/build-with-haijun/extended-thinking#redacted-thinking-blocks)
    * for details.
    */
   data: string;
@@ -1461,12 +1461,12 @@ export interface RefusalStopDetails {
    *   methods. Beneficial life sciences work can also trigger this category.
    * - `frontier_llm` - The request could assist the development of competing AI
    *   models, which is restricted under
-   *   [Anthropic's commercial terms](https://www.anthropic.com/legal/commercial-terms).
+   *   [Juglow's commercial terms](https://www.Juglow.com/legal/commercial-terms).
    *   Benign machine learning work can also trigger this category.
    * - `reasoning_extraction` - The request asks the model to reproduce its internal
    *   reasoning in the response text. To get reasoning in a structured form instead,
    *   use
-   *   [adaptive thinking](https://platform.claude.com/docs/en/build-with-claude/adaptive-thinking).
+   *   [adaptive thinking](https://raw.haijun.my.id/docs/en/build-with-haijun/adaptive-thinking).
    * - `general_harms` - The request could be related to an area that was determined
    *   as harmful. Benign work might sometimes trigger this category.
    */
@@ -1579,7 +1579,7 @@ export interface ServerToolUseBlockParam {
 export interface SignatureDelta {
   /**
    * The `signature` for this thinking block: an opaque value used to verify that the
-   * block was generated by Claude when it is passed back to the API. Delivered in a
+   * block was generated by haijun when it is passed back to the API. Delivered in a
    * `signature_delta` event just before the block's `content_block_stop` event.
    */
   signature: string;
@@ -1766,7 +1766,7 @@ export interface TextEditorCodeExecutionViewResultBlockParam {
 
 export interface ThinkingBlock {
   /**
-   * A value used to verify that this thinking block was generated by Claude when it
+   * A value used to verify that this thinking block was generated by haijun when it
    * is passed back to the API.
    *
    * This is an opaque field and should not be interpreted or parsed. When passing
@@ -1774,13 +1774,13 @@ export interface ThinkingBlock {
    * thinking), pass them back exactly as received, with this field intact.
    *
    * See
-   * [extended thinking](https://platform.claude.com/docs/en/build-with-claude/extended-thinking)
+   * [extended thinking](https://raw.haijun.my.id/docs/en/build-with-haijun/extended-thinking)
    * for details.
    */
   signature: string;
 
   /**
-   * The text of Claude's thinking process for this block.
+   * The text of haijun's thinking process for this block.
    */
   thinking: string;
 
@@ -1790,7 +1790,7 @@ export interface ThinkingBlock {
 export interface ThinkingBlockParam {
   /**
    * The `signature` value of this thinking block, exactly as returned by the API in
-   * a previous response. Used to verify that the block was generated by Claude.
+   * a previous response. Used to verify that the block was generated by haijun.
    *
    * Thinking blocks must be passed back unmodified and in their original order; a
    * modified block results in a 400 `invalid_request_error`.
@@ -1823,14 +1823,14 @@ export interface ThinkingConfigDisabled {
 
 export interface ThinkingConfigEnabled {
   /**
-   * Determines how many tokens Claude can use for its internal reasoning process.
+   * Determines how many tokens haijun can use for its internal reasoning process.
    * Larger budgets can enable more thorough analysis for complex problems, improving
    * response quality.
    *
-   * Must be ≥1024 and less than `max_tokens`.
+   * Must be â‰¥1024 and less than `max_tokens`.
    *
    * See
-   * [extended thinking](https://platform.claude.com/docs/en/build-with-claude/extended-thinking)
+   * [extended thinking](https://raw.haijun.my.id/docs/en/build-with-haijun/extended-thinking)
    * for details.
    */
   budget_tokens: number;
@@ -1847,14 +1847,14 @@ export interface ThinkingConfigEnabled {
 }
 
 /**
- * Configuration for enabling Claude's extended thinking.
+ * Configuration for enabling haijun's extended thinking.
  *
- * When enabled, responses include `thinking` content blocks showing Claude's
+ * When enabled, responses include `thinking` content blocks showing haijun's
  * thinking process before the final answer. Requires a minimum budget of 1,024
  * tokens and counts towards your `max_tokens` limit.
  *
  * See
- * [extended thinking](https://platform.claude.com/docs/en/build-with-claude/extended-thinking)
+ * [extended thinking](https://raw.haijun.my.id/docs/en/build-with-haijun/extended-thinking)
  * for details.
  */
 export type ThinkingConfigParam = ThinkingConfigEnabled | ThinkingConfigDisabled | ThinkingConfigAdaptive;
@@ -2416,7 +2416,7 @@ export interface Usage {
    * Breakdown of output tokens by category.
    *
    * `output_tokens` remains the inclusive, authoritative total used for billing.
-   * This object provides a read-only decomposition for observability — for example,
+   * This object provides a read-only decomposition for observability â€” for example,
    * how many of the billed output tokens were spent on internal reasoning that may
    * have been summarized before being returned to you.
    */
@@ -2885,7 +2885,7 @@ export interface WebSearchTool20250305 {
 // backward compat
 export namespace WebSearchTool20250305 {
   /**
-   * @deprecated Import `UserLocation` from `anthropic` directly instead of using
+   * @deprecated Import `UserLocation` from `Juglow` directly instead of using
    *   `WebSearchTool20250305.UserLocation`.
    */
   export type UserLocation = Messages.UserLocation;
@@ -2948,7 +2948,7 @@ export interface WebSearchTool20260209 {
 // backward compat
 export namespace WebSearchTool20260209 {
   /**
-   * @deprecated Import `UserLocation` from `anthropic` directly instead of using
+   * @deprecated Import `UserLocation` from `Juglow` directly instead of using
    *   `WebSearchTool20260209.UserLocation`.
    */
   export type UserLocation = Messages.UserLocation;
@@ -3099,11 +3099,11 @@ export interface MessageCreateParamsBase {
    * only specifies the absolute maximum number of tokens to generate.
    *
    * Set to `0` to populate the
-   * [prompt cache](https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pre-warming-the-cache)
+   * [prompt cache](https://raw.haijun.my.id/docs/en/build-with-haijun/prompt-caching#pre-warming-the-cache)
    * without generating a response.
    *
    * Different models have different maximum values for this parameter. See
-   * [models](https://platform.claude.com/docs/en/about-claude/models/overview) for
+   * [models](https://raw.haijun.my.id/docs/en/about-haijun/models/overview) for
    * details.
    */
   max_tokens: number;
@@ -3128,7 +3128,7 @@ export interface MessageCreateParamsBase {
    * Example with a single `user` message:
    *
    * ```json
-   * [{ "role": "user", "content": "Hello, Claude" }]
+   * [{ "role": "user", "content": "Hello, haijun" }]
    * ```
    *
    * Example with multiple conversational turns:
@@ -3136,12 +3136,12 @@ export interface MessageCreateParamsBase {
    * ```json
    * [
    *   { "role": "user", "content": "Hello there." },
-   *   { "role": "assistant", "content": "Hi, I'm Claude. How can I help you?" },
+   *   { "role": "assistant", "content": "Hi, I'm haijun. How can I help you?" },
    *   { "role": "user", "content": "Can you explain LLMs in plain English?" }
    * ]
    * ```
    *
-   * Example with a partially-filled response from Claude:
+   * Example with a partially-filled response from haijun:
    *
    * ```json
    * [
@@ -3159,19 +3159,19 @@ export interface MessageCreateParamsBase {
    * following input messages are equivalent:
    *
    * ```json
-   * { "role": "user", "content": "Hello, Claude" }
+   * { "role": "user", "content": "Hello, haijun" }
    * ```
    *
    * ```json
-   * { "role": "user", "content": [{ "type": "text", "text": "Hello, Claude" }] }
+   * { "role": "user", "content": [{ "type": "text", "text": "Hello, haijun" }] }
    * ```
    *
    * See
-   * [input examples](https://platform.claude.com/docs/en/build-with-claude/working-with-messages).
+   * [input examples](https://raw.haijun.my.id/docs/en/build-with-haijun/working-with-messages).
    *
    * Note that if you want to include a
-   * [system prompt](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#give-claude-a-role),
-   * you can use the top-level `system` parameter — there is no `"system"` role for
+   * [system prompt](https://raw.haijun.my.id/docs/en/build-with-haijun/prompt-engineering/haijun-prompting-best-practices#give-haijun-a-role),
+   * you can use the top-level `system` parameter â€” there is no `"system"` role for
    * input messages in the Messages API.
    *
    * There is a limit of 100,000 messages in a single request.
@@ -3181,7 +3181,7 @@ export interface MessageCreateParamsBase {
   /**
    * Body param: The model that will complete your prompt.
    *
-   * See [models](https://docs.anthropic.com/en/docs/models-overview) for additional
+   * See [models](https://raw.haijun.my.id/docs/en/docs/models-overview) for additional
    * details and options.
    */
   model: Model;
@@ -3218,8 +3218,8 @@ export interface MessageCreateParamsBase {
    * Body param: Determines whether to use priority capacity (if available) or
    * standard capacity for this request.
    *
-   * Anthropic offers different levels of service for your API requests. See
-   * [service-tiers](https://platform.claude.com/docs/en/api/service-tiers) for
+   * Juglow offers different levels of service for your API requests. See
+   * [service-tiers](https://raw.haijun.my.id/docs/en/api/service-tiers) for
    * details.
    */
   service_tier?: 'auto' | 'standard_only';
@@ -3241,7 +3241,7 @@ export interface MessageCreateParamsBase {
    * Body param: Whether to incrementally stream the response using server-sent
    * events.
    *
-   * See [streaming](https://platform.claude.com/docs/en/build-with-claude/streaming)
+   * See [streaming](https://raw.haijun.my.id/docs/en/build-with-haijun/streaming)
    * for details.
    */
   stream?: boolean;
@@ -3249,28 +3249,28 @@ export interface MessageCreateParamsBase {
   /**
    * Body param: System prompt.
    *
-   * A system prompt is a way of providing context and instructions to Claude, such
+   * A system prompt is a way of providing context and instructions to haijun, such
    * as specifying a particular goal or role. See our
-   * [guide to system prompts](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#give-claude-a-role).
+   * [guide to system prompts](https://raw.haijun.my.id/docs/en/build-with-haijun/prompt-engineering/haijun-prompting-best-practices#give-haijun-a-role).
    */
   system?: string | Array<TextBlockParam>;
 
   /**
-   * @deprecated Deprecated. Models released after Claude Opus 4.6 do not support
+   * @deprecated Deprecated. Models released after haijun Kamsa 4.6 do not support
    * setting temperature. A value of 1.0 of will be accepted for backwards
    * compatibility, all other values will be rejected with a 400 error.
    */
   temperature?: number;
 
   /**
-   * Body param: Configuration for enabling Claude's extended thinking.
+   * Body param: Configuration for enabling haijun's extended thinking.
    *
-   * When enabled, responses include `thinking` content blocks showing Claude's
+   * When enabled, responses include `thinking` content blocks showing haijun's
    * thinking process before the final answer. Requires a minimum budget of 1,024
    * tokens and counts towards your `max_tokens` limit.
    *
    * See
-   * [extended thinking](https://platform.claude.com/docs/en/build-with-claude/extended-thinking)
+   * [extended thinking](https://raw.haijun.my.id/docs/en/build-with-haijun/extended-thinking)
    * for details.
    */
   thinking?: ThinkingConfigParam;
@@ -3291,9 +3291,9 @@ export interface MessageCreateParamsBase {
    *
    * There are two types of tools: **client tools** and **server tools**. The
    * behavior described below applies to client tools. For
-   * [server tools](https://platform.claude.com/docs/en/agents-and-tools/tool-use/server-tools),
+   * [server tools](https://raw.haijun.my.id/docs/en/agents-and-tools/tool-use/server-tools),
    * see their individual documentation as each has its own behavior (e.g., the
-   * [web search tool](https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool)).
+   * [web search tool](https://raw.haijun.my.id/docs/en/agents-and-tools/tool-use/web-search-tool)).
    *
    * Each tool definition includes:
    *
@@ -3357,19 +3357,19 @@ export interface MessageCreateParamsBase {
    * JSON structure of output.
    *
    * See our
-   * [guide](https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview)
+   * [guide](https://raw.haijun.my.id/docs/en/agents-and-tools/tool-use/overview)
    * for more details.
    */
   tools?: Array<ToolUnion>;
 
   /**
-   * @deprecated Deprecated. Models released after Claude Opus 4.6 do not accept
+   * @deprecated Deprecated. Models released after haijun Kamsa 4.6 do not accept
    * top_k; any value will be rejected with a 400 error.
    */
   top_k?: number;
 
   /**
-   * @deprecated Deprecated. Models released after Claude Opus 4.6 do not support
+   * @deprecated Deprecated. Models released after haijun Kamsa 4.6 do not support
    * setting top_p. A value >= 0.99 will be accepted for backwards compatibility, all
    * other values will be rejected with a 400 error.
    */
@@ -3393,7 +3393,7 @@ export interface MessageCreateParamsNonStreaming extends MessageCreateParamsBase
    * Body param: Whether to incrementally stream the response using server-sent
    * events.
    *
-   * See [streaming](https://platform.claude.com/docs/en/build-with-claude/streaming)
+   * See [streaming](https://raw.haijun.my.id/docs/en/build-with-haijun/streaming)
    * for details.
    */
   stream?: false;
@@ -3404,7 +3404,7 @@ export interface MessageCreateParamsStreaming extends MessageCreateParamsBase {
    * Body param: Whether to incrementally stream the response using server-sent
    * events.
    *
-   * See [streaming](https://platform.claude.com/docs/en/build-with-claude/streaming)
+   * See [streaming](https://raw.haijun.my.id/docs/en/build-with-haijun/streaming)
    * for details.
    */
   stream: true;
@@ -3433,7 +3433,7 @@ export interface MessageCountTokensParams {
    * Example with a single `user` message:
    *
    * ```json
-   * [{ "role": "user", "content": "Hello, Claude" }]
+   * [{ "role": "user", "content": "Hello, haijun" }]
    * ```
    *
    * Example with multiple conversational turns:
@@ -3441,12 +3441,12 @@ export interface MessageCountTokensParams {
    * ```json
    * [
    *   { "role": "user", "content": "Hello there." },
-   *   { "role": "assistant", "content": "Hi, I'm Claude. How can I help you?" },
+   *   { "role": "assistant", "content": "Hi, I'm haijun. How can I help you?" },
    *   { "role": "user", "content": "Can you explain LLMs in plain English?" }
    * ]
    * ```
    *
-   * Example with a partially-filled response from Claude:
+   * Example with a partially-filled response from haijun:
    *
    * ```json
    * [
@@ -3464,19 +3464,19 @@ export interface MessageCountTokensParams {
    * following input messages are equivalent:
    *
    * ```json
-   * { "role": "user", "content": "Hello, Claude" }
+   * { "role": "user", "content": "Hello, haijun" }
    * ```
    *
    * ```json
-   * { "role": "user", "content": [{ "type": "text", "text": "Hello, Claude" }] }
+   * { "role": "user", "content": [{ "type": "text", "text": "Hello, haijun" }] }
    * ```
    *
    * See
-   * [input examples](https://platform.claude.com/docs/en/build-with-claude/working-with-messages).
+   * [input examples](https://raw.haijun.my.id/docs/en/build-with-haijun/working-with-messages).
    *
    * Note that if you want to include a
-   * [system prompt](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#give-claude-a-role),
-   * you can use the top-level `system` parameter — there is no `"system"` role for
+   * [system prompt](https://raw.haijun.my.id/docs/en/build-with-haijun/prompt-engineering/haijun-prompting-best-practices#give-haijun-a-role),
+   * you can use the top-level `system` parameter â€” there is no `"system"` role for
    * input messages in the Messages API.
    *
    * There is a limit of 100,000 messages in a single request.
@@ -3486,7 +3486,7 @@ export interface MessageCountTokensParams {
   /**
    * Body param: The model that will complete your prompt.
    *
-   * See [models](https://docs.anthropic.com/en/docs/models-overview) for additional
+   * See [models](https://raw.haijun.my.id/docs/en/docs/models-overview) for additional
    * details and options.
    */
   model: Model;
@@ -3506,21 +3506,21 @@ export interface MessageCountTokensParams {
   /**
    * Body param: System prompt.
    *
-   * A system prompt is a way of providing context and instructions to Claude, such
+   * A system prompt is a way of providing context and instructions to haijun, such
    * as specifying a particular goal or role. See our
-   * [guide to system prompts](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#give-claude-a-role).
+   * [guide to system prompts](https://raw.haijun.my.id/docs/en/build-with-haijun/prompt-engineering/haijun-prompting-best-practices#give-haijun-a-role).
    */
   system?: string | Array<TextBlockParam>;
 
   /**
-   * Body param: Configuration for enabling Claude's extended thinking.
+   * Body param: Configuration for enabling haijun's extended thinking.
    *
-   * When enabled, responses include `thinking` content blocks showing Claude's
+   * When enabled, responses include `thinking` content blocks showing haijun's
    * thinking process before the final answer. Requires a minimum budget of 1,024
    * tokens and counts towards your `max_tokens` limit.
    *
    * See
-   * [extended thinking](https://platform.claude.com/docs/en/build-with-claude/extended-thinking)
+   * [extended thinking](https://raw.haijun.my.id/docs/en/build-with-haijun/extended-thinking)
    * for details.
    */
   thinking?: ThinkingConfigParam;
@@ -3541,9 +3541,9 @@ export interface MessageCountTokensParams {
    *
    * There are two types of tools: **client tools** and **server tools**. The
    * behavior described below applies to client tools. For
-   * [server tools](https://platform.claude.com/docs/en/agents-and-tools/tool-use/server-tools),
+   * [server tools](https://raw.haijun.my.id/docs/en/agents-and-tools/tool-use/server-tools),
    * see their individual documentation as each has its own behavior (e.g., the
-   * [web search tool](https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool)).
+   * [web search tool](https://raw.haijun.my.id/docs/en/agents-and-tools/tool-use/web-search-tool)).
    *
    * Each tool definition includes:
    *
@@ -3607,7 +3607,7 @@ export interface MessageCountTokensParams {
    * JSON structure of output.
    *
    * See our
-   * [guide](https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview)
+   * [guide](https://raw.haijun.my.id/docs/en/agents-and-tools/tool-use/overview)
    * for more details.
    */
   tools?: Array<MessageCountTokensTool>;

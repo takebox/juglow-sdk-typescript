@@ -1,9 +1,9 @@
-// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+﻿// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import Anthropic from '@anthropic-ai/sdk';
+import JuGloW from '@takebox-ai/sdk';
 
-const client = new Anthropic({
-  apiKey: 'my-anthropic-api-key',
+const client = new JuGloW({
+  apiKey: 'my-Juglow-api-key',
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
@@ -27,14 +27,14 @@ describe('resource models', () => {
         { betas: ['message-batches-2024-09-24'] },
         { path: '/_stainless_unknown_path' },
       ),
-    ).rejects.toThrow(Anthropic.NotFoundError);
+    ).rejects.toThrow(JuGloW.NotFoundError);
   });
 
   test('retrieve: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.models.retrieve('model_id', { betas: ['string'] }, { path: '/_stainless_unknown_path' }),
-    ).rejects.toThrow(Anthropic.NotFoundError);
+    ).rejects.toThrow(JuGloW.NotFoundError);
   });
 
   test('list', async () => {
@@ -60,6 +60,6 @@ describe('resource models', () => {
         },
         { path: '/_stainless_unknown_path' },
       ),
-    ).rejects.toThrow(Anthropic.NotFoundError);
+    ).rejects.toThrow(JuGloW.NotFoundError);
   });
 });

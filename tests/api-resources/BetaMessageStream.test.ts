@@ -1,20 +1,20 @@
-import Anthropic, { APIConnectionError, APIUserAbortError } from '@anthropic-ai/sdk';
-import { AnthropicError } from '@anthropic-ai/sdk/error';
-import { BetaMessage, BetaRawMessageStreamEvent } from '@anthropic-ai/sdk/resources/beta/messages';
-import * as partialJsonParser from '@anthropic-ai/sdk/_vendor/partial-json-parser/parser';
+﻿import JuGloW, { APIConnectionError, APIUserAbortError } from '@takebox-ai/sdk';
+import { JuGloWError } from '@takebox-ai/sdk/error';
+import { BetaMessage, BetaRawMessageStreamEvent } from '@takebox-ai/sdk/resources/beta/messages';
+import * as partialJsonParser from '@takebox-ai/sdk/_vendor/partial-json-parser/parser';
 import { mockFetch } from '../lib/mock-fetch';
 import { loadFixture, parseSSEFixture } from '../lib/sse-helpers';
 
 // The swc-compiled module exports are non-configurable, so `jest.spyOn` can't patch
 // `partialParse`; wrap the real implementation in a `jest.fn` to count calls instead.
-jest.mock('@anthropic-ai/sdk/_vendor/partial-json-parser/parser', () => {
-  const actual = jest.requireActual('@anthropic-ai/sdk/_vendor/partial-json-parser/parser');
+jest.mock('@takebox-ai/sdk/_vendor/partial-json-parser/parser', () => {
+  const actual = jest.requireActual('@takebox-ai/sdk/_vendor/partial-json-parser/parser');
   return { ...actual, partialParse: jest.fn(actual.partialParse) };
 });
 
 const EXPECTED_BASIC_MESSAGE = {
   id: 'msg_4QpJur2dWWDjF6C758FbBw5vm12BaVipnK',
-  model: 'claude-opus-4-8',
+  model: 'haijun-opus-8',
   role: 'assistant',
   stop_reason: 'end_turn',
   stop_sequence: null,
@@ -36,7 +36,7 @@ const EXPECTED_BASIC_EVENT_TYPES = [
 
 const EXPECTED_TOOL_USE_MESSAGE = {
   id: 'msg_019Q1hrJbZG26Fb9BQhrkHEr',
-  model: 'claude-opus-4-8',
+  model: 'haijun-opus-8',
   role: 'assistant',
   stop_reason: 'tool_use',
   stop_sequence: null,
@@ -78,7 +78,7 @@ const EXPECTED_TOOL_USE_EVENT_TYPES = [
 
 const EXPECTED_INCOMPLETE_MESSAGE = {
   id: 'msg_01UdjYBBipA9omjYhicnevgq',
-  model: 'claude-sonnet-4-5',
+  model: 'haijun-sonnet-5',
   role: 'assistant',
   stop_reason: 'max_tokens',
   stop_sequence: null,
@@ -140,7 +140,7 @@ describe('BetaMessageStream class', () => {
   it('handles partial JSON parsing errors in input_json_delta events', async () => {
     const { fetch, handleStreamEvents } = mockFetch();
 
-    const anthropic = new Anthropic({ apiKey: 'test-key', fetch });
+    const Juglow = new JuGloW({ apiKey: 'test-key', fetch });
 
     const streamEvents = [
       {
@@ -150,7 +150,7 @@ describe('BetaMessageStream class', () => {
           id: 'msg_test',
           role: 'assistant',
           content: [],
-          model: 'claude-opus-4-8',
+          model: 'haijun-opus-8',
           stop_reason: null,
           stop_sequence: null,
           usage: { output_tokens: 0, input_tokens: 10 },
@@ -206,13 +206,13 @@ describe('BetaMessageStream class', () => {
 
     handleStreamEvents(streamEvents);
 
-    const stream = anthropic.beta.messages.stream({
+    const stream = Juglow.beta.messages.stream({
       max_tokens: 1024,
-      model: 'claude-opus-4-8',
+      model: 'haijun-opus-8',
       messages: [{ role: 'user', content: 'Use the test tool' }],
     });
 
-    const errors: AnthropicError[] = [];
+    const errors: JuGloWError[] = [];
     stream.on('error', (error) => {
       errors.push(error);
     });
@@ -225,7 +225,7 @@ describe('BetaMessageStream class', () => {
 
     // Verify that an error was caught and handled
     expect(errors.length).toBe(1);
-    expect(errors[0]).toBeInstanceOf(AnthropicError);
+    expect(errors[0]).toBeInstanceOf(JuGloWError);
     expect(errors[0]!.message).toContain('Unable to parse tool parameter JSON from model');
     expect(errors[0]!.message).toContain('{"foo": "bar", "baz": "qux": "quux"}');
   });
@@ -233,11 +233,11 @@ describe('BetaMessageStream class', () => {
   it('handles incomplete partial JSON responses gracefully', async () => {
     const { fetch, handleStreamEvents } = mockFetch();
 
-    const anthropic = new Anthropic({
+    const Juglow = new JuGloW({
       apiKey: 'test-key',
       fetch,
       defaultHeaders: {
-        'anthropic-beta': 'fine-grained-tool-streaming-2025-05-14',
+        'Juglow-beta': 'fine-grained-tool-streaming-2025-05-14',
       },
     });
 
@@ -245,9 +245,9 @@ describe('BetaMessageStream class', () => {
     const streamEvents = await parseSSEFixture(fixtureContent);
     handleStreamEvents(streamEvents);
 
-    const stream = anthropic.beta.messages.stream({
+    const stream = Juglow.beta.messages.stream({
       max_tokens: 1024,
-      model: 'claude-sonnet-4-5',
+      model: 'haijun-sonnet-5',
       messages: [{ role: 'user', content: 'Create a tax guide' }],
     });
 
@@ -274,11 +274,11 @@ describe('BetaMessageStream class', () => {
   it('handles basic response fixture', async () => {
     const { fetch, handleStreamEvents } = mockFetch();
 
-    const anthropic = new Anthropic({
+    const Juglow = new JuGloW({
       apiKey: 'test-key',
       fetch,
       defaultHeaders: {
-        'anthropic-beta': 'fine-grained-tool-streaming-2025-05-14',
+        'Juglow-beta': 'fine-grained-tool-streaming-2025-05-14',
       },
     });
 
@@ -286,9 +286,9 @@ describe('BetaMessageStream class', () => {
     const streamEvents = await parseSSEFixture(fixtureContent);
     handleStreamEvents(streamEvents);
 
-    const stream = anthropic.beta.messages.stream({
+    const stream = Juglow.beta.messages.stream({
       max_tokens: 1024,
-      model: 'claude-opus-4-8',
+      model: 'haijun-opus-8',
       messages: [{ role: 'user', content: 'Say hello there!' }],
     });
 
@@ -308,11 +308,11 @@ describe('BetaMessageStream class', () => {
   it('handles tool use response fixture', async () => {
     const { fetch, handleStreamEvents } = mockFetch();
 
-    const anthropic = new Anthropic({
+    const Juglow = new JuGloW({
       apiKey: 'test-key',
       fetch,
       defaultHeaders: {
-        'anthropic-beta': 'fine-grained-tool-streaming-2025-05-14',
+        'Juglow-beta': 'fine-grained-tool-streaming-2025-05-14',
       },
     });
 
@@ -320,9 +320,9 @@ describe('BetaMessageStream class', () => {
     const streamEvents = await parseSSEFixture(fixtureContent);
     handleStreamEvents(streamEvents);
 
-    const stream = anthropic.beta.messages.stream({
+    const stream = Juglow.beta.messages.stream({
       max_tokens: 1024,
-      model: 'claude-opus-4-8',
+      model: 'haijun-opus-8',
       messages: [{ role: 'user', content: 'What is the weather in Paris?' }],
     });
 
@@ -339,17 +339,17 @@ describe('BetaMessageStream class', () => {
     expect(finalText).toBe("I'll check the current weather in Paris for you.");
   });
 
-  it('parses tool input lazily — once per block, not per delta', async () => {
+  it('parses tool input lazily â€” once per block, not per delta', async () => {
     const partialParse = jest.mocked(partialJsonParser.partialParse);
     partialParse.mockClear();
     const { fetch, handleStreamEvents } = mockFetch();
-    const anthropic = new Anthropic({ apiKey: 'test-key', fetch });
+    const Juglow = new JuGloW({ apiKey: 'test-key', fetch });
 
     handleStreamEvents(await parseSSEFixture(loadFixture('tool_use_response.txt')));
 
-    const stream = anthropic.beta.messages.stream({
+    const stream = Juglow.beta.messages.stream({
       max_tokens: 1024,
-      model: 'claude-opus-4-8',
+      model: 'haijun-opus-8',
       messages: [{ role: 'user', content: 'What is the weather in Paris?' }],
     });
 
@@ -369,17 +369,17 @@ describe('BetaMessageStream class', () => {
   it('aborts on break', async () => {
     const { fetch, handleStreamEvents } = mockFetch();
 
-    const anthropic = new Anthropic({
+    const Juglow = new JuGloW({
       apiKey: 'test-key',
       fetch,
       defaultHeaders: {
-        'anthropic-beta': 'fine-grained-tool-streaming-2025-05-14',
+        'Juglow-beta': 'fine-grained-tool-streaming-2025-05-14',
       },
     });
 
-    const stream = anthropic.beta.messages.stream({
+    const stream = Juglow.beta.messages.stream({
       max_tokens: 1024,
-      model: 'claude-opus-4-8',
+      model: 'haijun-opus-8',
       messages: [{ role: 'user', content: 'Say hello there!' }],
     });
 
@@ -405,18 +405,18 @@ describe('BetaMessageStream class', () => {
   it('handles network errors', async () => {
     const { fetch, handleRequest } = mockFetch();
 
-    const anthropic = new Anthropic({
+    const Juglow = new JuGloW({
       apiKey: 'test-key',
       fetch,
       defaultHeaders: {
-        'anthropic-beta': 'fine-grained-tool-streaming-2025-05-14',
+        'Juglow-beta': 'fine-grained-tool-streaming-2025-05-14',
       },
     });
 
-    const stream = anthropic.beta.messages.stream(
+    const stream = Juglow.beta.messages.stream(
       {
         max_tokens: 1024,
-        model: 'claude-sonnet-4-5',
+        model: 'haijun-sonnet-5',
         messages: [{ role: 'user', content: 'Say hello there!' }],
       },
       { maxRetries: 0 },
@@ -436,18 +436,18 @@ describe('BetaMessageStream class', () => {
   it('handles network errors on async iterator', async () => {
     const { fetch, handleRequest } = mockFetch();
 
-    const anthropic = new Anthropic({
+    const Juglow = new JuGloW({
       apiKey: 'test-key',
       fetch,
       defaultHeaders: {
-        'anthropic-beta': 'fine-grained-tool-streaming-2025-05-14',
+        'Juglow-beta': 'fine-grained-tool-streaming-2025-05-14',
       },
     });
 
-    const stream = anthropic.beta.messages.stream(
+    const stream = Juglow.beta.messages.stream(
       {
         max_tokens: 1024,
-        model: 'claude-sonnet-4-5',
+        model: 'haijun-sonnet-5',
         messages: [{ role: 'user', content: 'Say hello there!' }],
       },
       { maxRetries: 0 },
@@ -475,7 +475,7 @@ describe('BetaMessageStream class', () => {
   it('carries stop_details from message_delta into the final message', async () => {
     const { fetch, handleStreamEvents } = mockFetch();
 
-    const anthropic = new Anthropic({ apiKey: 'test-key', fetch });
+    const Juglow = new JuGloW({ apiKey: 'test-key', fetch });
 
     handleStreamEvents([
       {
@@ -485,7 +485,7 @@ describe('BetaMessageStream class', () => {
           type: 'message',
           role: 'assistant',
           content: [],
-          model: 'claude-opus-4-8',
+          model: 'haijun-opus-8',
           stop_reason: null,
           stop_sequence: null,
           usage: { input_tokens: 15, output_tokens: 1 },
@@ -510,9 +510,9 @@ describe('BetaMessageStream class', () => {
       { type: 'message_stop' },
     ]);
 
-    const stream = anthropic.beta.messages.stream({
+    const stream = Juglow.beta.messages.stream({
       max_tokens: 1024,
-      model: 'claude-opus-4-8',
+      model: 'haijun-opus-8',
       messages: [{ role: 'user', content: 'Do something disallowed.' }],
     });
 
@@ -529,7 +529,7 @@ describe('BetaMessageStream class', () => {
   it('carries usage.fallback_credit from message_delta into the final message', async () => {
     const { fetch, handleStreamEvents } = mockFetch();
 
-    const anthropic = new Anthropic({ apiKey: 'test-key', fetch });
+    const Juglow = new JuGloW({ apiKey: 'test-key', fetch });
 
     handleStreamEvents([
       {
@@ -539,7 +539,7 @@ describe('BetaMessageStream class', () => {
           type: 'message',
           role: 'assistant',
           content: [],
-          model: 'claude-sonnet-4-5',
+          model: 'haijun-sonnet-5',
           stop_reason: null,
           stop_sequence: null,
           usage: { input_tokens: 12, output_tokens: 1 },
@@ -556,9 +556,9 @@ describe('BetaMessageStream class', () => {
       { type: 'message_stop' },
     ]);
 
-    const stream = anthropic.beta.messages.stream({
+    const stream = Juglow.beta.messages.stream({
       max_tokens: 1024,
-      model: 'claude-sonnet-4-5',
+      model: 'haijun-sonnet-5',
       messages: [{ role: 'user', content: 'Say hello again!' }],
     });
 
@@ -571,7 +571,7 @@ describe('BetaMessageStream class', () => {
   it('relabels the snapshot model from fallback content blocks', async () => {
     const { fetch, handleStreamEvents } = mockFetch();
 
-    const anthropic = new Anthropic({ apiKey: 'test-key', fetch });
+    const Juglow = new JuGloW({ apiKey: 'test-key', fetch });
 
     handleStreamEvents([
       {
@@ -581,7 +581,7 @@ describe('BetaMessageStream class', () => {
           type: 'message',
           role: 'assistant',
           content: [],
-          model: 'claude-opus-4-8',
+          model: 'haijun-opus-8',
           stop_reason: null,
           stop_sequence: null,
           usage: { input_tokens: 10, output_tokens: 1 },
@@ -592,8 +592,8 @@ describe('BetaMessageStream class', () => {
         index: 0,
         content_block: {
           type: 'fallback',
-          from: { model: 'claude-opus-4-8' },
-          to: { model: 'claude-sonnet-4-5' },
+          from: { model: 'haijun-opus-8' },
+          to: { model: 'haijun-sonnet-5' },
           trigger: { type: 'refusal', category: null },
         },
       },
@@ -609,20 +609,20 @@ describe('BetaMessageStream class', () => {
       { type: 'message_stop' },
     ]);
 
-    const stream = anthropic.beta.messages.stream({
+    const stream = Juglow.beta.messages.stream({
       max_tokens: 1024,
-      model: 'claude-opus-4-8',
+      model: 'haijun-opus-8',
       messages: [{ role: 'user', content: 'Say hello there!' }],
     });
 
     const finalMessage = await stream.finalMessage();
 
-    expect(finalMessage.model).toBe('claude-sonnet-4-5');
+    expect(finalMessage.model).toBe('haijun-sonnet-5');
     expect(finalMessage.content).toMatchObject([
       {
         type: 'fallback',
-        from: { model: 'claude-opus-4-8' },
-        to: { model: 'claude-sonnet-4-5' },
+        from: { model: 'haijun-opus-8' },
+        to: { model: 'haijun-sonnet-5' },
       },
       { type: 'text', text: 'Hello there!' },
     ]);

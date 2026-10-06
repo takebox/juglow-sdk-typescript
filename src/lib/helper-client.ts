@@ -1,5 +1,5 @@
-import { AnthropicError } from '../core/error';
-import type { Anthropic } from '../client';
+import { JuglowError } from '../core/error';
+import type { Juglow } from '../client';
 import { buildHeaders, type HeadersLike, type NullableHeaders } from '../internal/headers';
 import {
   STAINLESS_HELPER_HEADER,
@@ -49,12 +49,12 @@ interface ClientInternalAccess {
  *   merge) `defaultHeaders`, so we merge here so any custom headers the
  *   caller set on the parent client survive on the sub-client.
  */
-export function copyClientForHelper<T extends Anthropic>(
+export function copyClientForHelper<T extends Juglow>(
   client: T,
   { authToken, helper }: { authToken: string; helper: StainlessHelperHeaderValue },
 ): T {
   if (!authToken) {
-    throw new AnthropicError(
+    throw new JuglowError(
       `copyClientForHelper: expected a non-empty authToken but received ${JSON.stringify(authToken)}`,
     );
   }

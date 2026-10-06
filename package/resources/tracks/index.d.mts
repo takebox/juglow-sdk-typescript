@@ -1,0 +1,3 @@
+export { Tracks, type DeletedTrack, type Track, type TrackSource, type TrackCreateParams, type TrackRetrieveParams, type TrackListParams, type TrackDeleteParams, type TracksPageCursor, } from "./tracks.mjs";
+export { Versions, type DeletedTrackVersion, type TrackVersion, type VersionCreateParams, type VersionRetrieveParams, type VersionListParams, type VersionDeleteParams, type TrackVersionsPageCursor, } from "./versions.mjs";
+//# sourceMappingURL=index.d.mts.map

@@ -1,12 +1,12 @@
 import type { APIRequest } from '../core/api';
-import { AnthropicError } from '../core/error';
+import { JuglowError } from '../core/error';
 import type { Middleware, MiddlewareContext, MiddlewareNext } from '../core/middleware';
 import { Stream, type ServerSentEvent } from '../core/streaming';
 import { isAbortError } from '../internal/errors';
 import { appendHeaderValue } from '../internal/headers';
 import { STAINLESS_HELPER_HEADER } from '../internal/stainless-helper-header';
 import { safeJSON } from '../internal/utils/values';
-import type { AnthropicBeta } from '../resources/beta/beta';
+import type { JuglowBeta } from '../resources/beta/beta';
 import type {
   BetaContentBlockParam,
   BetaFallbackBlock,
@@ -32,12 +32,12 @@ export { BetaFallbackState } from '../internal/request-options';
 const encoder = new TextEncoder();
 
 /** Betas sent by default; override with {@link BetaRefusalFallbackOptions.betas}. */
-const DEFAULT_BETAS: readonly AnthropicBeta[] = ['fallback-credit-2026-07-01'];
+const DEFAULT_BETAS: readonly JuglowBeta[] = ['fallback-credit-2026-07-01'];
 
 /**
  * Remove `fallback` blocks replayed in history. They only parse under the
  * server-side fallback beta, which belongs to the caller-owned server-side
- * `fallbacks` feature — this middleware never sends it, so a request
+ * `fallbacks` feature â€” this middleware never sends it, so a request
  * replaying them would 400. An assistant turn left empty is dropped whole.
  */
 function stripFallbackBlocks(body: MessageCreateParams): MessageCreateParams {
@@ -55,10 +55,10 @@ function stripFallbackBlocks(body: MessageCreateParams): MessageCreateParams {
  * Apply one chain entry to the original request params as a patch: a field
  * set to a value overrides the original, a field explicitly `null` removes
  * the field from the retried request, and an absent (or `undefined`) field
- * keeps the original value. `output_config` patches one level deep — its
+ * keeps the original value. `output_config` patches one level deep â€” its
  * subfields follow the same set/`null`/absent rules against the original
  * `output_config` (created if the entry sets any subfield). Every hop patches
- * the original params — never a previous hop's patched body — and `body` is
+ * the original params â€” never a previous hop's patched body â€” and `body` is
  * never mutated.
  */
 function applyFallbackPatch(body: MessageCreateParams, entry: BetaFallbackParam): MessageCreateParams {
@@ -117,15 +117,15 @@ export type BetaRefusalFallbackError =
 
 export interface BetaRefusalFallbackOptions {
   /**
-   * Betas added to the `anthropic-beta` header of every `/v1/messages`
-   * request this middleware handles — the original request included, since
+   * Betas added to the `Juglow-beta` header of every `/v1/messages`
+   * request this middleware handles â€” the original request included, since
    * refusals only carry a `fallback_credit_token` when the beta is enabled.
    * Defaults to `['fallback-credit-2026-07-01']`; pass `[]` to send none.
    */
-  betas?: readonly AnthropicBeta[] | undefined;
+  betas?: readonly JuglowBeta[] | undefined;
 
   /**
-   * Called when a refusal is surfaced to the client rather than retried —
+   * Called when a refusal is surfaced to the client rather than retried â€”
    * it carries no `fallback_credit_token`, no fallback entries remain, or a
    * streaming fallback request failed. Discriminate on `error.kind`.
    * Defaults to logging through the client logger.
@@ -140,19 +140,19 @@ export interface BetaRefusalFallbackOptions {
  * request is retried with each entry of `fallbacks` applied as a patch to the
  * original params (a set field overrides, an explicit `null` unsets, an absent
  * field keeps the original value; entries never patch each other's requests)
- * — passing along the refusal's `fallback_credit_token` — until a model
+ * â€” passing along the refusal's `fallback_credit_token` â€” until a model
  * accepts or the chain is exhausted. A message served by a fallback carries a
- * `fallback` content block prepended at each model boundary — the same seam
+ * `fallback` content block prepended at each model boundary â€” the same seam
  * block shape the server-side `fallbacks` param places in `content`, though
  * the rest of the envelope is the serving hop's as returned (see the
  * known-divergences note below); an exhausted chain surfaces the final
  * refusal verbatim.
  *
  * Streaming: when the stream ends in `stop_reason: 'refusal'`, a second
- * request is issued to the fallback model — carrying the refused model's
+ * request is issued to the fallback model â€” carrying the refused model's
  * partial output as a trailing assistant prefill when the refusal grants one
  * (`fallback_has_prefill_claim`), plus the refusal's `fallback_credit_token`
- * — and the fallback's events are spliced onto the
+ * â€” and the fallback's events are spliced onto the
  * still-open stream, so the client sees one continuous message in the
  * server-side `fallbacks` wire shape: a `fallback` content block at each model
  * boundary, monotonic block indices, and per-hop `usage.iterations` on the
@@ -167,18 +167,18 @@ export interface BetaRefusalFallbackOptions {
  * In both modes a fallback that itself refuses with a fresh credit token
  * continues down the chain. A streaming fallback whose prefill the server
  * rejects (HTTP 400) is retried once without it; a fallback whose request
- * fails outright is skipped — its token was never redeemed, so it carries to
+ * fails outright is skipped â€” its token was never redeemed, so it carries to
  * the next entry.
  *
  * To keep later requests on the model that accepted, pass a
  * {@link BetaFallbackState} via the `fallbackState` request option; requests
  * sharing that state start directly at the pinned fallback. Reuse one state
- * across whatever scope the pin should apply to — typically a conversation.
+ * across whatever scope the pin should apply to â€” typically a conversation.
  *
  * @example
  * ```ts
- * const client = new Anthropic({
- *   middleware: [betaRefusalFallbackMiddleware([{ model: 'claude-opus-4-8' }])],
+ * const client = new Juglow({
+ *   middleware: [betaRefusalFallbackMiddleware([{ model: 'haijun-kamsa-8' }])],
  * });
  *
  * const fallbackState = new BetaFallbackState();
@@ -208,7 +208,7 @@ export function betaRefusalFallbackMiddleware(
     }
 
     if ((ctx.options.body as MessageCreateParams).fallbacks != null) {
-      throw new AnthropicError(
+      throw new JuglowError(
         'Sending the `fallbacks:` request param is not supported when using the `betaRefusalFallbackMiddleware`. ' +
           'You should either remove the middleware and send `fallbacks:` with the `server-side-fallback-2026-07-01` beta header to let the API handle refusal fallbacks, ' +
           "or omit the `fallbacks:` param if you'd like `betaRefusalFallbackMiddleware` to handle fallbacks on the client side.",
@@ -218,7 +218,7 @@ export function betaRefusalFallbackMiddleware(
     const onError =
       options.onError ??
       ((error: BetaRefusalFallbackError) =>
-        ctx.logger.error(`anthropic-sdk: betaRefusalFallbackMiddleware: ${error.message}`));
+        ctx.logger.error(`Juglow-sdk: betaRefusalFallbackMiddleware: ${error.message}`));
 
     // Send the configured betas on this and every hop request derived from it,
     // and tag this and every hop with the middleware's helper telemetry.
@@ -230,7 +230,7 @@ export function betaRefusalFallbackMiddleware(
     // start from the pinned fallback (-1 = the original params)
     const startIndex = state?.index ?? -1;
     if (!Number.isInteger(startIndex) || startIndex < -1 || startIndex >= fallbacks.length) {
-      throw new AnthropicError(
+      throw new JuglowError(
         `fallbackState.index ${startIndex} is out of bounds for a chain of ${fallbacks.length} fallback(s); was the state shared with a different middleware?`,
       );
     }
@@ -242,14 +242,14 @@ export function betaRefusalFallbackMiddleware(
       } else if (!warnedMissingState) {
         warnedMissingState = true;
         ctx.logger.warn(
-          'anthropic-sdk: betaRefusalFallbackMiddleware fell back without a `fallbackState` request option; follow-up requests will retry models that already refused. Pass a shared `{ fallbackState: new BetaFallbackState() }` to pin them to the accepted model.',
+          'Juglow-sdk: betaRefusalFallbackMiddleware fell back without a `fallbackState` request option; follow-up requests will retry models that already refused. Pass a shared `{ fallbackState: new BetaFallbackState() }` to pin them to the accepted model.',
         );
       }
     };
 
     const initialBody = startIndex === -1 ? body : applyFallbackPatch(body, fallbacks[startIndex]!);
 
-    // a non-string body can't be respliced or redeemed against — leave the
+    // a non-string body can't be respliced or redeemed against â€” leave the
     // request untouched (the streaming path stands down on it below too)
     const initialRequest =
       typeof request.body !== 'string' ? request : { ...request, body: JSON.stringify(initialBody) };
@@ -282,7 +282,7 @@ export function betaRefusalFallbackMiddleware(
 
     let index = startIndex;
     let res = response;
-    // The model the current hop was requested as — the caller's spelling, not
+    // The model the current hop was requested as â€” the caller's spelling, not
     // the server's `message.model` echo; the seam block's `from` carries it.
     let requestedModel = initialBody.model;
     const fallbackBlocks: BetaFallbackBlock[] = [];
@@ -296,7 +296,7 @@ export function betaRefusalFallbackMiddleware(
       pin(index);
       const entry = fallbacks[index]!;
       // One `fallback` seam block per model boundary, prepended to the serving
-      // hop's content below — the same block shape the server places in
+      // hop's content below â€” the same block shape the server places in
       // `content`, not a claim of full envelope parity.
       fallbackBlocks.push({
         type: 'fallback',
@@ -357,13 +357,13 @@ export function betaRefusalFallbackMiddleware(
 //
 // * Seam `to.model` and non-first `from.model` carry the chain entry's
 //   spelling, not the canonical id the server emits.
-// * Streaming: `message.model` keeps the refused model's id — `message_start`
+// * Streaming: `message.model` keeps the refused model's id â€” `message_start`
 //   has already been sent when the refusal arrives; the seam's `to.model`
 //   carries the serving model.
 // * Streaming: `usage.iterations` survives stream accumulation only on the
 //   beta surface (`client.beta.messages.stream`); the non-beta accumulator
 //   drops it. Non-streaming: no `fallback_message` entry is synthesized in
-//   `usage.iterations` — the serving hop's `usage` passes through as-is.
+//   `usage.iterations` â€” the serving hop's `usage` passes through as-is.
 // * Streaming: refusal text streamed before the refusal stays in the message
 //   and is resent as-is (the appended turn must match the partial output
 //   verbatim). Non-streaming: a refused hop's partial content is dropped.
@@ -371,7 +371,7 @@ export function betaRefusalFallbackMiddleware(
 //   body spelling; streaming uses the server's `message.model` echo.
 
 interface FallbackStreamArgs {
-  /** The request stream A was made with — the body its credit token is redeemable against. */
+  /** The request stream A was made with â€” the body its credit token is redeemable against. */
   request: APIRequest;
   /** Stream A: the OK SSE response that may end in a refusal. */
   response: Response;
@@ -391,7 +391,7 @@ interface FallbackStreamArgs {
  * {@link splicedEvents}). Cancelling the returned body tears down whichever
  * stream is being read and aborts any in-flight fallback request or retry
  * backoff: hop requests run under `controller`'s signal, which fires on
- * cancel and mirrors the original request's signal — a user abort has no
+ * cancel and mirrors the original request's signal â€” a user abort has no
  * other way to reach a hop, since this synthetic body isn't fetch-backed.
  */
 function spliceFallbackStream(args: FallbackStreamArgs): Response {
@@ -441,7 +441,7 @@ async function* splicedEvents(
 
   // --- fallback chain: try each entry in order ---
   // `base` is the assistant-turn content the current token's request already
-  // carried — the token is redeemable only with it resent verbatim. `partial`
+  // carried â€” the token is redeemable only with it resent verbatim. `partial`
   // is the newest refused hop's output, included only when its refusal
   // granted a prefill claim (any other change to the body is a 400).
   let nextIndex = a.nextIndex; // monotonic block index across all spliced streams
@@ -450,11 +450,11 @@ async function* splicedEvents(
   let partial = a.refused.hasPrefillClaim ? toPrefillBlocks(a.blocks) : [];
   let fromModel = a.model ?? '';
   let lastUsage: BetaMessageDeltaUsage | null = a.refused.usage;
-  // The refusal whose token is currently in flight — surfaced verbatim (with a
+  // The refusal whose token is currently in flight â€” surfaced verbatim (with a
   // recommended_model added) if every fallback request fails and we degrade.
   let refusalDetails = a.refused.stopDetails;
 
-  // One `message` entry per refused hop, in order — A first. Failed hops are
+  // One `message` entry per refused hop, in order â€” A first. Failed hops are
   // skipped (no usage came back); the serving hop is appended as
   // `fallback_message` when its message_delta arrives.
   const iterations: BetaMessageIterationUsage[] = [
@@ -468,7 +468,7 @@ async function* splicedEvents(
 
     // --- boundary: a `fallback` content block at the next monotonic index ---
     // Emitted before the request, so a hop that fails leaves its boundary in
-    // place and the next attempt emits its own (still `from: fromModel` — the
+    // place and the next attempt emits its own (still `from: fromModel` â€” the
     // last model that contributed output).
     const fbIndex = nextIndex++;
     yield emit<BetaRawContentBlockStartEvent>('content_block_start', {
@@ -489,7 +489,7 @@ async function* splicedEvents(
     // --- build the request: appended-assistant continuation ---
     // First attempt carries the newest partial appended (when its refusal
     // granted a prefill claim); a 400 on that form means the server rejected
-    // the prefill, so the hop is retried once without it — the same-body
+    // the prefill, so the hop is retried once without it â€” the same-body
     // form the token always supports.
     let continuation = [...base, ...partial];
     let resB: Response | null = null;
@@ -497,7 +497,7 @@ async function* splicedEvents(
     for (let attempt = 0; attempt < 2; attempt++) {
       const reqB = buildFallbackRequest(request, { model, creditToken: token, continuation });
       // controller mirrors the original signal and additionally fires when the
-      // spliced body is cancelled — either must abort an in-flight hop request.
+      // spliced body is cancelled â€” either must abort an in-flight hop request.
       reqB.signal = controller.signal;
 
       try {
@@ -520,7 +520,7 @@ async function* splicedEvents(
       const errBody = await ctx.parse(resB).catch(() => null);
       if (attempt === 0 && resB.status === 400 && partial.length) {
         ctx.logger.warn(
-          `anthropic-sdk: betaRefusalFallbackMiddleware: fallback request with the partial output appended was rejected (HTTP 400: ${JSON.stringify(
+          `Juglow-sdk: betaRefusalFallbackMiddleware: fallback request with the partial output appended was rejected (HTTP 400: ${JSON.stringify(
             errBody,
           )}); retrying without it`,
         );
@@ -540,10 +540,10 @@ async function* splicedEvents(
 
     if (failure) {
       onError(failure);
-      // The token was never redeemed — retry it against the next entry.
+      // The token was never redeemed â€” retry it against the next entry.
       if (hasNext) continue;
-      // Surface the held refusal verbatim — its category/explanation and the
-      // still-unredeemed credit token — and point recommended_model at the hop
+      // Surface the held refusal verbatim â€” its category/explanation and the
+      // still-unredeemed credit token â€” and point recommended_model at the hop
       // we last tried.
       const stopDetails: BetaRefusalStopDetails = {
         ...refusalDetails,
@@ -601,9 +601,9 @@ interface HopOutcome {
   } | null;
   /** The hop's serving model, from its message_start. */
   model: string | undefined;
-  /** The hop's accumulated content blocks, in start order — the next partial segment. */
+  /** The hop's accumulated content blocks, in start order â€” the next partial segment. */
   blocks: any[];
-  /** One past the highest (shifted) block index emitted — where the next boundary goes. */
+  /** One past the highest (shifted) block index emitted â€” where the next boundary goes. */
   nextIndex: number;
 }
 
@@ -617,8 +617,8 @@ interface HopOutcome {
  * terminal message_delta's usage rewritten to the `usage.iterations`
  * chain shape.
  *
- * A refusal that can be chained — it carries a `fallback_credit_token` and a
- * fallback entry remains — ends the hop early: open blocks are closed, the
+ * A refusal that can be chained â€” it carries a `fallback_credit_token` and a
+ * fallback entry remains â€” ends the hop early: open blocks are closed, the
  * terminal message_delta + message_stop are suppressed, and the token+usage
  * are returned so the caller can issue the next hop. Any other refusal is
  * reported through `onError` and passes through to the client.
@@ -712,8 +712,8 @@ async function* consumeHop(args: {
           // message_delta self-reports a single `{type:"message",
           // model:undefined}` iteration (a fresh non-fallback request counts
           // itself as one message hop). Server-side `fallbacks` relabels the
-          // whole chain instead — refused hops as `message`, the serving hop
-          // as `fallback_message` — so spreading the self-report would
+          // whole chain instead â€” refused hops as `message`, the serving hop
+          // as `fallback_message` â€” so spreading the self-report would
           // prepend a spurious `message:undefined` entry.
           const usage = backfill(p.usage, startUsage);
           usage.iterations = [
@@ -728,8 +728,8 @@ async function* consumeHop(args: {
       }
     }
 
-    // message_stop, ping, error, unrecognised — and for stream A every
-    // event — pass through in their original wire bytes.
+    // message_stop, ping, error, unrecognised â€” and for stream A every
+    // event â€” pass through in their original wire bytes.
     yield passthroughSSE(sse);
   }
   return { refused: null, model, blocks: tracker.contentBlocks(), nextIndex: tracker.nextIndex };
@@ -796,8 +796,8 @@ class BlockTracker {
 
 /**
  * Object form of the redeemed credit token. `best_effort` keeps the retry
- * served if the token layer rejects it — the retry then proceeds at normal
- * price and the outcome lands on `usage.fallback_credit` — where the
+ * served if the token layer rejects it â€” the retry then proceeds at normal
+ * price and the outcome lands on `usage.fallback_credit` â€” where the
  * bare-string (`strict`) form would 400 the whole request.
  */
 function creditTokenParam(token: string): BetaFallbackCreditTokenParam {
@@ -831,7 +831,7 @@ function buildFallbackRequest(
   }
 
   // Do NOT touch max_tokens (or any other render-shaping field): the token is
-  // only redeemable against the same request body as the refused request —
+  // only redeemable against the same request body as the refused request â€”
   // model, fallback_credit_token, and the one appended assistant turn are the
   // only permitted deltas; anything else is a 400 ("request body ... does not
   // match the original refused request"). This is also why the per-entry
@@ -896,20 +896,20 @@ function toPrefillBlocks(responseBlocks: any[]): BetaContentBlockParam[] {
 // --- helpers --------------------------------------------------------------
 
 /**
- * A copy of `request` with `betas` appended to its `anthropic-beta` header,
+ * A copy of `request` with `betas` appended to its `Juglow-beta` header,
  * skipping values already present (set by the caller or another middleware).
  */
-function withMiddlewareHeaders(request: APIRequest, betas: readonly AnthropicBeta[]): APIRequest {
+function withMiddlewareHeaders(request: APIRequest, betas: readonly JuglowBeta[]): APIRequest {
   const headers = new Headers(request.headers);
   const existing = new Set(
     headers
-      .get('anthropic-beta')
+      .get('Juglow-beta')
       ?.split(',')
       .map((s) => s.trim()),
   );
   for (const beta of betas) {
     if (!existing.has(beta)) {
-      headers.append('anthropic-beta', beta);
+      headers.append('Juglow-beta', beta);
       existing.add(beta);
     }
   }
@@ -934,7 +934,7 @@ function passthroughSSE(sse: ServerSentEvent): Uint8Array {
   return encoder.encode(sse.raw.length ? sse.raw.join('\n') + '\n\n' : serializeSSE(sse));
 }
 
-// Field-wise union of BetaUsage and BetaMessageDeltaUsage, all nullable —
+// Field-wise union of BetaUsage and BetaMessageDeltaUsage, all nullable â€”
 // a plain Partial<A & B> intersects `number` with `number | null` down to
 // `number`, which rejects delta usage objects.
 type UsageLike =

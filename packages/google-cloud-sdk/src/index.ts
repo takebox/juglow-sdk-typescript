@@ -1,3 +1,3 @@
-export * from './client';
-export { AnthropicGoogleCloud as default } from './client';
+﻿export * from './client';
+export { JuglowGoogleCloud as default } from './client';
 export type { GoogleCloudClientOptions } from './client';

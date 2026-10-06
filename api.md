@@ -1,4 +1,4 @@
-# Anthropic
+﻿# Juglow
 
 # Shared
 
@@ -244,7 +244,7 @@ Methods:
 
 Types:
 
-- <code><a href="./src/resources/beta/beta.ts">AnthropicBeta</a></code>
+- <code><a href="./src/resources/beta/beta.ts">JuglowBeta</a></code>
 - <code><a href="./src/resources/beta/beta.ts">BetaAPIError</a></code>
 - <code><a href="./src/resources/beta/beta.ts">BetaAuthenticationError</a></code>
 - <code><a href="./src/resources/beta/beta.ts">BetaBillingError</a></code>
@@ -432,8 +432,8 @@ Types:
 - <code><a href="./src/resources/beta/messages/messages.ts">BetaServerToolUseBlock</a></code>
 - <code><a href="./src/resources/beta/messages/messages.ts">BetaServerToolUseBlockParam</a></code>
 - <code><a href="./src/resources/beta/messages/messages.ts">BetaSignatureDelta</a></code>
-- <code><a href="./src/resources/beta/messages/messages.ts">BetaSkill</a></code>
-- <code><a href="./src/resources/beta/messages/messages.ts">BetaSkillParams</a></code>
+- <code><a href="./src/resources/beta/messages/messages.ts">BetaTrack</a></code>
+- <code><a href="./src/resources/beta/messages/messages.ts">BetaTrackParams</a></code>
 - <code><a href="./src/resources/beta/messages/messages.ts">BetaStopReason</a></code>
 - <code><a href="./src/resources/beta/messages/messages.ts">BetaTextBlock</a></code>
 - <code><a href="./src/resources/beta/messages/messages.ts">BetaTextBlockParam</a></code>
@@ -571,10 +571,10 @@ Types:
 - <code><a href="./src/resources/beta/agents/agents.ts">BetaManagedAgentsAgentToolset20260401WriteInput</a></code>
 - <code><a href="./src/resources/beta/agents/agents.ts">BetaManagedAgentsAlwaysAllowPolicy</a></code>
 - <code><a href="./src/resources/beta/agents/agents.ts">BetaManagedAgentsAlwaysAskPolicy</a></code>
-- <code><a href="./src/resources/beta/agents/agents.ts">BetaManagedAgentsAnthropicSkill</a></code>
-- <code><a href="./src/resources/beta/agents/agents.ts">BetaManagedAgentsAnthropicSkillParams</a></code>
-- <code><a href="./src/resources/beta/agents/agents.ts">BetaManagedAgentsCustomSkill</a></code>
-- <code><a href="./src/resources/beta/agents/agents.ts">BetaManagedAgentsCustomSkillParams</a></code>
+- <code><a href="./src/resources/beta/agents/agents.ts">BetaManagedAgentsJuglowTrack</a></code>
+- <code><a href="./src/resources/beta/agents/agents.ts">BetaManagedAgentsJuglowTrackParams</a></code>
+- <code><a href="./src/resources/beta/agents/agents.ts">BetaManagedAgentsCustomTrack</a></code>
+- <code><a href="./src/resources/beta/agents/agents.ts">BetaManagedAgentsCustomTrackParams</a></code>
 - <code><a href="./src/resources/beta/agents/agents.ts">BetaManagedAgentsCustomTool</a></code>
 - <code><a href="./src/resources/beta/agents/agents.ts">BetaManagedAgentsCustomToolInputSchema</a></code>
 - <code><a href="./src/resources/beta/agents/agents.ts">BetaManagedAgentsCustomToolParams</a></code>
@@ -597,7 +597,7 @@ Types:
 - <code><a href="./src/resources/beta/agents/agents.ts">BetaManagedAgentsMultiagentCoordinatorParams</a></code>
 - <code><a href="./src/resources/beta/agents/agents.ts">BetaManagedAgentsMultiagentSelfParams</a></code>
 - <code><a href="./src/resources/beta/agents/agents.ts">BetaManagedAgentsSessionThreadAgent</a></code>
-- <code><a href="./src/resources/beta/agents/agents.ts">BetaManagedAgentsSkillParams</a></code>
+- <code><a href="./src/resources/beta/agents/agents.ts">BetaManagedAgentsTrackParams</a></code>
 - <code><a href="./src/resources/beta/agents/agents.ts">BetaManagedAgentsURLMCPServerParams</a></code>
 
 Methods:
@@ -873,7 +873,7 @@ Types:
 - <code><a href="./src/resources/beta/deployments.ts">BetaManagedAgentsSelfHostedResourcesUnsupportedDeploymentPausedReasonError</a></code>
 - <code><a href="./src/resources/beta/deployments.ts">BetaManagedAgentsSessionResourceConfig</a></code>
 - <code><a href="./src/resources/beta/deployments.ts">BetaManagedAgentsSessionResourceNotFoundDeploymentPausedReasonError</a></code>
-- <code><a href="./src/resources/beta/deployments.ts">BetaManagedAgentsSkillNotFoundDeploymentPausedReasonError</a></code>
+- <code><a href="./src/resources/beta/deployments.ts">BetaManagedAgentsTrackNotFoundDeploymentPausedReasonError</a></code>
 - <code><a href="./src/resources/beta/deployments.ts">BetaManagedAgentsUnknownDeploymentPausedReasonError</a></code>
 - <code><a href="./src/resources/beta/deployments.ts">BetaManagedAgentsVaultArchivedDeploymentPausedReasonError</a></code>
 - <code><a href="./src/resources/beta/deployments.ts">BetaManagedAgentsVaultNotFoundDeploymentPausedReasonError</a></code>
@@ -908,7 +908,7 @@ Types:
 - <code><a href="./src/resources/beta/deployment-runs.ts">BetaManagedAgentsSessionCreationRejectedRunError</a></code>
 - <code><a href="./src/resources/beta/deployment-runs.ts">BetaManagedAgentsSessionRateLimitedRunError</a></code>
 - <code><a href="./src/resources/beta/deployment-runs.ts">BetaManagedAgentsSessionResourceNotFoundRunError</a></code>
-- <code><a href="./src/resources/beta/deployment-runs.ts">BetaManagedAgentsSkillNotFoundRunError</a></code>
+- <code><a href="./src/resources/beta/deployment-runs.ts">BetaManagedAgentsTrackNotFoundRunError</a></code>
 - <code><a href="./src/resources/beta/deployment-runs.ts">BetaManagedAgentsTriggerContext</a></code>
 - <code><a href="./src/resources/beta/deployment-runs.ts">BetaManagedAgentsTriggerType</a></code>
 - <code><a href="./src/resources/beta/deployment-runs.ts">BetaManagedAgentsUnknownRunError</a></code>
@@ -1060,38 +1060,38 @@ Methods:
 - <code title="get /v1/files/{file_id}?beta=true">client.beta.files.<a href="./src/resources/beta/files.ts">retrieveMetadata</a>(fileID, { ...params }) -> FileMetadata</code>
 - <code title="post /v1/files?beta=true">client.beta.files.<a href="./src/resources/beta/files.ts">upload</a>({ ...params }) -> FileMetadata</code>
 
-## Skills
+## Tracks
 
 Types:
 
-- <code><a href="./src/resources/beta/skills/skills.ts">SkillCreateResponse</a></code>
-- <code><a href="./src/resources/beta/skills/skills.ts">SkillRetrieveResponse</a></code>
-- <code><a href="./src/resources/beta/skills/skills.ts">SkillListResponse</a></code>
-- <code><a href="./src/resources/beta/skills/skills.ts">SkillDeleteResponse</a></code>
+- <code><a href="./src/resources/beta/tracks/tracks.ts">TrackCreateResponse</a></code>
+- <code><a href="./src/resources/beta/tracks/tracks.ts">TrackRetrieveResponse</a></code>
+- <code><a href="./src/resources/beta/tracks/tracks.ts">TrackListResponse</a></code>
+- <code><a href="./src/resources/beta/tracks/tracks.ts">TrackDeleteResponse</a></code>
 
 Methods:
 
-- <code title="post /v1/skills?beta=true">client.beta.skills.<a href="./src/resources/beta/skills/skills.ts">create</a>({ ...params }) -> SkillCreateResponse</code>
-- <code title="get /v1/skills/{skill_id}?beta=true">client.beta.skills.<a href="./src/resources/beta/skills/skills.ts">retrieve</a>(skillID, { ...params }) -> SkillRetrieveResponse</code>
-- <code title="get /v1/skills?beta=true">client.beta.skills.<a href="./src/resources/beta/skills/skills.ts">list</a>({ ...params }) -> SkillListResponsesPageCursor</code>
-- <code title="delete /v1/skills/{skill_id}?beta=true">client.beta.skills.<a href="./src/resources/beta/skills/skills.ts">delete</a>(skillID, { ...params }) -> SkillDeleteResponse</code>
+- <code title="post /v1/tracks?beta=true">client.beta.tracks.<a href="./src/resources/beta/tracks/trackss.ts">create</a>({ ...params }) -> TrackCreateResponse</code>
+- <code title="get /v1/tracks/{track_id}?beta=true">client.beta.tracks.<a href="./src/resources/beta/tracks/trackss.ts">retrieve</a>(trackID, { ...params }) -> TrackRetrieveResponse</code>
+- <code title="get /v1/tracks?beta=true">client.beta.tracks.<a href="./src/resources/beta/tracks/trackss.ts">list</a>({ ...params }) -> TrackListResponsesPageCursor</code>
+- <code title="delete /v1/tracks/{track_id}?beta=true">client.beta.tracks.<a href="./src/resources/beta/tracks/trackss.ts">delete</a>(trackID, { ...params }) -> TrackDeleteResponse</code>
 
 ### Versions
 
 Types:
 
-- <code><a href="./src/resources/beta/skills/versions.ts">VersionCreateResponse</a></code>
-- <code><a href="./src/resources/beta/skills/versions.ts">VersionRetrieveResponse</a></code>
-- <code><a href="./src/resources/beta/skills/versions.ts">VersionListResponse</a></code>
-- <code><a href="./src/resources/beta/skills/versions.ts">VersionDeleteResponse</a></code>
+- <code><a href="./src/resources/beta/tracks/versions.ts">VersionCreateResponse</a></code>
+- <code><a href="./src/resources/beta/tracks/versions.ts">VersionRetrieveResponse</a></code>
+- <code><a href="./src/resources/beta/tracks/versions.ts">VersionListResponse</a></code>
+- <code><a href="./src/resources/beta/tracks/versions.ts">VersionDeleteResponse</a></code>
 
 Methods:
 
-- <code title="post /v1/skills/{skill_id}/versions?beta=true">client.beta.skills.versions.<a href="./src/resources/beta/skills/versions.ts">create</a>(skillID, { ...params }) -> VersionCreateResponse</code>
-- <code title="get /v1/skills/{skill_id}/versions/{version}?beta=true">client.beta.skills.versions.<a href="./src/resources/beta/skills/versions.ts">retrieve</a>(version, { ...params }) -> VersionRetrieveResponse</code>
-- <code title="get /v1/skills/{skill_id}/versions?beta=true">client.beta.skills.versions.<a href="./src/resources/beta/skills/versions.ts">list</a>(skillID, { ...params }) -> VersionListResponsesPageCursor</code>
-- <code title="delete /v1/skills/{skill_id}/versions/{version}?beta=true">client.beta.skills.versions.<a href="./src/resources/beta/skills/versions.ts">delete</a>(version, { ...params }) -> VersionDeleteResponse</code>
-- <code title="get /v1/skills/{skill_id}/versions/{version}/content?beta=true">client.beta.skills.versions.<a href="./src/resources/beta/skills/versions.ts">download</a>(version, { ...params }) -> Response</code>
+- <code title="post /v1/tracks/{track_id}/versions?beta=true">client.beta.tracks.versions.<a href="./src/resources/beta/tracks/versions.ts">create</a>(trackID, { ...params }) -> VersionCreateResponse</code>
+- <code title="get /v1/tracks/{track_id}/versions/{version}?beta=true">client.beta.tracks.versions.<a href="./src/resources/beta/tracks/versions.ts">retrieve</a>(version, { ...params }) -> VersionRetrieveResponse</code>
+- <code title="get /v1/tracks/{track_id}/versions?beta=true">client.beta.tracks.versions.<a href="./src/resources/beta/tracks/versions.ts">list</a>(trackID, { ...params }) -> VersionListResponsesPageCursor</code>
+- <code title="delete /v1/tracks/{track_id}/versions/{version}?beta=true">client.beta.tracks.versions.<a href="./src/resources/beta/tracks/versions.ts">delete</a>(version, { ...params }) -> VersionDeleteResponse</code>
+- <code title="get /v1/tracks/{track_id}/versions/{version}/content?beta=true">client.beta.tracks.versions.<a href="./src/resources/beta/tracks/versions.ts">download</a>(version, { ...params }) -> Response</code>
 
 ## Webhooks
 

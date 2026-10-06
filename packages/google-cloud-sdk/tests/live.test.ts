@@ -1,23 +1,23 @@
-/**
- * Live integration tests against the real gateway. Gated on `ANTHROPIC_LIVE=1`;
+﻿/**
+ * Live integration tests against the real gateway. Gated on `HAIJUN_LIVE=1`;
  * the regular suite never hits the network. Expects
- * `ANTHROPIC_GOOGLE_CLOUD_{PROJECT_ID,WORKSPACE_ID}` (or `..._BASE_URL`) and
+ * `HAIJUN_GOOGLE_CLOUD_{PROJECT_ID,WORKSPACE_ID}` (or `..._BASE_URL`) and
  * Application Default Credentials in the environment.
  */
-import { AnthropicGoogleCloud } from '../src';
-import { APIError } from '@anthropic-ai/sdk';
+import { JuglowGoogleCloud } from '../src';
+import { APIError } from '@takebox-ai/sdk';
 
-const live = process.env['ANTHROPIC_LIVE'] === '1' ? describe : describe.skip;
+const live = process.env['HAIJUN_LIVE'] === '1' ? describe : describe.skip;
 
-const MODEL = 'claude-haiku-4-5';
+const MODEL = 'haijun-haiku';
 
 const newClient = () =>
-  new AnthropicGoogleCloud({
-    location: process.env['ANTHROPIC_GOOGLE_CLOUD_LOCATION'] ?? 'us-central1',
+  new JuglowGoogleCloud({
+    location: process.env['HAIJUN_GOOGLE_CLOUD_LOCATION'] ?? 'us-central1',
     maxRetries: 1,
   });
 
-live('AnthropicGoogleCloud — live', () => {
+live('JuglowGoogleCloud â€” live', () => {
   jest.setTimeout(60_000);
 
   test('non-streaming create', async () => {

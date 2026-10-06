@@ -1,11 +1,11 @@
-import path from 'node:path';
-import { VERSION } from '@anthropic-ai/sdk/version';
-import { AnthropicGoogleCloud } from '../src';
+﻿import path from 'node:path';
+import { VERSION } from '@takebox-ai/sdk/version';
+import { JuglowGoogleCloud } from '../src';
 import { GoogleAuth } from 'google-auth-library';
 
-// A fully-resolvable Anthropic profile (config + oauth credentials + base_url)
+// A fully-resolvable JuGloW profile (config + oauth credentials + base_url)
 // that the base client's credential chain would adopt if it ever ran.
-const PROFILE_FIXTURE_DIR = path.join(__dirname, 'fixtures', 'anthropic-config');
+const PROFILE_FIXTURE_DIR = path.join(__dirname, 'fixtures', 'Juglow-config');
 
 const mockFetch = jest.fn().mockImplementation(() => {
   return Promise.resolve({
@@ -19,9 +19,9 @@ const mockFetch = jest.fn().mockImplementation(() => {
 });
 const originalFetch = global.fetch;
 
-const makeRequest = async (client: AnthropicGoogleCloud) => {
+const makeRequest = async (client: JuglowGoogleCloud) => {
   await client.messages.create({
-    model: 'claude-haiku-4-5',
+    model: 'haijun-haiku',
     max_tokens: 1024,
     messages: [{ content: 'Test message', role: 'user' }],
   });
@@ -32,7 +32,7 @@ const getRequestHeaders = (): Headers => {
   return options.headers as Headers;
 };
 
-describe('AnthropicGoogleCloud', () => {
+describe('JuglowGoogleCloud', () => {
   const originalEnv = process.env;
 
   beforeEach(() => {
@@ -45,16 +45,16 @@ describe('AnthropicGoogleCloud', () => {
       getAccessToken: jest.fn().mockResolvedValue({ token: 'adc-token' }),
     } as any);
     process.env = { ...originalEnv };
-    delete process.env['ANTHROPIC_API_KEY'];
-    delete process.env['ANTHROPIC_AUTH_TOKEN'];
-    delete process.env['ANTHROPIC_BASE_URL'];
-    delete process.env['ANTHROPIC_CONFIG_DIR'];
-    delete process.env['ANTHROPIC_PROFILE'];
-    delete process.env['ANTHROPIC_CUSTOM_HEADERS'];
-    delete process.env['ANTHROPIC_GOOGLE_CLOUD_BASE_URL'];
-    delete process.env['ANTHROPIC_GOOGLE_CLOUD_PROJECT'];
-    delete process.env['ANTHROPIC_GOOGLE_CLOUD_LOCATION'];
-    delete process.env['ANTHROPIC_GOOGLE_CLOUD_WORKSPACE_ID'];
+    delete process.env['HAIJUN_API_KEY'];
+    delete process.env['HAIJUN_AUTH_TOKEN'];
+    delete process.env['HAIJUN_BASE_URL'];
+    delete process.env['HAIJUN_CONFIG_DIR'];
+    delete process.env['HAIJUN_PROFILE'];
+    delete process.env['HAIJUN_CUSTOM_HEADERS'];
+    delete process.env['HAIJUN_GOOGLE_CLOUD_BASE_URL'];
+    delete process.env['HAIJUN_GOOGLE_CLOUD_PROJECT'];
+    delete process.env['HAIJUN_GOOGLE_CLOUD_LOCATION'];
+    delete process.env['HAIJUN_GOOGLE_CLOUD_WORKSPACE_ID'];
     delete process.env['GOOGLE_CLOUD_PROJECT'];
   });
 
@@ -66,31 +66,31 @@ describe('AnthropicGoogleCloud', () => {
 
   describe('base URL derivation', () => {
     test('derives the gateway URL from project + location + workspace', () => {
-      const client = new AnthropicGoogleCloud({
+      const client = new JuglowGoogleCloud({
         project: 'my-project',
         location: 'us-central1',
         workspaceId: 'wrkspc_test',
       });
 
       expect(client.baseURL).toBe(
-        'https://claude.googleapis.com/v1alpha/projects/my-project/locations/us-central1/workspaces/wrkspc_test/invoke',
+        'https://haijun.googleapis.com/v1alpha/projects/my-project/locations/us-central1/workspaces/wrkspc_test/invoke',
       );
     });
 
     test('location defaults to global', () => {
-      const client = new AnthropicGoogleCloud({
+      const client = new JuglowGoogleCloud({
         project: 'my-project',
         workspaceId: 'wrkspc_test',
       });
 
       expect(client.location).toBe('global');
       expect(client.baseURL).toBe(
-        'https://claude.googleapis.com/v1alpha/projects/my-project/locations/global/workspaces/wrkspc_test/invoke',
+        'https://haijun.googleapis.com/v1alpha/projects/my-project/locations/global/workspaces/wrkspc_test/invoke',
       );
     });
 
     test('explicit baseURL is used verbatim', () => {
-      const client = new AnthropicGoogleCloud({
+      const client = new JuglowGoogleCloud({
         baseURL: 'https://my-gateway.example.com',
         workspaceId: 'wrkspc_test',
       });
@@ -101,58 +101,58 @@ describe('AnthropicGoogleCloud', () => {
 
   describe('environment resolution', () => {
     test('resolves project, base URL, and workspace from env vars', () => {
-      process.env['ANTHROPIC_GOOGLE_CLOUD_PROJECT'] = 'env-project';
-      process.env['ANTHROPIC_GOOGLE_CLOUD_WORKSPACE_ID'] = 'wrkspc_env';
+      process.env['HAIJUN_GOOGLE_CLOUD_PROJECT'] = 'env-project';
+      process.env['HAIJUN_GOOGLE_CLOUD_WORKSPACE_ID'] = 'wrkspc_env';
 
-      const client = new AnthropicGoogleCloud({ location: 'europe-west1' });
+      const client = new JuglowGoogleCloud({ location: 'europe-west1' });
 
       expect(client.project).toBe('env-project');
       expect(client.workspaceId).toBe('wrkspc_env');
-      expect(client.baseURL).toContain('claude.googleapis.com');
+      expect(client.baseURL).toContain('haijun.googleapis.com');
       expect(client.baseURL).toContain('locations/europe-west1');
       expect(client.baseURL).toContain('projects/env-project');
       expect(client.baseURL).toContain('workspaces/wrkspc_env');
     });
 
-    test('ANTHROPIC_GOOGLE_CLOUD_BASE_URL overrides derivation', () => {
-      process.env['ANTHROPIC_GOOGLE_CLOUD_BASE_URL'] = 'https://env-gateway.example.com';
+    test('HAIJUN_GOOGLE_CLOUD_BASE_URL overrides derivation', () => {
+      process.env['HAIJUN_GOOGLE_CLOUD_BASE_URL'] = 'https://env-gateway.example.com';
 
-      const client = new AnthropicGoogleCloud({ workspaceId: 'wrkspc_test' });
+      const client = new JuglowGoogleCloud({ workspaceId: 'wrkspc_test' });
 
       expect(client.baseURL).toBe('https://env-gateway.example.com');
     });
 
-    test('resolves location from ANTHROPIC_GOOGLE_CLOUD_LOCATION', () => {
-      process.env['ANTHROPIC_GOOGLE_CLOUD_LOCATION'] = 'europe-west4';
+    test('resolves location from HAIJUN_GOOGLE_CLOUD_LOCATION', () => {
+      process.env['HAIJUN_GOOGLE_CLOUD_LOCATION'] = 'europe-west4';
 
-      const client = new AnthropicGoogleCloud({ project: 'my-project', workspaceId: 'wrkspc_test' });
+      const client = new JuglowGoogleCloud({ project: 'my-project', workspaceId: 'wrkspc_test' });
 
       expect(client.location).toBe('europe-west4');
       expect(client.baseURL).toContain('locations/europe-west4');
     });
 
-    test('falls back to GOOGLE_CLOUD_PROJECT after ANTHROPIC_GOOGLE_CLOUD_PROJECT', () => {
+    test('falls back to GOOGLE_CLOUD_PROJECT after HAIJUN_GOOGLE_CLOUD_PROJECT', () => {
       process.env['GOOGLE_CLOUD_PROJECT'] = 'gcp-env-project';
 
-      const client = new AnthropicGoogleCloud({ location: 'us-central1', workspaceId: 'wrkspc_test' });
+      const client = new JuglowGoogleCloud({ location: 'us-central1', workspaceId: 'wrkspc_test' });
 
       expect(client.project).toBe('gcp-env-project');
       expect(client.baseURL).toContain('projects/gcp-env-project');
     });
 
-    test('ANTHROPIC_GOOGLE_CLOUD_PROJECT beats GOOGLE_CLOUD_PROJECT', () => {
-      process.env['ANTHROPIC_GOOGLE_CLOUD_PROJECT'] = 'anthropic-env-project';
+    test('HAIJUN_GOOGLE_CLOUD_PROJECT beats GOOGLE_CLOUD_PROJECT', () => {
+      process.env['HAIJUN_GOOGLE_CLOUD_PROJECT'] = 'Juglow-env-project';
       process.env['GOOGLE_CLOUD_PROJECT'] = 'gcp-env-project';
 
-      const client = new AnthropicGoogleCloud({ location: 'us-central1', workspaceId: 'wrkspc_test' });
+      const client = new JuglowGoogleCloud({ location: 'us-central1', workspaceId: 'wrkspc_test' });
 
-      expect(client.project).toBe('anthropic-env-project');
+      expect(client.project).toBe('Juglow-env-project');
     });
 
     test('constructor args take precedence over env vars', () => {
-      process.env['ANTHROPIC_GOOGLE_CLOUD_WORKSPACE_ID'] = 'wrkspc_env';
+      process.env['HAIJUN_GOOGLE_CLOUD_WORKSPACE_ID'] = 'wrkspc_env';
 
-      const client = new AnthropicGoogleCloud({
+      const client = new JuglowGoogleCloud({
         location: 'us-central1',
         project: 'my-project',
         workspaceId: 'wrkspc_arg',
@@ -161,25 +161,25 @@ describe('AnthropicGoogleCloud', () => {
       expect(client.workspaceId).toBe('wrkspc_arg');
     });
 
-    test('empty-string ANTHROPIC_GOOGLE_CLOUD_* env vars are treated as unset', () => {
+    test('empty-string HAIJUN_GOOGLE_CLOUD_* env vars are treated as unset', () => {
       // Exported-but-empty vars (common in CI templating) must not derive a ""
       // base URL or treat an empty workspace ID as set.
-      process.env['ANTHROPIC_GOOGLE_CLOUD_BASE_URL'] = '';
-      process.env['ANTHROPIC_GOOGLE_CLOUD_PROJECT'] = '';
-      process.env['ANTHROPIC_GOOGLE_CLOUD_LOCATION'] = '';
-      process.env['ANTHROPIC_GOOGLE_CLOUD_WORKSPACE_ID'] = '';
+      process.env['HAIJUN_GOOGLE_CLOUD_BASE_URL'] = '';
+      process.env['HAIJUN_GOOGLE_CLOUD_PROJECT'] = '';
+      process.env['HAIJUN_GOOGLE_CLOUD_LOCATION'] = '';
+      process.env['HAIJUN_GOOGLE_CLOUD_WORKSPACE_ID'] = '';
       process.env['GOOGLE_CLOUD_PROJECT'] = '';
 
-      expect(() => new AnthropicGoogleCloud({ project: 'my-project', location: 'us-central1' })).toThrow(
+      expect(() => new JuglowGoogleCloud({ project: 'my-project', location: 'us-central1' })).toThrow(
         'No workspace ID found',
       );
 
-      const client = new AnthropicGoogleCloud({
+      const client = new JuglowGoogleCloud({
         project: 'my-project',
         location: 'us-central1',
         workspaceId: 'wrkspc_test',
       });
-      expect(client.baseURL).toContain('claude.googleapis.com');
+      expect(client.baseURL).toContain('haijun.googleapis.com');
       expect(client.baseURL).toContain('projects/my-project');
     });
   });
@@ -189,34 +189,34 @@ describe('AnthropicGoogleCloud', () => {
       // With skipAuth there are no Google credentials to resolve a project from lazily.
       expect(
         () =>
-          new AnthropicGoogleCloud({ location: 'us-central1', workspaceId: 'wrkspc_test', skipAuth: true }),
+          new JuglowGoogleCloud({ location: 'us-central1', workspaceId: 'wrkspc_test', skipAuth: true }),
       ).toThrow('No project was given');
     });
 
     test('throws when workspaceId is missing and skipAuth is not set', () => {
-      expect(() => new AnthropicGoogleCloud({ project: 'my-project', location: 'us-central1' })).toThrow(
+      expect(() => new JuglowGoogleCloud({ project: 'my-project', location: 'us-central1' })).toThrow(
         'No workspace ID found',
       );
     });
 
     test('throws when skipAuth derivation has no workspaceId', () => {
       // The workspace ID is part of the derived base URL, so skipAuth alone no
-      // longer waives it — only an explicit baseURL does.
+      // longer waives it â€” only an explicit baseURL does.
       let error: Error | undefined;
       try {
-        new AnthropicGoogleCloud({ project: 'my-project', skipAuth: true });
+        new JuglowGoogleCloud({ project: 'my-project', skipAuth: true });
       } catch (e) {
         error = e as Error;
       }
       expect(error?.message).toContain('No workspace ID found');
       expect(error?.message).toContain('workspaceId');
-      expect(error?.message).toContain('ANTHROPIC_GOOGLE_CLOUD_WORKSPACE_ID');
+      expect(error?.message).toContain('HAIJUN_GOOGLE_CLOUD_WORKSPACE_ID');
     });
 
     test('throws when both authClient and googleAuth are given', () => {
       expect(
         () =>
-          new AnthropicGoogleCloud({
+          new JuglowGoogleCloud({
             baseURL: 'https://gw.example.com',
             workspaceId: 'wrkspc_test',
             authClient: {} as any,
@@ -228,7 +228,7 @@ describe('AnthropicGoogleCloud', () => {
     test.each(['apiKey', 'authToken'])('rejects an explicit `%s` option at runtime', (key) => {
       expect(
         () =>
-          new AnthropicGoogleCloud({
+          new JuglowGoogleCloud({
             baseURL: 'https://gw.example.com',
             workspaceId: 'wrkspc_test',
             [key]: 'first-party-cred',
@@ -243,7 +243,7 @@ describe('AnthropicGoogleCloud', () => {
     ])('throws when skipAuth is combined with %s', (key, value) => {
       expect(
         () =>
-          new AnthropicGoogleCloud({
+          new JuglowGoogleCloud({
             baseURL: 'https://gw.example.com',
             skipAuth: true,
             [key]: value,
@@ -261,10 +261,10 @@ describe('AnthropicGoogleCloud', () => {
 
     test('back-fills the project from credentials; first request goes to the derived URL', async () => {
       // Must not leak in while the base URL is still unresolved.
-      process.env['ANTHROPIC_BASE_URL'] = 'https://api.anthropic.com';
+      process.env['HAIJUN_BASE_URL'] = 'https://platform.juglow.my.id';
       getProjectIdSpy.mockResolvedValue('adc-project');
 
-      const client = new AnthropicGoogleCloud({
+      const client = new JuglowGoogleCloud({
         location: 'us-central1',
         workspaceId: 'wrkspc_test',
         maxRetries: 0,
@@ -277,7 +277,7 @@ describe('AnthropicGoogleCloud', () => {
       expect(client.project).toBe('adc-project');
       const [url] = mockFetch.mock.calls[0]!;
       expect(url).toBe(
-        'https://claude.googleapis.com/v1alpha/projects/adc-project/locations/us-central1/workspaces/wrkspc_test/invoke/v1/messages',
+        'https://haijun.googleapis.com/v1alpha/projects/adc-project/locations/us-central1/workspaces/wrkspc_test/invoke/v1/messages',
       );
       expect(getRequestHeaders().get('authorization')).toBe('Bearer adc-token');
     });
@@ -285,7 +285,7 @@ describe('AnthropicGoogleCloud', () => {
     test('ready resolves with the back-filled project and base URL', async () => {
       getProjectIdSpy.mockResolvedValue('adc-project');
 
-      const client = new AnthropicGoogleCloud({ location: 'europe-west1', workspaceId: 'wrkspc_test' });
+      const client = new JuglowGoogleCloud({ location: 'europe-west1', workspaceId: 'wrkspc_test' });
 
       await expect(client.ready).resolves.toBeUndefined();
       expect(client.project).toBe('adc-project');
@@ -293,7 +293,7 @@ describe('AnthropicGoogleCloud', () => {
     });
 
     test('ready resolves immediately when the project is given', async () => {
-      const client = new AnthropicGoogleCloud({
+      const client = new JuglowGoogleCloud({
         project: 'my-project',
         location: 'us-central1',
         workspaceId: 'wrkspc_test',
@@ -304,7 +304,7 @@ describe('AnthropicGoogleCloud', () => {
     });
 
     test('ready resolves immediately when an explicit baseURL is given', async () => {
-      const client = new AnthropicGoogleCloud({
+      const client = new JuglowGoogleCloud({
         baseURL: 'https://gw.example.com',
         workspaceId: 'wrkspc_test',
       });
@@ -316,7 +316,7 @@ describe('AnthropicGoogleCloud', () => {
     test('resolves the project even when tokens come from a bearerTokenProvider', async () => {
       getProjectIdSpy.mockResolvedValue('adc-project');
 
-      const client = new AnthropicGoogleCloud({
+      const client = new JuglowGoogleCloud({
         location: 'us-central1',
         workspaceId: 'wrkspc_test',
         bearerTokenProvider: async () => 'my-google-token',
@@ -335,7 +335,7 @@ describe('AnthropicGoogleCloud', () => {
         new Error('Unable to detect a Project Id in the current environment.'),
       );
 
-      const client = new AnthropicGoogleCloud({
+      const client = new JuglowGoogleCloud({
         location: 'us-central1',
         workspaceId: 'wrkspc_test',
         maxRetries: 0,
@@ -343,7 +343,7 @@ describe('AnthropicGoogleCloud', () => {
 
       await expect(makeRequest(client)).rejects.toThrow(
         'No project was given and it could not be resolved from Google credentials. Set `project` or the ' +
-          '`ANTHROPIC_GOOGLE_CLOUD_PROJECT` environment variable (or provide `baseURL`).',
+          '`HAIJUN_GOOGLE_CLOUD_PROJECT` environment variable (or provide `baseURL`).',
       );
       expect(mockFetch).not.toHaveBeenCalled();
     });
@@ -354,7 +354,7 @@ describe('AnthropicGoogleCloud', () => {
       const handler = jest.fn();
       process.on('unhandledRejection', handler);
       try {
-        new AnthropicGoogleCloud({ location: 'us-central1', workspaceId: 'wrkspc_test' });
+        new JuglowGoogleCloud({ location: 'us-central1', workspaceId: 'wrkspc_test' });
         // Let any microtask/rejection settle
         await new Promise((r) => setImmediate(r));
         expect(handler).not.toHaveBeenCalled();
@@ -371,7 +371,7 @@ describe('AnthropicGoogleCloud', () => {
       const handler = jest.fn();
       process.on('unhandledRejection', handler);
       try {
-        const client = new AnthropicGoogleCloud({
+        const client = new JuglowGoogleCloud({
           project: 'my-project',
           location: 'us-central1',
           workspaceId: 'wrkspc_test',
@@ -391,7 +391,7 @@ describe('AnthropicGoogleCloud', () => {
       const googleAuth = new GoogleAuth({ scopes: 'https://www.googleapis.com/auth/cloud-platform' });
       jest.spyOn(googleAuth, 'getProjectId').mockResolvedValue('caller-project');
 
-      const client = new AnthropicGoogleCloud({
+      const client = new JuglowGoogleCloud({
         location: 'us-central1',
         workspaceId: 'wrkspc_test',
         bearerTokenProvider: async () => 'my-google-token',
@@ -411,7 +411,7 @@ describe('AnthropicGoogleCloud', () => {
     test('the unresolved-state baseURL is an unroutable placeholder, never the default API host', () => {
       jest.spyOn(GoogleAuth.prototype, 'getProjectId').mockReturnValue(new Promise(() => {}));
 
-      const client = new AnthropicGoogleCloud({ location: 'us-central1', workspaceId: 'wrkspc_test' });
+      const client = new JuglowGoogleCloud({ location: 'us-central1', workspaceId: 'wrkspc_test' });
 
       expect(client.baseURL).toBe('https://unresolved.invalid');
     });
@@ -422,7 +422,7 @@ describe('AnthropicGoogleCloud', () => {
         .spyOn(GoogleAuth.prototype, 'getProjectId')
         .mockReturnValue(new Promise<string>((r) => (resolveProject = r)));
 
-      const client = new AnthropicGoogleCloud({
+      const client = new JuglowGoogleCloud({
         location: 'us-central1',
         workspaceId: 'wrkspc_test',
         bearerTokenProvider: async () => 'my-google-token',
@@ -440,16 +440,16 @@ describe('AnthropicGoogleCloud', () => {
       resolveProject('adc-project');
       const { url, req } = await pending;
       expect(url).toBe(
-        'https://claude.googleapis.com/v1alpha/projects/adc-project/locations/us-central1/workspaces/wrkspc_test/invoke/v1/messages',
+        'https://haijun.googleapis.com/v1alpha/projects/adc-project/locations/us-central1/workspaces/wrkspc_test/invoke/v1/messages',
       );
-      expect(url).not.toContain('api.anthropic.com');
+      expect(url).not.toContain('platform.juglow.my.id');
       expect((req.headers as Headers).get('authorization')).toBe('Bearer my-google-token');
     });
 
-    test('buildRequest() rejects when resolution failed — no default-host request can carry the bearer', async () => {
+    test('buildRequest() rejects when resolution failed â€” no default-host request can carry the bearer', async () => {
       jest.spyOn(GoogleAuth.prototype, 'getProjectId').mockRejectedValue(new Error('no project'));
 
-      const client = new AnthropicGoogleCloud({
+      const client = new JuglowGoogleCloud({
         location: 'us-central1',
         workspaceId: 'wrkspc_test',
         bearerTokenProvider: async () => 'my-google-token',
@@ -466,7 +466,7 @@ describe('AnthropicGoogleCloud', () => {
   describe('withOptions', () => {
     test('clones keep the gateway options: URL, workspace ID, and token provider', async () => {
       const bearerTokenProvider = jest.fn().mockResolvedValue('my-google-token');
-      const client = new AnthropicGoogleCloud({
+      const client = new JuglowGoogleCloud({
         project: 'my-project',
         location: 'us-central1',
         workspaceId: 'wrkspc_clone',
@@ -486,13 +486,13 @@ describe('AnthropicGoogleCloud', () => {
       expect(url).toContain('workspaces/wrkspc_clone');
       const headers = getRequestHeaders();
       expect(headers.get('authorization')).toBe('Bearer my-google-token');
-      expect(headers.get('anthropic-workspace-id')).toBeNull();
+      expect(headers.get('Juglow-workspace-id')).toBeNull();
       expect(bearerTokenProvider).toHaveBeenCalledTimes(1);
     });
 
     test('clones keep a caller-supplied authClient', async () => {
       const authClient = { getAccessToken: jest.fn().mockResolvedValue({ token: 'impersonated-token' }) };
-      const client = new AnthropicGoogleCloud({
+      const client = new JuglowGoogleCloud({
         baseURL: 'https://gw.example.com',
         workspaceId: 'wrkspc_test',
         authClient: authClient as any,
@@ -506,7 +506,7 @@ describe('AnthropicGoogleCloud', () => {
     });
 
     test('clones keep skipAuth', async () => {
-      const client = new AnthropicGoogleCloud({
+      const client = new JuglowGoogleCloud({
         baseURL: 'https://gw.example.com',
         skipAuth: true,
         maxRetries: 0,
@@ -522,7 +522,7 @@ describe('AnthropicGoogleCloud', () => {
     test('a clone created mid-resolution resolves the project itself', async () => {
       jest.spyOn(GoogleAuth.prototype, 'getProjectId').mockResolvedValue('adc-project');
 
-      const client = new AnthropicGoogleCloud({
+      const client = new JuglowGoogleCloud({
         location: 'us-central1',
         workspaceId: 'wrkspc_test',
         maxRetries: 0,
@@ -533,7 +533,7 @@ describe('AnthropicGoogleCloud', () => {
 
       const [url] = mockFetch.mock.calls[0]!;
       expect(url).toContain('projects/adc-project');
-      expect(url).not.toContain('api.anthropic.com');
+      expect(url).not.toContain('platform.juglow.my.id');
       expect(getRequestHeaders().get('authorization')).toBe('Bearer adc-token');
     });
 
@@ -542,7 +542,7 @@ describe('AnthropicGoogleCloud', () => {
         .spyOn(GoogleAuth.prototype, 'getProjectId')
         .mockResolvedValue('adc-project');
 
-      const client = new AnthropicGoogleCloud({
+      const client = new JuglowGoogleCloud({
         location: 'us-central1',
         workspaceId: 'wrkspc_test',
         maxRetries: 0,
@@ -558,7 +558,7 @@ describe('AnthropicGoogleCloud', () => {
     });
 
     test('overriding workspaceId on a derived-URL clone re-derives the URL path', () => {
-      const client = new AnthropicGoogleCloud({
+      const client = new JuglowGoogleCloud({
         project: 'my-project',
         location: 'us-central1',
         workspaceId: 'wrkspc_a',
@@ -568,12 +568,12 @@ describe('AnthropicGoogleCloud', () => {
       expect(clone.workspaceId).toBe('wrkspc_b');
       expect(clone.project).toBe('my-project');
       expect(clone.baseURL).toBe(
-        'https://claude.googleapis.com/v1alpha/projects/my-project/locations/us-central1/workspaces/wrkspc_b/invoke',
+        'https://haijun.googleapis.com/v1alpha/projects/my-project/locations/us-central1/workspaces/wrkspc_b/invoke',
       );
     });
 
     test('overriding location on a derived-URL clone re-derives the URL path', () => {
-      const client = new AnthropicGoogleCloud({
+      const client = new JuglowGoogleCloud({
         project: 'my-project',
         location: 'us-central1',
         workspaceId: 'wrkspc_a',
@@ -582,12 +582,12 @@ describe('AnthropicGoogleCloud', () => {
       const clone = client.withOptions({ location: 'europe-west4' });
       expect(clone.location).toBe('europe-west4');
       expect(clone.baseURL).toBe(
-        'https://claude.googleapis.com/v1alpha/projects/my-project/locations/europe-west4/workspaces/wrkspc_a/invoke',
+        'https://haijun.googleapis.com/v1alpha/projects/my-project/locations/europe-west4/workspaces/wrkspc_a/invoke',
       );
     });
 
     test('an explicit baseURL passes through clones even when gateway options change', () => {
-      const client = new AnthropicGoogleCloud({
+      const client = new JuglowGoogleCloud({
         baseURL: 'https://gw.example.com',
         workspaceId: 'wrkspc_a',
       });
@@ -600,7 +600,7 @@ describe('AnthropicGoogleCloud', () => {
     test('a clone created mid-resolution derives with its overridden workspaceId', async () => {
       jest.spyOn(GoogleAuth.prototype, 'getProjectId').mockResolvedValue('adc-project');
 
-      const client = new AnthropicGoogleCloud({
+      const client = new JuglowGoogleCloud({
         location: 'us-central1',
         workspaceId: 'wrkspc_a',
         maxRetries: 0,
@@ -612,7 +612,7 @@ describe('AnthropicGoogleCloud', () => {
       const [url] = mockFetch.mock.calls[0]!;
       expect(url).toContain('projects/adc-project');
       expect(url).toContain('workspaces/wrkspc_b');
-      expect(getRequestHeaders().get('anthropic-workspace-id')).toBeNull();
+      expect(getRequestHeaders().get('Juglow-workspace-id')).toBeNull();
     });
   });
 
@@ -620,7 +620,7 @@ describe('AnthropicGoogleCloud', () => {
     test('sends a bearer token from bearerTokenProvider and no workspace header', async () => {
       const bearerTokenProvider = jest.fn().mockResolvedValue('my-google-token');
 
-      const client = new AnthropicGoogleCloud({
+      const client = new JuglowGoogleCloud({
         project: 'my-project',
         location: 'us-central1',
         workspaceId: 'wrkspc_abc',
@@ -635,20 +635,20 @@ describe('AnthropicGoogleCloud', () => {
 
       const [url] = mockFetch.mock.calls[0]!;
       expect(url).toBe(
-        'https://claude.googleapis.com/v1alpha/projects/my-project/locations/us-central1/workspaces/wrkspc_abc/invoke/v1/messages',
+        'https://haijun.googleapis.com/v1alpha/projects/my-project/locations/us-central1/workspaces/wrkspc_abc/invoke/v1/messages',
       );
 
       const headers = getRequestHeaders();
       expect(headers.get('authorization')).toBe('Bearer my-google-token');
       // The workspace ID travels only in the URL path, never as a header.
-      expect(headers.get('anthropic-workspace-id')).toBeNull();
-      expect(headers.get('anthropic-version')).toBeTruthy();
+      expect(headers.get('Juglow-workspace-id')).toBeNull();
+      expect(headers.get('Juglow-version')).toBeTruthy();
     });
 
     test('uses a google-auth AuthClient when no bearerTokenProvider is given', async () => {
       const authClient = { getAccessToken: jest.fn().mockResolvedValue({ token: 'adc-token' }) };
 
-      const client = new AnthropicGoogleCloud({
+      const client = new JuglowGoogleCloud({
         baseURL: 'https://gw.example.com',
         workspaceId: 'wrkspc_test',
         authClient: authClient as any,
@@ -664,7 +664,7 @@ describe('AnthropicGoogleCloud', () => {
 
     test('a constructor defaultHeaders Authorization suppresses the token fetch', async () => {
       const bearerTokenProvider = jest.fn();
-      const client = new AnthropicGoogleCloud({
+      const client = new JuglowGoogleCloud({
         baseURL: 'https://gw.example.com',
         workspaceId: 'wrkspc_test',
         defaultHeaders: { Authorization: 'Bearer caller-token' },
@@ -677,12 +677,12 @@ describe('AnthropicGoogleCloud', () => {
       expect(bearerTokenProvider).not.toHaveBeenCalled();
       const headers = getRequestHeaders();
       expect(headers.get('authorization')).toBe('Bearer caller-token');
-      expect(headers.get('anthropic-workspace-id')).toBeNull();
+      expect(headers.get('Juglow-workspace-id')).toBeNull();
     });
 
     test('a per-request `Authorization: null` sends the request unauthenticated', async () => {
       const bearerTokenProvider = jest.fn();
-      const client = new AnthropicGoogleCloud({
+      const client = new JuglowGoogleCloud({
         baseURL: 'https://gw.example.com',
         workspaceId: 'wrkspc_test',
         bearerTokenProvider,
@@ -691,7 +691,7 @@ describe('AnthropicGoogleCloud', () => {
 
       await client.messages.create(
         {
-          model: 'claude-haiku-4-5',
+          model: 'haijun-haiku',
           max_tokens: 1024,
           messages: [{ content: 'Test message', role: 'user' }],
         },
@@ -702,13 +702,13 @@ describe('AnthropicGoogleCloud', () => {
       expect(getRequestHeaders().get('authorization')).toBeNull();
     });
 
-    test('an Authorization in ANTHROPIC_CUSTOM_HEADERS wins under the only-if-absent contract', async () => {
-      // Exactly one Authorization header goes out — the env-supplied one — and
+    test('an Authorization in HAIJUN_CUSTOM_HEADERS wins under the only-if-absent contract', async () => {
+      // Exactly one Authorization header goes out â€” the env-supplied one â€” and
       // the token provider is never called.
-      process.env['ANTHROPIC_CUSTOM_HEADERS'] = 'Authorization: Bearer env-token';
+      process.env['HAIJUN_CUSTOM_HEADERS'] = 'Authorization: Bearer env-token';
       const bearerTokenProvider = jest.fn();
 
-      const client = new AnthropicGoogleCloud({
+      const client = new JuglowGoogleCloud({
         project: 'my-project',
         location: 'us-central1',
         workspaceId: 'wrkspc_test',
@@ -721,16 +721,16 @@ describe('AnthropicGoogleCloud', () => {
       expect(bearerTokenProvider).not.toHaveBeenCalled();
       const headers = getRequestHeaders();
       expect(headers.get('authorization')).toBe('Bearer env-token');
-      // Headers normalises the merge — guard against a duplicate slipping in.
+      // Headers normalises the merge â€” guard against a duplicate slipping in.
       expect([...headers.entries()].filter(([k]) => k === 'authorization')).toHaveLength(1);
-      expect(headers.get('anthropic-workspace-id')).toBeNull();
+      expect(headers.get('Juglow-workspace-id')).toBeNull();
     });
 
     test('an explicit credential source suppresses ADC discovery', async () => {
       const getClientSpy = jest.spyOn(GoogleAuth.prototype, 'getClient');
       getClientSpy.mockClear();
 
-      const provider = new AnthropicGoogleCloud({
+      const provider = new JuglowGoogleCloud({
         baseURL: 'https://gw.example.com',
         workspaceId: 'wrkspc_test',
         bearerTokenProvider: async () => 'my-google-token',
@@ -740,7 +740,7 @@ describe('AnthropicGoogleCloud', () => {
       expect(getClientSpy).not.toHaveBeenCalled();
 
       const authClient = { getAccessToken: jest.fn().mockResolvedValue({ token: 'tok' }) };
-      const explicit = new AnthropicGoogleCloud({
+      const explicit = new JuglowGoogleCloud({
         baseURL: 'https://gw.example.com',
         workspaceId: 'wrkspc_test',
         authClient: authClient as any,
@@ -750,10 +750,10 @@ describe('AnthropicGoogleCloud', () => {
       expect(getClientSpy).not.toHaveBeenCalled();
     });
 
-    test('passes ANTHROPIC_CUSTOM_HEADERS through without a workspace header', async () => {
-      process.env['ANTHROPIC_CUSTOM_HEADERS'] = 'x-my-trace: abc';
+    test('passes HAIJUN_CUSTOM_HEADERS through without a workspace header', async () => {
+      process.env['HAIJUN_CUSTOM_HEADERS'] = 'x-my-trace: abc';
 
-      const client = new AnthropicGoogleCloud({
+      const client = new JuglowGoogleCloud({
         project: 'my-project',
         location: 'us-central1',
         workspaceId: 'wrkspc_test',
@@ -765,7 +765,7 @@ describe('AnthropicGoogleCloud', () => {
 
       const headers = getRequestHeaders();
       expect(headers.get('x-my-trace')).toBe('abc');
-      expect(headers.get('anthropic-workspace-id')).toBeNull();
+      expect(headers.get('Juglow-workspace-id')).toBeNull();
       expect(headers.get('authorization')).toBe('Bearer my-google-token');
     });
 
@@ -775,7 +775,7 @@ describe('AnthropicGoogleCloud', () => {
         logged.push(args.map((a) => (typeof a === 'string' ? a : JSON.stringify(a))).join(' '));
       };
       const logger = { debug: push, info: push, warn: push, error: push };
-      const client = new AnthropicGoogleCloud({
+      const client = new JuglowGoogleCloud({
         baseURL: 'https://gw.example.com',
         workspaceId: 'wrkspc_test',
         bearerTokenProvider: async () => 'my-google-token',
@@ -793,10 +793,10 @@ describe('AnthropicGoogleCloud', () => {
   });
 
   describe('no env-credential leak', () => {
-    test('does not send x-api-key even when ANTHROPIC_API_KEY is set', async () => {
-      process.env['ANTHROPIC_API_KEY'] = 'sk-ant-should-not-leak';
+    test('does not send x-api-key even when HAIJUN_API_KEY is set', async () => {
+      process.env['HAIJUN_API_KEY'] = 'sk-ant-should-not-leak';
 
-      const client = new AnthropicGoogleCloud({
+      const client = new JuglowGoogleCloud({
         project: 'my-project',
         location: 'us-central1',
         workspaceId: 'wrkspc_test',
@@ -813,10 +813,10 @@ describe('AnthropicGoogleCloud', () => {
       expect(headers.get('authorization')).toBe('Bearer my-google-token');
     });
 
-    test('does not send a base-derived Authorization even when ANTHROPIC_AUTH_TOKEN is set', async () => {
-      process.env['ANTHROPIC_AUTH_TOKEN'] = 'base-token-should-not-leak';
+    test('does not send a base-derived Authorization even when HAIJUN_AUTH_TOKEN is set', async () => {
+      process.env['HAIJUN_AUTH_TOKEN'] = 'base-token-should-not-leak';
 
-      const client = new AnthropicGoogleCloud({
+      const client = new JuglowGoogleCloud({
         project: 'my-project',
         location: 'us-central1',
         workspaceId: 'wrkspc_test',
@@ -832,22 +832,22 @@ describe('AnthropicGoogleCloud', () => {
       expect(getRequestHeaders().get('authorization')).toBe('Bearer my-google-token');
     });
 
-    test('does not inherit ANTHROPIC_BASE_URL', () => {
-      process.env['ANTHROPIC_BASE_URL'] = 'https://api.anthropic.com';
+    test('does not inherit HAIJUN_BASE_URL', () => {
+      process.env['HAIJUN_BASE_URL'] = 'https://platform.juglow.my.id';
 
-      const client = new AnthropicGoogleCloud({
+      const client = new JuglowGoogleCloud({
         project: 'my-project',
         location: 'us-central1',
         workspaceId: 'wrkspc_test',
       });
 
-      expect(client.baseURL).toContain('claude.googleapis.com');
+      expect(client.baseURL).toContain('haijun.googleapis.com');
     });
 
-    test('skipAuth sends no Authorization even when ANTHROPIC_AUTH_TOKEN is set', async () => {
-      process.env['ANTHROPIC_AUTH_TOKEN'] = 'base-token-should-not-leak';
+    test('skipAuth sends no Authorization even when HAIJUN_AUTH_TOKEN is set', async () => {
+      process.env['HAIJUN_AUTH_TOKEN'] = 'base-token-should-not-leak';
 
-      const client = new AnthropicGoogleCloud({
+      const client = new JuglowGoogleCloud({
         baseURL: 'https://gw.example.com',
         skipAuth: true,
         maxRetries: 0,
@@ -861,11 +861,11 @@ describe('AnthropicGoogleCloud', () => {
 
   describe('profile-chain isolation', () => {
     beforeEach(() => {
-      process.env['ANTHROPIC_CONFIG_DIR'] = PROFILE_FIXTURE_DIR;
+      process.env['HAIJUN_CONFIG_DIR'] = PROFILE_FIXTURE_DIR;
     });
 
     test('a resolvable profile cannot rewrite the derived base URL or attach credentials', async () => {
-      const client = new AnthropicGoogleCloud({
+      const client = new JuglowGoogleCloud({
         project: 'my-project',
         location: 'us-central1',
         workspaceId: 'wrkspc_test',
@@ -876,22 +876,22 @@ describe('AnthropicGoogleCloud', () => {
       await makeRequest(client);
 
       const [url] = mockFetch.mock.calls[0]!;
-      expect(url).toContain('claude.googleapis.com');
+      expect(url).toContain('haijun.googleapis.com');
       expect(url).toContain('locations/us-central1');
       expect(url).not.toContain('profile-gateway.example.com');
 
       const headers = getRequestHeaders();
       expect(headers.get('authorization')).toBe('Bearer my-google-token');
-      // The profile token chain stamps an oauth anthropic-beta value; its
+      // The profile token chain stamps an oauth Juglow-beta value; its
       // absence proves the chain never ran.
-      expect(headers.get('anthropic-beta') ?? '').not.toContain('oauth');
+      expect(headers.get('Juglow-beta') ?? '').not.toContain('oauth');
     });
 
     test('the profile base_url cannot win the race against lazy project resolution', async () => {
       const getProjectIdSpy: jest.SpyInstance = jest.spyOn(GoogleAuth.prototype, 'getProjectId');
       getProjectIdSpy.mockResolvedValue('adc-project');
 
-      const client = new AnthropicGoogleCloud({
+      const client = new JuglowGoogleCloud({
         location: 'us-central1',
         workspaceId: 'wrkspc_test',
         maxRetries: 0,
@@ -912,7 +912,7 @@ describe('AnthropicGoogleCloud', () => {
     ])('rejects the base `%s` option at runtime', (key, value) => {
       expect(
         () =>
-          new AnthropicGoogleCloud({
+          new JuglowGoogleCloud({
             baseURL: 'https://gw.example.com',
             workspaceId: 'wrkspc_test',
             [key]: value,
@@ -924,14 +924,14 @@ describe('AnthropicGoogleCloud', () => {
   describe('skipAuth', () => {
     test('does not require a workspace ID when baseURL is explicit', () => {
       expect(
-        () => new AnthropicGoogleCloud({ baseURL: 'https://gw.example.com', skipAuth: true }),
+        () => new JuglowGoogleCloud({ baseURL: 'https://gw.example.com', skipAuth: true }),
       ).not.toThrow();
     });
 
     test('sends neither an Authorization nor an x-api-key header', async () => {
-      process.env['ANTHROPIC_API_KEY'] = 'sk-ant-should-not-leak';
+      process.env['HAIJUN_API_KEY'] = 'sk-ant-should-not-leak';
 
-      const client = new AnthropicGoogleCloud({
+      const client = new JuglowGoogleCloud({
         baseURL: 'https://gw.example.com',
         skipAuth: true,
         maxRetries: 0,
@@ -945,7 +945,7 @@ describe('AnthropicGoogleCloud', () => {
     });
 
     test('sends no workspace header even when a workspace ID is given', async () => {
-      const client = new AnthropicGoogleCloud({
+      const client = new JuglowGoogleCloud({
         baseURL: 'https://gw.example.com',
         workspaceId: 'wrkspc_test',
         skipAuth: true,
@@ -955,25 +955,25 @@ describe('AnthropicGoogleCloud', () => {
       await makeRequest(client);
 
       const headers = getRequestHeaders();
-      expect(headers.get('anthropic-workspace-id')).toBeNull();
+      expect(headers.get('Juglow-workspace-id')).toBeNull();
       expect(headers.get('authorization')).toBeNull();
     });
   });
 
   describe('surface', () => {
     test('drops the deprecated completions resource', () => {
-      const client = new AnthropicGoogleCloud({
+      const client = new JuglowGoogleCloud({
         baseURL: 'https://gw.example.com',
         workspaceId: 'wrkspc_test',
       });
 
       expect(() => client.completions).toThrow(
-        'The deprecated text Completions API is not available on Claude Platform on Google Cloud',
+        'The deprecated text Completions API is not available on haijun Platform on Google Cloud',
       );
     });
 
     test('keeps messages, models, beta, and batches', () => {
-      const client = new AnthropicGoogleCloud({
+      const client = new JuglowGoogleCloud({
         baseURL: 'https://gw.example.com',
         workspaceId: 'wrkspc_test',
       });
@@ -986,20 +986,20 @@ describe('AnthropicGoogleCloud', () => {
   });
 
   test('user agent is a hardcoded string', async () => {
-    const originalName = AnthropicGoogleCloud.name;
+    const originalName = JuglowGoogleCloud.name;
     // Rename the class, as a minifier would, to prove the header isn't derived from it.
-    Object.defineProperty(AnthropicGoogleCloud, 'name', { value: 'MinifiedClient' });
+    Object.defineProperty(JuglowGoogleCloud, 'name', { value: 'MinifiedClient' });
     try {
-      const client = new AnthropicGoogleCloud({
+      const client = new JuglowGoogleCloud({
         baseURL: 'https://gw.example.com',
         workspaceId: 'wrkspc_test',
         bearerTokenProvider: async () => 'my-google-token',
       });
       expect(client.constructor.name).toBe('MinifiedClient');
       const { req } = await client.buildRequest({ path: '/foo', method: 'post' });
-      expect(req.headers.get('user-agent')).toBe(`AnthropicGoogleCloud/JS ${VERSION}`);
+      expect(req.headers.get('user-agent')).toBe(`JuglowGoogleCloud/JS ${VERSION}`);
     } finally {
-      Object.defineProperty(AnthropicGoogleCloud, 'name', { value: originalName });
+      Object.defineProperty(JuglowGoogleCloud, 'name', { value: originalName });
     }
   });
 });

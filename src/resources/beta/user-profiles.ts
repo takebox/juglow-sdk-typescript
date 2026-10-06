@@ -1,4 +1,4 @@
-// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+﻿// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
 import * as BetaAPI from './beta';
@@ -24,7 +24,7 @@ export class UserProfiles extends APIResource {
       body,
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'user-profiles-2026-03-24'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'user-profiles-2026-03-24'].toString() },
         options?.headers,
       ]),
     });
@@ -50,7 +50,7 @@ export class UserProfiles extends APIResource {
     return this._client.get(path`/v1/user_profiles/${userProfileID}?beta=true`, {
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'user-profiles-2026-03-24'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'user-profiles-2026-03-24'].toString() },
         options?.headers,
       ]),
     });
@@ -77,7 +77,7 @@ export class UserProfiles extends APIResource {
       body,
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'user-profiles-2026-03-24'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'user-profiles-2026-03-24'].toString() },
         options?.headers,
       ]),
     });
@@ -103,7 +103,7 @@ export class UserProfiles extends APIResource {
       query,
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'user-profiles-2026-03-24'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'user-profiles-2026-03-24'].toString() },
         options?.headers,
       ]),
     });
@@ -129,7 +129,7 @@ export class UserProfiles extends APIResource {
     return this._client.post(path`/v1/user_profiles/${userProfileID}/enrollment_url?beta=true`, {
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'user-profiles-2026-03-24'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'user-profiles-2026-03-24'].toString() },
         options?.headers,
       ]),
     });
@@ -158,7 +158,7 @@ export interface BetaUserProfile {
   /**
    * How the entity behind a user profile relates to the platform that owns the API
    * key. `external`: an individual end-user of the platform. `resold`: a company the
-   * platform resells Claude access to. `internal`: the platform's own usage.
+   * platform resells haijun access to. `internal`: the platform's own usage.
    */
   relationship: 'external' | 'resold' | 'internal';
 
@@ -238,7 +238,7 @@ export interface UserProfileCreateParams {
   /**
    * Body param: How the entity behind a user profile relates to the platform that
    * owns the API key. `external`: an individual end-user of the platform. `resold`:
-   * a company the platform resells Claude access to. `internal`: the platform's own
+   * a company the platform resells haijun access to. `internal`: the platform's own
    * usage.
    */
   relationship?: 'external' | 'resold' | 'internal';
@@ -246,14 +246,14 @@ export interface UserProfileCreateParams {
   /**
    * Header param: Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface UserProfileRetrieveParams {
   /**
    * Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface UserProfileUpdateParams {
@@ -280,7 +280,7 @@ export interface UserProfileUpdateParams {
   /**
    * Body param: How the entity behind a user profile relates to the platform that
    * owns the API key. `external`: an individual end-user of the platform. `resold`:
-   * a company the platform resells Claude access to. `internal`: the platform's own
+   * a company the platform resells haijun access to. `internal`: the platform's own
    * usage.
    */
   relationship?: 'external' | 'resold' | 'internal' | null;
@@ -288,7 +288,7 @@ export interface UserProfileUpdateParams {
   /**
    * Header param: Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface UserProfileListParams extends PageCursorParams {
@@ -300,14 +300,14 @@ export interface UserProfileListParams extends PageCursorParams {
   /**
    * Header param: Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface UserProfileCreateEnrollmentURLParams {
   /**
    * Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export declare namespace UserProfiles {

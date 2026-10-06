@@ -2,7 +2,7 @@ import { FromSchema, JSONSchema } from 'json-schema-to-ts';
 import { Promisable, BetaRunnableTool, BetaToolRunContext } from '../../lib/tools/BetaRunnableTool';
 import { BetaToolResultContentBlockParam } from '../../resources/beta';
 import { AutoParseableBetaOutputFormat } from '../../lib/beta-parser';
-import { AnthropicError } from '../..';
+import { JuglowError } from '../..';
 import { transformJSONSchema } from '../../lib/transform-json-schema';
 
 type NoInfer<T> = T extends infer R ? R : never;
@@ -78,7 +78,7 @@ export function betaJSONSchemaOutputFormat<
       try {
         return JSON.parse(content);
       } catch (error) {
-        throw new AnthropicError(`Failed to parse structured output: ${error}`);
+        throw new JuglowError(`Failed to parse structured output: ${error}`);
       }
     },
   };

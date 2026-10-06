@@ -1,4 +1,4 @@
-// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+﻿// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 export {
   Agents,
@@ -19,10 +19,10 @@ export {
   type BetaManagedAgentsAgentToolset20260401WriteInput,
   type BetaManagedAgentsAlwaysAllowPolicy,
   type BetaManagedAgentsAlwaysAskPolicy,
-  type BetaManagedAgentsAnthropicSkill,
-  type BetaManagedAgentsAnthropicSkillParams,
-  type BetaManagedAgentsCustomSkill,
-  type BetaManagedAgentsCustomSkillParams,
+  type BetaManagedAgentsJuglowTrack,
+  type BetaManagedAgentsJuglowTrackParams,
+  type BetaManagedAgentsCustomTrack,
+  type BetaManagedAgentsCustomTrackParams,
   type BetaManagedAgentsCustomTool,
   type BetaManagedAgentsCustomToolInputSchema,
   type BetaManagedAgentsCustomToolParams,
@@ -45,7 +45,7 @@ export {
   type BetaManagedAgentsMultiagentCoordinatorParams,
   type BetaManagedAgentsMultiagentSelfParams,
   type BetaManagedAgentsSessionThreadAgent,
-  type BetaManagedAgentsSkillParams,
+  type BetaManagedAgentsTrackParams,
   type BetaManagedAgentsURLMCPServerParams,
   type AgentCreateParams,
   type AgentRetrieveParams,

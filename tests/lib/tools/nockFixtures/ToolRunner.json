@@ -1,10 +1,10 @@
-[
+﻿[
   {
-    "scope": "https://api.anthropic.com:443",
+    "scope": "https://platform.juglow.my.id:443",
     "method": "POST",
     "path": "/v1/messages?beta=true",
     "body": {
-      "model": "claude-opus-4-8",
+      "model": "haijun-opus-8",
       "max_tokens": 1000,
       "messages": [
         {
@@ -34,7 +34,7 @@
     },
     "status": 200,
     "response": {
-      "model": "claude-opus-4-8",
+      "model": "haijun-opus-8",
       "id": "msg_012foMGXNQ1eqhaq3QvA5dY6",
       "type": "message",
       "role": "assistant",
@@ -67,7 +67,7 @@
       }
     },
     "rawHeaders": {
-      "anthropic-organization-id": "5576611f-a1ee-427c-9800-298d9579899c",
+      "Juglow-organization-id": "5576611f-a1ee-427c-9800-298d9579899c",
       "cf-cache-status": "DYNAMIC",
       "cf-ray": "9a1f34a6fdcab91a-AMS",
       "connection": "keep-alive",
@@ -83,11 +83,11 @@
     "responseIsBinary": false
   },
   {
-    "scope": "https://api.anthropic.com:443",
+    "scope": "https://platform.juglow.my.id:443",
     "method": "POST",
     "path": "/v1/messages?beta=true",
     "body": {
-      "model": "claude-opus-4-8",
+      "model": "haijun-opus-8",
       "max_tokens": 1000,
       "messages": [
         {
@@ -144,7 +144,7 @@
     },
     "status": 200,
     "response": {
-      "model": "claude-opus-4-8",
+      "model": "haijun-opus-8",
       "id": "msg_01J176zPPSGQBvQpzw2qy5x4",
       "type": "message",
       "role": "assistant",
@@ -169,7 +169,7 @@
       }
     },
     "rawHeaders": {
-      "anthropic-organization-id": "5576611f-a1ee-427c-9800-298d9579899c",
+      "Juglow-organization-id": "5576611f-a1ee-427c-9800-298d9579899c",
       "cf-cache-status": "DYNAMIC",
       "cf-ray": "9a1f34b65e33b91a-AMS",
       "connection": "keep-alive",
@@ -185,11 +185,11 @@
     "responseIsBinary": false
   },
   {
-    "scope": "https://api.anthropic.com:443",
+    "scope": "https://platform.juglow.my.id:443",
     "method": "POST",
     "path": "/v1/messages?beta=true",
     "body": {
-      "model": "claude-opus-4-8",
+      "model": "haijun-opus-8",
       "max_tokens": 1000,
       "messages": [
         {
@@ -219,7 +219,7 @@
     },
     "status": 200,
     "response": {
-      "model": "claude-opus-4-8",
+      "model": "haijun-opus-8",
       "id": "msg_014tGTGP6AJwJvBHFgXxjp88",
       "type": "message",
       "role": "assistant",
@@ -260,7 +260,7 @@
       }
     },
     "rawHeaders": {
-      "anthropic-organization-id": "5576611f-a1ee-427c-9800-298d9579899c",
+      "Juglow-organization-id": "5576611f-a1ee-427c-9800-298d9579899c",
       "cf-cache-status": "DYNAMIC",
       "cf-ray": "9a1f34c86fe3b91a-AMS",
       "connection": "keep-alive",
@@ -276,11 +276,11 @@
     "responseIsBinary": false
   },
   {
-    "scope": "https://api.anthropic.com:443",
+    "scope": "https://platform.juglow.my.id:443",
     "method": "POST",
     "path": "/v1/messages?beta=true",
     "body": {
-      "model": "claude-opus-4-8",
+      "model": "haijun-opus-8",
       "max_tokens": 1000,
       "messages": [
         {
@@ -350,7 +350,7 @@
     },
     "status": 200,
     "response": {
-      "model": "claude-opus-4-8",
+      "model": "haijun-opus-8",
       "id": "msg_012FSxyfosSXbcSgY8XJVTTi",
       "type": "message",
       "role": "assistant",
@@ -375,7 +375,7 @@
       }
     },
     "rawHeaders": {
-      "anthropic-organization-id": "5576611f-a1ee-427c-9800-298d9579899c",
+      "Juglow-organization-id": "5576611f-a1ee-427c-9800-298d9579899c",
       "cf-cache-status": "DYNAMIC",
       "cf-ray": "9a1f34ddca87b91a-AMS",
       "connection": "keep-alive",
@@ -391,11 +391,11 @@
     "responseIsBinary": false
   },
   {
-    "scope": "https://api.anthropic.com:443",
+    "scope": "https://platform.juglow.my.id:443",
     "method": "POST",
     "path": "/v1/messages?beta=true",
     "body": {
-      "model": "claude-opus-4-8",
+      "model": "haijun-opus-8",
       "max_tokens": 1000,
       "messages": [
         {
@@ -425,7 +425,7 @@
     },
     "status": 200,
     "response": {
-      "model": "claude-opus-4-8",
+      "model": "haijun-opus-8",
       "id": "msg_01NxJEcDDsnAHe22dkAgkUrB",
       "type": "message",
       "role": "assistant",
@@ -458,7 +458,7 @@
       }
     },
     "rawHeaders": {
-      "anthropic-organization-id": "5576611f-a1ee-427c-9800-298d9579899c",
+      "Juglow-organization-id": "5576611f-a1ee-427c-9800-298d9579899c",
       "cf-cache-status": "DYNAMIC",
       "cf-ray": "9a1f34f0b9cbb91a-AMS",
       "connection": "keep-alive",
@@ -474,11 +474,11 @@
     "responseIsBinary": false
   },
   {
-    "scope": "https://api.anthropic.com:443",
+    "scope": "https://platform.juglow.my.id:443",
     "method": "POST",
     "path": "/v1/messages?beta=true",
     "body": {
-      "model": "claude-opus-4-8",
+      "model": "haijun-opus-8",
       "max_tokens": 1000,
       "messages": [
         {
@@ -535,7 +535,7 @@
     },
     "status": 200,
     "response": {
-      "model": "claude-opus-4-8",
+      "model": "haijun-opus-8",
       "id": "msg_01RVfMNB6BmkupnqNYej3ZXX",
       "type": "message",
       "role": "assistant",
@@ -560,7 +560,7 @@
       }
     },
     "rawHeaders": {
-      "anthropic-organization-id": "5576611f-a1ee-427c-9800-298d9579899c",
+      "Juglow-organization-id": "5576611f-a1ee-427c-9800-298d9579899c",
       "cf-cache-status": "DYNAMIC",
       "cf-ray": "9a1f350159a0b91a-AMS",
       "connection": "keep-alive",
@@ -576,11 +576,11 @@
     "responseIsBinary": false
   },
   {
-    "scope": "https://api.anthropic.com:443",
+    "scope": "https://platform.juglow.my.id:443",
     "method": "POST",
     "path": "/v1/messages?beta=true",
     "body": {
-      "model": "claude-sonnet-4-5",
+      "model": "haijun-sonnet-5",
       "max_tokens": 4000,
       "messages": [
         {
@@ -607,14 +607,14 @@
     },
     "status": 200,
     "response": {
-      "model": "claude-sonnet-4-5-20250929",
+      "model": "haijun-sonnet-5-20250929",
       "id": "msg_01Y2MsBpmaj4eQtsXSBak3dE",
       "type": "message",
       "role": "assistant",
       "content": [
         {
           "type": "text",
-          "text": "I'll write a detailed 500-word essay about dogs, cats, and birds, and then submit it using the tool.\n\n**Our Beloved Companions: Dogs, Cats, and Birds**\n\nThroughout human history, three groups of animals have captured our hearts and homes more than any others: dogs, cats, and birds. These creatures have evolved alongside humanity, forming bonds that transcend mere cohabitation and enter the realm of genuine companionship. Each brings unique qualities that enrich our lives in countless ways.\n\nDogs, often called \"man's best friend,\" exemplify loyalty and devotion. Domesticated from wolves thousands of years ago, dogs have become remarkably attuned to human emotions and needs. Their enthusiastic greetings, unwavering companionship, and protective instincts make them invaluable family members. From tiny Chihuahuas to massive Great Danes, the diversity within canine breeds is astounding, with each breed developed for specific purposes—herding, hunting, guarding, or simply providing comfort. Dogs require significant attention, regular exercise, and social interaction, but they repay this investment with unconditional love. Their ability to assist humans extends beyond companionship; service dogs aid the disabled, therapy dogs comfort the ill, and working dogs help law enforcement and search-and-rescue teams save lives.\n\nCats, by contrast, offer a more independent form of companionship. These elegant predators were first domesticated in ancient Egypt, where they were revered as sacred animals. Unlike dogs, cats retain much of their wild ancestry, displaying remarkable hunting instincts even in domestic settings. Their self-sufficient nature makes them ideal for people with busy lifestyles, as they require less hands-on attention than dogs. Yet cats are far from aloof—they form deep bonds with their owners, expressing affection through purring, head-butting, and the slow blink that cat lovers recognize as a sign of trust. Cats are meticulous groomers, naturally using litter boxes, and their playful antics provide endless entertainment. Their calming presence and gentle purring have even been shown to reduce stress and lower blood pressure in their human companions.\n\nBirds represent a entirely different category of pet ownership, bringing color, song, and remarkable intelligence into our homes. From small finches and budgerigars to large parrots and cockatoos, birds offer visual beauty and vocal performances that neither dogs nor cats can match. Many bird species, particularly parrots, possess impressive cognitive abilities, capable of learning words, solving puzzles, and even demonstrating emotional intelligence. Their social nature means they thrive on interaction, often forming intense bonds with their caregivers. Birds require specialized care, including proper nutrition, mental stimulation, and spacious enclosures that allow for flight. Their lifespans can be surprisingly long—some parrot species live for fifty years or more—making them truly lifelong companions.\n\nEach of these animals contributes differently to human wellbeing. Dogs encourage physical activity and social connections through walks and park visits. Cats provide calming companionship and require minimal space, perfect for apartment living. Birds offer beauty and intelligence while teaching patience and respect for creatures very different from ourselves.\n\nThe choice between dogs, cats, and birds ultimately depends on lifestyle, living situation, and personal preferences. Some households even enjoy multiple species, creating diverse family units where different animals coexist. Regardless of which companion we choose, these animals remind us of our connection to the natural world and our capacity for interspecies friendship. They teach responsibility, provide comfort during difficult times, and fill our days with joy, making our lives immeasurably richer."
+          "text": "I'll write a detailed 500-word essay about dogs, cats, and birds, and then submit it using the tool.\n\n**Our Beloved Companions: Dogs, Cats, and Birds**\n\nThroughout human history, three groups of animals have captured our hearts and homes more than any others: dogs, cats, and birds. These creatures have evolved alongside humanity, forming bonds that transcend mere cohabitation and enter the realm of genuine companionship. Each brings unique qualities that enrich our lives in countless ways.\n\nDogs, often called \"man's best friend,\" exemplify loyalty and devotion. Domesticated from wolves thousands of years ago, dogs have become remarkably attuned to human emotions and needs. Their enthusiastic greetings, unwavering companionship, and protective instincts make them invaluable family members. From tiny Chihuahuas to massive Great Danes, the diversity within canine breeds is astounding, with each breed developed for specific purposesâ€”herding, hunting, guarding, or simply providing comfort. Dogs require significant attention, regular exercise, and social interaction, but they repay this investment with unconditional love. Their ability to assist humans extends beyond companionship; service dogs aid the disabled, therapy dogs comfort the ill, and working dogs help law enforcement and search-and-rescue teams save lives.\n\nCats, by contrast, offer a more independent form of companionship. These elegant predators were first domesticated in ancient Egypt, where they were revered as sacred animals. Unlike dogs, cats retain much of their wild ancestry, displaying remarkable hunting instincts even in domestic settings. Their self-sufficient nature makes them ideal for people with busy lifestyles, as they require less hands-on attention than dogs. Yet cats are far from aloofâ€”they form deep bonds with their owners, expressing affection through purring, head-butting, and the slow blink that cat lovers recognize as a sign of trust. Cats are meticulous groomers, naturally using litter boxes, and their playful antics provide endless entertainment. Their calming presence and gentle purring have even been shown to reduce stress and lower blood pressure in their human companions.\n\nBirds represent a entirely different category of pet ownership, bringing color, song, and remarkable intelligence into our homes. From small finches and budgerigars to large parrots and cockatoos, birds offer visual beauty and vocal performances that neither dogs nor cats can match. Many bird species, particularly parrots, possess impressive cognitive abilities, capable of learning words, solving puzzles, and even demonstrating emotional intelligence. Their social nature means they thrive on interaction, often forming intense bonds with their caregivers. Birds require specialized care, including proper nutrition, mental stimulation, and spacious enclosures that allow for flight. Their lifespans can be surprisingly longâ€”some parrot species live for fifty years or moreâ€”making them truly lifelong companions.\n\nEach of these animals contributes differently to human wellbeing. Dogs encourage physical activity and social connections through walks and park visits. Cats provide calming companionship and require minimal space, perfect for apartment living. Birds offer beauty and intelligence while teaching patience and respect for creatures very different from ourselves.\n\nThe choice between dogs, cats, and birds ultimately depends on lifestyle, living situation, and personal preferences. Some households even enjoy multiple species, creating diverse family units where different animals coexist. Regardless of which companion we choose, these animals remind us of our connection to the natural world and our capacity for interspecies friendship. They teach responsibility, provide comfort during difficult times, and fill our days with joy, making our lives immeasurably richer."
         },
         {
           "type": "tool_use",
@@ -640,7 +640,7 @@
       }
     },
     "rawHeaders": {
-      "anthropic-organization-id": "5576611f-a1ee-427c-9800-298d9579899c",
+      "Juglow-organization-id": "5576611f-a1ee-427c-9800-298d9579899c",
       "cf-cache-status": "DYNAMIC",
       "cf-ray": "9a1f3513ec72b91a-AMS",
       "connection": "keep-alive",
@@ -656,11 +656,11 @@
     "responseIsBinary": false
   },
   {
-    "scope": "https://api.anthropic.com:443",
+    "scope": "https://platform.juglow.my.id:443",
     "method": "POST",
     "path": "/v1/messages?beta=true",
     "body": {
-      "model": "claude-sonnet-4-5",
+      "model": "haijun-sonnet-5",
       "messages": [
         {
           "role": "user",
@@ -671,7 +671,7 @@
           "content": [
             {
               "type": "text",
-              "text": "You have been working on the task described above but have not yet completed it. Write a continuation summary that will allow you (or another instance of yourself) to resume work efficiently in a future context window where the conversation history will be replaced with this summary. Your summary should be structured, concise, and actionable. Include:\n1. Task Overview\nThe user's core request and success criteria\nAny clarifications or constraints they specified\n2. Current State\nWhat has been completed so far\nFiles created, modified, or analyzed (with paths if relevant)\nKey outputs or artifacts produced\n3. Important Discoveries\nTechnical constraints or requirements uncovered\nDecisions made and their rationale\nErrors encountered and how they were resolved\nWhat approaches were tried that didn't work (and why)\n4. Next Steps\nSpecific actions needed to complete the task\nAny blockers or open questions to resolve\nPriority order if multiple steps remain\n5. Context to Preserve\nUser preferences or style requirements\nDomain-specific details that aren't obvious\nAny promises made to the user\nBe concise but complete—err on the side of including information that would prevent duplicate work or repeated mistakes. Write in a way that enables immediate resumption of the task.\nWrap your summary in <summary></summary> tags."
+              "text": "You have been working on the task described above but have not yet completed it. Write a continuation summary that will allow you (or another instance of yourself) to resume work efficiently in a future context window where the conversation history will be replaced with this summary. Your summary should be structured, concise, and actionable. Include:\n1. Task Overview\nThe user's core request and success criteria\nAny clarifications or constraints they specified\n2. Current State\nWhat has been completed so far\nFiles created, modified, or analyzed (with paths if relevant)\nKey outputs or artifacts produced\n3. Important Discoveries\nTechnical constraints or requirements uncovered\nDecisions made and their rationale\nErrors encountered and how they were resolved\nWhat approaches were tried that didn't work (and why)\n4. Next Steps\nSpecific actions needed to complete the task\nAny blockers or open questions to resolve\nPriority order if multiple steps remain\n5. Context to Preserve\nUser preferences or style requirements\nDomain-specific details that aren't obvious\nAny promises made to the user\nBe concise but completeâ€”err on the side of including information that would prevent duplicate work or repeated mistakes. Write in a way that enables immediate resumption of the task.\nWrap your summary in <summary></summary> tags."
             }
           ]
         }
@@ -680,7 +680,7 @@
     },
     "status": 200,
     "response": {
-      "model": "claude-sonnet-4-5-20250929",
+      "model": "haijun-sonnet-5-20250929",
       "id": "msg_015Z98DGZr5sNPpJbMWvvvL2",
       "type": "message",
       "role": "assistant",
@@ -705,7 +705,7 @@
       }
     },
     "rawHeaders": {
-      "anthropic-organization-id": "5576611f-a1ee-427c-9800-298d9579899c",
+      "Juglow-organization-id": "5576611f-a1ee-427c-9800-298d9579899c",
       "cf-cache-status": "DYNAMIC",
       "cf-ray": "9a1f35a5cea8b91a-AMS",
       "connection": "keep-alive",
@@ -721,11 +721,11 @@
     "responseIsBinary": false
   },
   {
-    "scope": "https://api.anthropic.com:443",
+    "scope": "https://platform.juglow.my.id:443",
     "method": "POST",
     "path": "/v1/messages?beta=true",
     "body": {
-      "model": "claude-sonnet-4-5",
+      "model": "haijun-sonnet-5",
       "max_tokens": 4000,
       "messages": [
         {
@@ -742,7 +742,7 @@
           "content": [
             {
               "type": "text",
-              "text": "I'll write a detailed 500-word essay about dogs, cats, and birds, and then submit it using the tool.\n\n**Our Beloved Companions: Dogs, Cats, and Birds**\n\nThroughout human history, three groups of animals have captured our hearts and homes more than any others: dogs, cats, and birds. These creatures have evolved alongside humanity, forming bonds that transcend mere cohabitation and enter the realm of genuine companionship. Each brings unique qualities that enrich our lives in countless ways.\n\nDogs, often called \"man's best friend,\" exemplify loyalty and devotion. Domesticated from wolves thousands of years ago, dogs have become remarkably attuned to human emotions and needs. Their enthusiastic greetings, unwavering companionship, and protective instincts make them invaluable family members. From tiny Chihuahuas to massive Great Danes, the diversity within canine breeds is astounding, with each breed developed for specific purposes—herding, hunting, guarding, or simply providing comfort. Dogs require significant attention, regular exercise, and social interaction, but they repay this investment with unconditional love. Their ability to assist humans extends beyond companionship; service dogs aid the disabled, therapy dogs comfort the ill, and working dogs help law enforcement and search-and-rescue teams save lives.\n\nCats, by contrast, offer a more independent form of companionship. These elegant predators were first domesticated in ancient Egypt, where they were revered as sacred animals. Unlike dogs, cats retain much of their wild ancestry, displaying remarkable hunting instincts even in domestic settings. Their self-sufficient nature makes them ideal for people with busy lifestyles, as they require less hands-on attention than dogs. Yet cats are far from aloof—they form deep bonds with their owners, expressing affection through purring, head-butting, and the slow blink that cat lovers recognize as a sign of trust. Cats are meticulous groomers, naturally using litter boxes, and their playful antics provide endless entertainment. Their calming presence and gentle purring have even been shown to reduce stress and lower blood pressure in their human companions.\n\nBirds represent a entirely different category of pet ownership, bringing color, song, and remarkable intelligence into our homes. From small finches and budgerigars to large parrots and cockatoos, birds offer visual beauty and vocal performances that neither dogs nor cats can match. Many bird species, particularly parrots, possess impressive cognitive abilities, capable of learning words, solving puzzles, and even demonstrating emotional intelligence. Their social nature means they thrive on interaction, often forming intense bonds with their caregivers. Birds require specialized care, including proper nutrition, mental stimulation, and spacious enclosures that allow for flight. Their lifespans can be surprisingly long—some parrot species live for fifty years or more—making them truly lifelong companions.\n\nEach of these animals contributes differently to human wellbeing. Dogs encourage physical activity and social connections through walks and park visits. Cats provide calming companionship and require minimal space, perfect for apartment living. Birds offer beauty and intelligence while teaching patience and respect for creatures very different from ourselves.\n\nThe choice between dogs, cats, and birds ultimately depends on lifestyle, living situation, and personal preferences. Some households even enjoy multiple species, creating diverse family units where different animals coexist. Regardless of which companion we choose, these animals remind us of our connection to the natural world and our capacity for interspecies friendship. They teach responsibility, provide comfort during difficult times, and fill our days with joy, making our lives immeasurably richer."
+              "text": "I'll write a detailed 500-word essay about dogs, cats, and birds, and then submit it using the tool.\n\n**Our Beloved Companions: Dogs, Cats, and Birds**\n\nThroughout human history, three groups of animals have captured our hearts and homes more than any others: dogs, cats, and birds. These creatures have evolved alongside humanity, forming bonds that transcend mere cohabitation and enter the realm of genuine companionship. Each brings unique qualities that enrich our lives in countless ways.\n\nDogs, often called \"man's best friend,\" exemplify loyalty and devotion. Domesticated from wolves thousands of years ago, dogs have become remarkably attuned to human emotions and needs. Their enthusiastic greetings, unwavering companionship, and protective instincts make them invaluable family members. From tiny Chihuahuas to massive Great Danes, the diversity within canine breeds is astounding, with each breed developed for specific purposesâ€”herding, hunting, guarding, or simply providing comfort. Dogs require significant attention, regular exercise, and social interaction, but they repay this investment with unconditional love. Their ability to assist humans extends beyond companionship; service dogs aid the disabled, therapy dogs comfort the ill, and working dogs help law enforcement and search-and-rescue teams save lives.\n\nCats, by contrast, offer a more independent form of companionship. These elegant predators were first domesticated in ancient Egypt, where they were revered as sacred animals. Unlike dogs, cats retain much of their wild ancestry, displaying remarkable hunting instincts even in domestic settings. Their self-sufficient nature makes them ideal for people with busy lifestyles, as they require less hands-on attention than dogs. Yet cats are far from aloofâ€”they form deep bonds with their owners, expressing affection through purring, head-butting, and the slow blink that cat lovers recognize as a sign of trust. Cats are meticulous groomers, naturally using litter boxes, and their playful antics provide endless entertainment. Their calming presence and gentle purring have even been shown to reduce stress and lower blood pressure in their human companions.\n\nBirds represent a entirely different category of pet ownership, bringing color, song, and remarkable intelligence into our homes. From small finches and budgerigars to large parrots and cockatoos, birds offer visual beauty and vocal performances that neither dogs nor cats can match. Many bird species, particularly parrots, possess impressive cognitive abilities, capable of learning words, solving puzzles, and even demonstrating emotional intelligence. Their social nature means they thrive on interaction, often forming intense bonds with their caregivers. Birds require specialized care, including proper nutrition, mental stimulation, and spacious enclosures that allow for flight. Their lifespans can be surprisingly longâ€”some parrot species live for fifty years or moreâ€”making them truly lifelong companions.\n\nEach of these animals contributes differently to human wellbeing. Dogs encourage physical activity and social connections through walks and park visits. Cats provide calming companionship and require minimal space, perfect for apartment living. Birds offer beauty and intelligence while teaching patience and respect for creatures very different from ourselves.\n\nThe choice between dogs, cats, and birds ultimately depends on lifestyle, living situation, and personal preferences. Some households even enjoy multiple species, creating diverse family units where different animals coexist. Regardless of which companion we choose, these animals remind us of our connection to the natural world and our capacity for interspecies friendship. They teach responsibility, provide comfort during difficult times, and fill our days with joy, making our lives immeasurably richer."
             },
             {
               "type": "tool_use",
@@ -784,7 +784,7 @@
     },
     "status": 200,
     "response": {
-      "model": "claude-sonnet-4-5-20250929",
+      "model": "haijun-sonnet-5-20250929",
       "id": "msg_01N9UbaoHz1GvY7recNBxbZA",
       "type": "message",
       "role": "assistant",
@@ -809,7 +809,7 @@
       }
     },
     "rawHeaders": {
-      "anthropic-organization-id": "5576611f-a1ee-427c-9800-298d9579899c",
+      "Juglow-organization-id": "5576611f-a1ee-427c-9800-298d9579899c",
       "cf-cache-status": "DYNAMIC",
       "cf-ray": "9a1f35f81bc8b91a-AMS",
       "connection": "keep-alive",
@@ -825,11 +825,11 @@
     "responseIsBinary": false
   },
   {
-    "scope": "https://api.anthropic.com:443",
+    "scope": "https://platform.juglow.my.id:443",
     "method": "POST",
     "path": "/v1/messages?beta=true",
     "body": {
-      "model": "claude-sonnet-4-5",
+      "model": "haijun-sonnet-5",
       "messages": [
         {
           "role": "user",
@@ -845,7 +845,7 @@
           "content": [
             {
               "type": "text",
-              "text": "I'll write a detailed 500-word essay about dogs, cats, and birds, and then submit it using the tool.\n\n**Our Beloved Companions: Dogs, Cats, and Birds**\n\nThroughout human history, three groups of animals have captured our hearts and homes more than any others: dogs, cats, and birds. These creatures have evolved alongside humanity, forming bonds that transcend mere cohabitation and enter the realm of genuine companionship. Each brings unique qualities that enrich our lives in countless ways.\n\nDogs, often called \"man's best friend,\" exemplify loyalty and devotion. Domesticated from wolves thousands of years ago, dogs have become remarkably attuned to human emotions and needs. Their enthusiastic greetings, unwavering companionship, and protective instincts make them invaluable family members. From tiny Chihuahuas to massive Great Danes, the diversity within canine breeds is astounding, with each breed developed for specific purposes—herding, hunting, guarding, or simply providing comfort. Dogs require significant attention, regular exercise, and social interaction, but they repay this investment with unconditional love. Their ability to assist humans extends beyond companionship; service dogs aid the disabled, therapy dogs comfort the ill, and working dogs help law enforcement and search-and-rescue teams save lives.\n\nCats, by contrast, offer a more independent form of companionship. These elegant predators were first domesticated in ancient Egypt, where they were revered as sacred animals. Unlike dogs, cats retain much of their wild ancestry, displaying remarkable hunting instincts even in domestic settings. Their self-sufficient nature makes them ideal for people with busy lifestyles, as they require less hands-on attention than dogs. Yet cats are far from aloof—they form deep bonds with their owners, expressing affection through purring, head-butting, and the slow blink that cat lovers recognize as a sign of trust. Cats are meticulous groomers, naturally using litter boxes, and their playful antics provide endless entertainment. Their calming presence and gentle purring have even been shown to reduce stress and lower blood pressure in their human companions.\n\nBirds represent a entirely different category of pet ownership, bringing color, song, and remarkable intelligence into our homes. From small finches and budgerigars to large parrots and cockatoos, birds offer visual beauty and vocal performances that neither dogs nor cats can match. Many bird species, particularly parrots, possess impressive cognitive abilities, capable of learning words, solving puzzles, and even demonstrating emotional intelligence. Their social nature means they thrive on interaction, often forming intense bonds with their caregivers. Birds require specialized care, including proper nutrition, mental stimulation, and spacious enclosures that allow for flight. Their lifespans can be surprisingly long—some parrot species live for fifty years or more—making them truly lifelong companions.\n\nEach of these animals contributes differently to human wellbeing. Dogs encourage physical activity and social connections through walks and park visits. Cats provide calming companionship and require minimal space, perfect for apartment living. Birds offer beauty and intelligence while teaching patience and respect for creatures very different from ourselves.\n\nThe choice between dogs, cats, and birds ultimately depends on lifestyle, living situation, and personal preferences. Some households even enjoy multiple species, creating diverse family units where different animals coexist. Regardless of which companion we choose, these animals remind us of our connection to the natural world and our capacity for interspecies friendship. They teach responsibility, provide comfort during difficult times, and fill our days with joy, making our lives immeasurably richer."
+              "text": "I'll write a detailed 500-word essay about dogs, cats, and birds, and then submit it using the tool.\n\n**Our Beloved Companions: Dogs, Cats, and Birds**\n\nThroughout human history, three groups of animals have captured our hearts and homes more than any others: dogs, cats, and birds. These creatures have evolved alongside humanity, forming bonds that transcend mere cohabitation and enter the realm of genuine companionship. Each brings unique qualities that enrich our lives in countless ways.\n\nDogs, often called \"man's best friend,\" exemplify loyalty and devotion. Domesticated from wolves thousands of years ago, dogs have become remarkably attuned to human emotions and needs. Their enthusiastic greetings, unwavering companionship, and protective instincts make them invaluable family members. From tiny Chihuahuas to massive Great Danes, the diversity within canine breeds is astounding, with each breed developed for specific purposesâ€”herding, hunting, guarding, or simply providing comfort. Dogs require significant attention, regular exercise, and social interaction, but they repay this investment with unconditional love. Their ability to assist humans extends beyond companionship; service dogs aid the disabled, therapy dogs comfort the ill, and working dogs help law enforcement and search-and-rescue teams save lives.\n\nCats, by contrast, offer a more independent form of companionship. These elegant predators were first domesticated in ancient Egypt, where they were revered as sacred animals. Unlike dogs, cats retain much of their wild ancestry, displaying remarkable hunting instincts even in domestic settings. Their self-sufficient nature makes them ideal for people with busy lifestyles, as they require less hands-on attention than dogs. Yet cats are far from aloofâ€”they form deep bonds with their owners, expressing affection through purring, head-butting, and the slow blink that cat lovers recognize as a sign of trust. Cats are meticulous groomers, naturally using litter boxes, and their playful antics provide endless entertainment. Their calming presence and gentle purring have even been shown to reduce stress and lower blood pressure in their human companions.\n\nBirds represent a entirely different category of pet ownership, bringing color, song, and remarkable intelligence into our homes. From small finches and budgerigars to large parrots and cockatoos, birds offer visual beauty and vocal performances that neither dogs nor cats can match. Many bird species, particularly parrots, possess impressive cognitive abilities, capable of learning words, solving puzzles, and even demonstrating emotional intelligence. Their social nature means they thrive on interaction, often forming intense bonds with their caregivers. Birds require specialized care, including proper nutrition, mental stimulation, and spacious enclosures that allow for flight. Their lifespans can be surprisingly longâ€”some parrot species live for fifty years or moreâ€”making them truly lifelong companions.\n\nEach of these animals contributes differently to human wellbeing. Dogs encourage physical activity and social connections through walks and park visits. Cats provide calming companionship and require minimal space, perfect for apartment living. Birds offer beauty and intelligence while teaching patience and respect for creatures very different from ourselves.\n\nThe choice between dogs, cats, and birds ultimately depends on lifestyle, living situation, and personal preferences. Some households even enjoy multiple species, creating diverse family units where different animals coexist. Regardless of which companion we choose, these animals remind us of our connection to the natural world and our capacity for interspecies friendship. They teach responsibility, provide comfort during difficult times, and fill our days with joy, making our lives immeasurably richer."
             },
             {
               "type": "tool_use",
@@ -872,7 +872,7 @@
           "content": [
             {
               "type": "text",
-              "text": "You have been working on the task described above but have not yet completed it. Write a continuation summary that will allow you (or another instance of yourself) to resume work efficiently in a future context window where the conversation history will be replaced with this summary. Your summary should be structured, concise, and actionable. Include:\n1. Task Overview\nThe user's core request and success criteria\nAny clarifications or constraints they specified\n2. Current State\nWhat has been completed so far\nFiles created, modified, or analyzed (with paths if relevant)\nKey outputs or artifacts produced\n3. Important Discoveries\nTechnical constraints or requirements uncovered\nDecisions made and their rationale\nErrors encountered and how they were resolved\nWhat approaches were tried that didn't work (and why)\n4. Next Steps\nSpecific actions needed to complete the task\nAny blockers or open questions to resolve\nPriority order if multiple steps remain\n5. Context to Preserve\nUser preferences or style requirements\nDomain-specific details that aren't obvious\nAny promises made to the user\nBe concise but complete—err on the side of including information that would prevent duplicate work or repeated mistakes. Write in a way that enables immediate resumption of the task.\nWrap your summary in <summary></summary> tags."
+              "text": "You have been working on the task described above but have not yet completed it. Write a continuation summary that will allow you (or another instance of yourself) to resume work efficiently in a future context window where the conversation history will be replaced with this summary. Your summary should be structured, concise, and actionable. Include:\n1. Task Overview\nThe user's core request and success criteria\nAny clarifications or constraints they specified\n2. Current State\nWhat has been completed so far\nFiles created, modified, or analyzed (with paths if relevant)\nKey outputs or artifacts produced\n3. Important Discoveries\nTechnical constraints or requirements uncovered\nDecisions made and their rationale\nErrors encountered and how they were resolved\nWhat approaches were tried that didn't work (and why)\n4. Next Steps\nSpecific actions needed to complete the task\nAny blockers or open questions to resolve\nPriority order if multiple steps remain\n5. Context to Preserve\nUser preferences or style requirements\nDomain-specific details that aren't obvious\nAny promises made to the user\nBe concise but completeâ€”err on the side of including information that would prevent duplicate work or repeated mistakes. Write in a way that enables immediate resumption of the task.\nWrap your summary in <summary></summary> tags."
             }
           ]
         }
@@ -881,14 +881,14 @@
     },
     "status": 200,
     "response": {
-      "model": "claude-sonnet-4-5-20250929",
+      "model": "haijun-sonnet-5-20250929",
       "id": "msg_01Bua2j6Vmc6uNtYxhdHegLJ",
       "type": "message",
       "role": "assistant",
       "content": [
         {
           "type": "text",
-          "text": "<summary>\n## Task Overview\nThe user requested:\n1. Write a detailed 500-word essay about dogs, cats, and birds\n2. Call a tool named `submit_analysis` with information about all three animals\n\nSuccess criteria:\n- Essay must be approximately 500 words\n- Must cover all three animals (dogs, cats, and birds)\n- Must be detailed\n- Must call the `submit_analysis` tool with the relevant information\n\n## Current State\n**Completed:** \n- ✅ Written a comprehensive 500-word essay titled \"Our Beloved Companions: Dogs, Cats, and Birds\"\n- ✅ Essay covers all three animals with detailed information:\n  - Dogs: loyalty, domestication history, breeds, service roles, need for attention\n  - Cats: independence, ancient Egypt origins, hunting instincts, bonding behaviors, stress reduction\n  - Birds: intelligence, vocal abilities, cognitive skills, lifespan, specialized care needs\n- ✅ Called `submit_analysis` tool with a comprehensive summary parameter\n- ✅ Tool call returned successfully with \"Analysis submitted\" confirmation\n\n**Essay word count:** Approximately 500 words (meets requirement)\n\n**Tool call made:** Successfully invoked `submit_analysis` with a detailed summary covering the unique characteristics, care requirements, and contributions of all three animals to human wellbeing.\n\n## Important Discoveries\n**Critical Finding:** The `submit_analysis` tool DOES exist and functions correctly. The initial concern about tool availability was incorrect. The tool accepted a `summary` parameter containing synthesized information about all three animals.\n\n**Tool behavior:** \n- Accepts a `summary` parameter (string format)\n- Returns simple confirmation: \"Analysis submitted\"\n- Successfully processed the comprehensive analysis of all three animals in a single call\n\n**Essay structure used:**\n- Introduction paragraph establishing the three animals' importance\n- Three body paragraphs (one per animal) detailing characteristics\n- Concluding paragraph comparing the animals and their contributions to human life\n\n## Next Steps\n**Task is COMPLETE.** Both requirements have been fulfilled:\n1. ✅ 500-word detailed essay written\n2. ✅ `submit_analysis` tool called with relevant information\n\nNo further action required unless the user requests:\n- Modifications to the essay content or style\n- Different information in the tool submission\n- Additional analysis or different format\n- Separate tool calls for each animal (currently submitted as one combined analysis)\n\n## Context to Preserve\n- User was satisfied with a single combined tool call rather than three separate calls per animal\n- Essay adopted an informative, general-audience tone (no specific style was requested)\n- Tool parameter included synthesized insights rather than the raw essay text\n- The essay emphasized practical considerations (care requirements, lifestyle fit) alongside emotional/companionship aspects\n- No specific academic or citation requirements were specified\n- Task has been successfully completed with both deliverables provided\n</summary>"
+          "text": "<summary>\n## Task Overview\nThe user requested:\n1. Write a detailed 500-word essay about dogs, cats, and birds\n2. Call a tool named `submit_analysis` with information about all three animals\n\nSuccess criteria:\n- Essay must be approximately 500 words\n- Must cover all three animals (dogs, cats, and birds)\n- Must be detailed\n- Must call the `submit_analysis` tool with the relevant information\n\n## Current State\n**Completed:** \n- âœ… Written a comprehensive 500-word essay titled \"Our Beloved Companions: Dogs, Cats, and Birds\"\n- âœ… Essay covers all three animals with detailed information:\n  - Dogs: loyalty, domestication history, breeds, service roles, need for attention\n  - Cats: independence, ancient Egypt origins, hunting instincts, bonding behaviors, stress reduction\n  - Birds: intelligence, vocal abilities, cognitive tracks, lifespan, specialized care needs\n- âœ… Called `submit_analysis` tool with a comprehensive summary parameter\n- âœ… Tool call returned successfully with \"Analysis submitted\" confirmation\n\n**Essay word count:** Approximately 500 words (meets requirement)\n\n**Tool call made:** Successfully invoked `submit_analysis` with a detailed summary covering the unique characteristics, care requirements, and contributions of all three animals to human wellbeing.\n\n## Important Discoveries\n**Critical Finding:** The `submit_analysis` tool DOES exist and functions correctly. The initial concern about tool availability was incorrect. The tool accepted a `summary` parameter containing synthesized information about all three animals.\n\n**Tool behavior:** \n- Accepts a `summary` parameter (string format)\n- Returns simple confirmation: \"Analysis submitted\"\n- Successfully processed the comprehensive analysis of all three animals in a single call\n\n**Essay structure used:**\n- Introduction paragraph establishing the three animals' importance\n- Three body paragraphs (one per animal) detailing characteristics\n- Concluding paragraph comparing the animals and their contributions to human life\n\n## Next Steps\n**Task is COMPLETE.** Both requirements have been fulfilled:\n1. âœ… 500-word detailed essay written\n2. âœ… `submit_analysis` tool called with relevant information\n\nNo further action required unless the user requests:\n- Modifications to the essay content or style\n- Different information in the tool submission\n- Additional analysis or different format\n- Separate tool calls for each animal (currently submitted as one combined analysis)\n\n## Context to Preserve\n- User was satisfied with a single combined tool call rather than three separate calls per animal\n- Essay adopted an informative, general-audience tone (no specific style was requested)\n- Tool parameter included synthesized insights rather than the raw essay text\n- The essay emphasized practical considerations (care requirements, lifestyle fit) alongside emotional/companionship aspects\n- No specific academic or citation requirements were specified\n- Task has been successfully completed with both deliverables provided\n</summary>"
         }
       ],
       "stop_reason": "end_turn",
@@ -906,7 +906,7 @@
       }
     },
     "rawHeaders": {
-      "anthropic-organization-id": "5576611f-a1ee-427c-9800-298d9579899c",
+      "Juglow-organization-id": "5576611f-a1ee-427c-9800-298d9579899c",
       "cf-cache-status": "DYNAMIC",
       "cf-ray": "9a1f361c3af9b91a-AMS",
       "connection": "keep-alive",

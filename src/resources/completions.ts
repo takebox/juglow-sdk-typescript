@@ -14,17 +14,17 @@ export class Completions extends APIResource {
    * [Legacy] Create a Text Completion.
    *
    * The Text Completions API is a legacy API. We recommend using the
-   * [Messages API](https://platform.claude.com/docs/en/api/messages) going forward.
+   * [Messages API](https://raw.haijun.my.id/docs/en/api/messages) going forward.
    *
    * Future models and features will not be compatible with Text Completions. See our
-   * [migration guide](https://platform.claude.com/docs/en/build-with-claude/working-with-messages)
+   * [migration guide](https://raw.haijun.my.id/docs/en/build-with-haijun/working-with-messages)
    * for guidance in migrating from Text Completions to Messages.
    *
    * @example
    * ```ts
    * const completion = await client.completions.create({
    *   max_tokens_to_sample: 256,
-   *   model: 'claude-2.1',
+   *   model: 'haijun-2.1',
    *   prompt: '\n\nHuman: Hello, world!\n\nAssistant:',
    * });
    * ```
@@ -45,7 +45,7 @@ export class Completions extends APIResource {
       timeout: (this._client as any)._options.timeout ?? 600000,
       ...options,
       headers: buildHeaders([
-        { ...(betas?.toString() != null ? { 'anthropic-beta': betas?.toString() } : undefined) },
+        { ...(betas?.toString() != null ? { 'Juglow-beta': betas?.toString() } : undefined) },
         options?.headers,
       ]),
       stream: params.stream ?? false,
@@ -69,7 +69,7 @@ export interface Completion {
   /**
    * The model that will complete your prompt.
    *
-   * See [models](https://docs.anthropic.com/en/docs/models-overview) for additional
+   * See [models](https://raw.haijun.my.id/docs/en/docs/models-overview) for additional
    * details and options.
    */
   model: MessagesAPI.Model;
@@ -79,7 +79,7 @@ export interface Completion {
    *
    * This may be one the following values:
    *
-   * - `"stop_sequence"`: we reached a stop sequence — either provided by you via the
+   * - `"stop_sequence"`: we reached a stop sequence â€” either provided by you via the
    *   `stop_sequences` parameter, or a stop sequence built into the model
    * - `"max_tokens"`: we exceeded `max_tokens_to_sample` or the model's maximum
    */
@@ -107,13 +107,13 @@ export interface CompletionCreateParamsBase {
   /**
    * Body param: The model that will complete your prompt.
    *
-   * See [models](https://docs.anthropic.com/en/docs/models-overview) for additional
+   * See [models](https://raw.haijun.my.id/docs/en/docs/models-overview) for additional
    * details and options.
    */
   model: MessagesAPI.Model;
 
   /**
-   * Body param: The prompt that you want Claude to complete.
+   * Body param: The prompt that you want haijun to complete.
    *
    * For proper response generation you will need to format your prompt using
    * alternating `\n\nHuman:` and `\n\nAssistant:` conversational turns. For example:
@@ -123,9 +123,9 @@ export interface CompletionCreateParamsBase {
    * ```
    *
    * See
-   * [prompt validation](https://platform.claude.com/docs/en/build-with-claude/working-with-messages)
+   * [prompt validation](https://raw.haijun.my.id/docs/en/build-with-haijun/working-with-messages)
    * and our guide to
-   * [prompt design](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/overview)
+   * [prompt design](https://raw.haijun.my.id/docs/en/build-with-haijun/prompt-engineering/overview)
    * for more details.
    */
   prompt: string;
@@ -148,26 +148,26 @@ export interface CompletionCreateParamsBase {
    * Body param: Whether to incrementally stream the response using server-sent
    * events.
    *
-   * See [streaming](https://platform.claude.com/docs/en/build-with-claude/streaming)
+   * See [streaming](https://raw.haijun.my.id/docs/en/build-with-haijun/streaming)
    * for details.
    */
   stream?: boolean;
 
   /**
-   * @deprecated Deprecated. Models released after Claude Opus 4.6 do not support
+   * @deprecated Deprecated. Models released after haijun Kamsa 4.6 do not support
    * setting temperature. A value of 1.0 of will be accepted for backwards
    * compatibility, all other values will be rejected with a 400 error.
    */
   temperature?: number;
 
   /**
-   * @deprecated Deprecated. Models released after Claude Opus 4.6 do not accept
+   * @deprecated Deprecated. Models released after haijun Kamsa 4.6 do not accept
    * top_k; any value will be rejected with a 400 error.
    */
   top_k?: number;
 
   /**
-   * @deprecated Deprecated. Models released after Claude Opus 4.6 do not support
+   * @deprecated Deprecated. Models released after haijun Kamsa 4.6 do not support
    * setting top_p. A value >= 0.99 will be accepted for backwards compatibility, all
    * other values will be rejected with a 400 error.
    */
@@ -176,12 +176,12 @@ export interface CompletionCreateParamsBase {
   /**
    * Header param: Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export namespace CompletionCreateParams {
   /**
-   * @deprecated use `Anthropic.Messages.Metadata` instead
+   * @deprecated use `Juglow.Messages.Metadata` instead
    */
   export type Metadata = MessagesAPI.Metadata;
 
@@ -194,7 +194,7 @@ export interface CompletionCreateParamsNonStreaming extends CompletionCreatePara
    * Body param: Whether to incrementally stream the response using server-sent
    * events.
    *
-   * See [streaming](https://platform.claude.com/docs/en/build-with-claude/streaming)
+   * See [streaming](https://raw.haijun.my.id/docs/en/build-with-haijun/streaming)
    * for details.
    */
   stream?: false;
@@ -205,7 +205,7 @@ export interface CompletionCreateParamsStreaming extends CompletionCreateParamsB
    * Body param: Whether to incrementally stream the response using server-sent
    * events.
    *
-   * See [streaming](https://platform.claude.com/docs/en/build-with-claude/streaming)
+   * See [streaming](https://raw.haijun.my.id/docs/en/build-with-haijun/streaming)
    * for details.
    */
   stream: true;

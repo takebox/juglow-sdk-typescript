@@ -1,4 +1,4 @@
-// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+﻿// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
 import * as BetaAPI from '../beta';
@@ -65,7 +65,7 @@ export class MemoryStores extends APIResource {
       body,
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'agent-memory-2026-07-22'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'agent-memory-2026-07-22'].toString() },
         options?.headers,
       ]),
     });
@@ -91,7 +91,7 @@ export class MemoryStores extends APIResource {
     return this._client.get(path`/v1/memory_stores/${memoryStoreID}?beta=true`, {
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'agent-memory-2026-07-22'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'agent-memory-2026-07-22'].toString() },
         options?.headers,
       ]),
     });
@@ -116,7 +116,7 @@ export class MemoryStores extends APIResource {
       body,
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'agent-memory-2026-07-22'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'agent-memory-2026-07-22'].toString() },
         options?.headers,
       ]),
     });
@@ -142,7 +142,7 @@ export class MemoryStores extends APIResource {
       query,
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'agent-memory-2026-07-22'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'agent-memory-2026-07-22'].toString() },
         options?.headers,
       ]),
     });
@@ -166,7 +166,7 @@ export class MemoryStores extends APIResource {
     return this._client.delete(path`/v1/memory_stores/${memoryStoreID}?beta=true`, {
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'agent-memory-2026-07-22'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'agent-memory-2026-07-22'].toString() },
         options?.headers,
       ]),
     });
@@ -190,7 +190,7 @@ export class MemoryStores extends APIResource {
     return this._client.post(path`/v1/memory_stores/${memoryStoreID}/archive?beta=true`, {
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'agent-memory-2026-07-22'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'agent-memory-2026-07-22'].toString() },
         options?.headers,
       ]),
     });
@@ -231,7 +231,7 @@ export interface BetaManagedAgentsMemoryStore {
   created_at: string;
 
   /**
-   * Human-readable name for the store. 1–255 characters. The store's mount-path slug
+   * Human-readable name for the store. 1â€“255 characters. The store's mount-path slug
    * under `/mnt/memory/` is derived from this name.
    */
   name: string;
@@ -257,7 +257,7 @@ export interface BetaManagedAgentsMemoryStore {
 
   /**
    * Arbitrary key-value tags for your own bookkeeping (such as the end user a store
-   * belongs to). Up to 16 pairs; keys 1–64 characters; values up to 512 characters.
+   * belongs to). Up to 16 pairs; keys 1â€“64 characters; values up to 512 characters.
    * Returned on retrieve/list but not filterable.
    */
   metadata?: { [key: string]: string };
@@ -265,7 +265,7 @@ export interface BetaManagedAgentsMemoryStore {
 
 export interface MemoryStoreCreateParams {
   /**
-   * Body param: Human-readable name for the store. Required; 1–255 characters; no
+   * Body param: Human-readable name for the store. Required; 1â€“255 characters; no
    * control characters. The mount-path slug under `/mnt/memory/` is derived from
    * this name (lowercased, non-alphanumeric runs collapsed to a hyphen). Names need
    * not be unique within a workspace.
@@ -281,7 +281,7 @@ export interface MemoryStoreCreateParams {
 
   /**
    * Body param: Arbitrary key-value tags for your own bookkeeping (such as the end
-   * user a store belongs to). Up to 16 pairs; keys 1–64 characters; values up to 512
+   * user a store belongs to). Up to 16 pairs; keys 1â€“64 characters; values up to 512
    * characters. Not visible to the agent.
    */
   metadata?: { [key: string]: string };
@@ -289,14 +289,14 @@ export interface MemoryStoreCreateParams {
   /**
    * Header param: Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface MemoryStoreRetrieveParams {
   /**
    * Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface MemoryStoreUpdateParams {
@@ -314,7 +314,7 @@ export interface MemoryStoreUpdateParams {
   metadata?: { [key: string]: string | null } | null;
 
   /**
-   * Body param: New human-readable name for the store. 1–255 characters; no control
+   * Body param: New human-readable name for the store. 1â€“255 characters; no control
    * characters. Renaming changes the slug used for the store's `mount_path` in
    * sessions created after the update.
    */
@@ -323,7 +323,7 @@ export interface MemoryStoreUpdateParams {
   /**
    * Header param: Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface MemoryStoreListParams extends PageCursorParams {
@@ -348,21 +348,21 @@ export interface MemoryStoreListParams extends PageCursorParams {
   /**
    * Header param: Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface MemoryStoreDeleteParams {
   /**
    * Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface MemoryStoreArchiveParams {
   /**
    * Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 MemoryStores.Memories = Memories;

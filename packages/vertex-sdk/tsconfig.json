@@ -9,8 +9,8 @@
     "esModuleInterop": true,
     "baseUrl": "./",
     "paths": {
-      "@anthropic-ai/vertex-sdk/*": ["src/*"],
-      "@anthropic-ai/vertex-sdk": ["src/index.ts"]
+      "@takebox-ai/vertex-sdk/*": ["src/*"],
+      "@takebox-ai/vertex-sdk": ["src/index.ts"]
     },
     "noEmit": true,
 

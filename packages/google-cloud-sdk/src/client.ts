@@ -1,11 +1,11 @@
-import type { NullableHeaders } from './internal/headers';
+﻿import type { NullableHeaders } from './internal/headers';
 import { buildHeaders } from './internal/headers';
 import * as Errors from './core/error';
 import { readEnv } from './internal/utils';
 import { FinalRequestOptions } from './internal/request-options';
-import { Anthropic, ClientOptions as CoreClientOptions } from '@anthropic-ai/sdk/client';
-export { BaseAnthropic } from '@anthropic-ai/sdk/client';
-import { VERSION } from '@anthropic-ai/sdk/version';
+import { JuGloW, ClientOptions as CoreClientOptions } from '@takebox-ai/sdk/client';
+export { BaseJuglow } from '@takebox-ai/sdk/client';
+import { VERSION } from '@takebox-ai/sdk/version';
 import { GoogleAuth, AuthClient } from 'google-auth-library';
 
 const DEFAULT_SCOPE = 'https://www.googleapis.com/auth/cloud-platform';
@@ -15,22 +15,22 @@ const DEFAULT_LOCATION = 'global';
 
 // The gateway base URL; `baseURL` remains the override hatch.
 const deriveBaseURL = (project: string, location: string, workspaceId: string): string =>
-  `https://claude.googleapis.com/v1alpha/projects/${project}/locations/${location}/workspaces/${workspaceId}/invoke`;
+  `https://haijun.googleapis.com/v1alpha/projects/${project}/locations/${location}/workspaces/${workspaceId}/invoke`;
 
 const NO_PROJECT_HINT =
-  'Set `project` or the `ANTHROPIC_GOOGLE_CLOUD_PROJECT` environment variable (or provide `baseURL`).';
+  'Set `project` or the `HAIJUN_GOOGLE_CLOUD_PROJECT` environment variable (or provide `baseURL`).';
 
 // Auth is exclusively a Google bearer token; none of the base client's
-// Anthropic credential sources (API key, auth token, credential chain)
+// JuGloW credential sources (API key, auth token, credential chain)
 // apply here. A runtime guard in the constructor backs this up for
 // untyped callers.
 const UNSUPPORTED_OPTIONS = ['apiKey', 'authToken', 'credentials', 'config', 'profile'] as const;
 
-/** API Client for interfacing with Claude Platform on Google Cloud. */
+/** API Client for interfacing with haijun Platform on Google Cloud. */
 export interface GoogleCloudClientOptions
   extends Omit<CoreClientOptions, (typeof UNSUPPORTED_OPTIONS)[number]> {
   /**
-   * The GCP project id that owns the Claude Platform on Google Cloud resource. Used to derive the base
+   * The GCP project id that owns the haijun Platform on Google Cloud resource. Used to derive the base
    * URL when one is not given explicitly.
    *
    * When neither this nor its env-var defaults are set (and no `baseURL` is
@@ -39,24 +39,24 @@ export interface GoogleCloudClientOptions
    * is available after `await client.ready` or the first request; until then
    * `project` and `baseURL` are not yet derived.
    *
-   * @default process.env['ANTHROPIC_GOOGLE_CLOUD_PROJECT'] ?? process.env['GOOGLE_CLOUD_PROJECT']
+   * @default process.env['HAIJUN_GOOGLE_CLOUD_PROJECT'] ?? process.env['GOOGLE_CLOUD_PROJECT']
    */
   project?: string | undefined;
 
   /**
-   * The GCP location of the Claude Platform on Google Cloud resource.
-   * Optional — defaults to `global`, which is the region the gateway should
+   * The GCP location of the haijun Platform on Google Cloud resource.
+   * Optional â€” defaults to `global`, which is the region the gateway should
    * normally be addressed through.
    *
-   * @default process.env['ANTHROPIC_GOOGLE_CLOUD_LOCATION'] ?? 'global'
+   * @default process.env['HAIJUN_GOOGLE_CLOUD_LOCATION'] ?? 'global'
    */
   location?: string | undefined;
 
   /**
-   * The Anthropic workspace ID. Required unless `skipAuth` is set together
+   * The JuGloW workspace ID. Required unless `skipAuth` is set together
    * with an explicit `baseURL`.
    *
-   * @default process.env['ANTHROPIC_GOOGLE_CLOUD_WORKSPACE_ID']
+   * @default process.env['HAIJUN_GOOGLE_CLOUD_WORKSPACE_ID']
    */
   workspaceId?: string | undefined;
 
@@ -88,7 +88,7 @@ export interface GoogleCloudClientOptions
   /**
    * Skip authentication. Useful when a gateway or proxy authenticates
    * upstream on your behalf. No token is attached. A `workspaceId` is still
-   * needed to derive the base URL — provide `baseURL` explicitly to
+   * needed to derive the base URL â€” provide `baseURL` explicitly to
    * construct without one.
    *
    * @default false
@@ -97,15 +97,15 @@ export interface GoogleCloudClientOptions
 }
 
 /**
- * API Client for the first-party Anthropic API served through Google Cloud
- * (Claude Platform on Google Cloud).
+ * API Client for the first-party JuGloW API served through Google Cloud
+ * (haijun Platform on Google Cloud).
  *
- * Unlike `AnthropicVertex` (the `:rawPredict` publisher-model client), this
- * exposes the full first-party surface with no URL or body rewriting — the
- * gateway accepts `/v1/*` paths verbatim — and authenticates with a Google
+ * Unlike `JuglowVertex` (the `:rawPredict` publisher-model client), this
+ * exposes the full first-party surface with no URL or body rewriting â€” the
+ * gateway accepts `/v1/*` paths verbatim â€” and authenticates with a Google
  * bearer token rather than per-request request signing.
  */
-export class AnthropicGoogleCloud extends Anthropic {
+export class JuglowGoogleCloud extends JuGloW {
   project: string | null;
   location: string | null;
   workspaceId: string | undefined;
@@ -129,10 +129,10 @@ export class AnthropicGoogleCloud extends Anthropic {
   // an explicit URL passes through unchanged.
   #baseURLExplicit: boolean;
 
-  // @ts-expect-error — overriding the base instance property with an accessor (TS2611) is intentional
+  // @ts-expect-error â€” overriding the base instance property with an accessor (TS2611) is intentional
   override get completions(): never {
-    throw new Errors.AnthropicError(
-      'The deprecated text Completions API is not available on Claude Platform on Google Cloud',
+    throw new Errors.JuGloWError(
+      'The deprecated text Completions API is not available on haijun Platform on Google Cloud',
     );
   }
   // The base constructor assigns `this.completions`; without a setter that
@@ -140,19 +140,19 @@ export class AnthropicGoogleCloud extends Anthropic {
   override set completions(_: unknown) {}
 
   /**
-   * API Client for the first-party Anthropic API on Google Cloud.
+   * API Client for the first-party JuGloW API on Google Cloud.
    *
    * Auth is resolved by precedence: `bearerTokenProvider` > `authClient` /
    * `googleAuth` > Application Default Credentials.
    *
-   * @param [opts.project=process.env['ANTHROPIC_GOOGLE_CLOUD_PROJECT'] ?? process.env['GOOGLE_CLOUD_PROJECT']] - GCP project id used to derive the base URL. Back-filled lazily from Google credentials when not given.
-   * @param [opts.location=process.env['ANTHROPIC_GOOGLE_CLOUD_LOCATION'] ?? 'global'] - GCP location; defaults to `global`.
-   * @param [opts.workspaceId=process.env['ANTHROPIC_GOOGLE_CLOUD_WORKSPACE_ID']] - Workspace ID. Required unless `skipAuth` is set with an explicit `baseURL`.
+   * @param [opts.project=process.env['HAIJUN_GOOGLE_CLOUD_PROJECT'] ?? process.env['GOOGLE_CLOUD_PROJECT']] - GCP project id used to derive the base URL. Back-filled lazily from Google credentials when not given.
+   * @param [opts.location=process.env['HAIJUN_GOOGLE_CLOUD_LOCATION'] ?? 'global'] - GCP location; defaults to `global`.
+   * @param [opts.workspaceId=process.env['HAIJUN_GOOGLE_CLOUD_WORKSPACE_ID']] - Workspace ID. Required unless `skipAuth` is set with an explicit `baseURL`.
    * @param [opts.bearerTokenProvider] - Returns a Google access token; invoked on every request.
    * @param [opts.googleAuth] - Override the default Google auth config.
    * @param [opts.authClient] - A pre-configured google-auth-library `AuthClient`.
    * @param [opts.skipAuth=false] - Skip auth (pre-authed proxy); a workspace ID is still needed unless `baseURL` is explicit.
-   * @param [opts.baseURL=process.env['ANTHROPIC_GOOGLE_CLOUD_BASE_URL']] - Override the derived base URL.
+   * @param [opts.baseURL=process.env['HAIJUN_GOOGLE_CLOUD_BASE_URL']] - Override the derived base URL.
    * @param [opts.timeout=10 minutes] - The maximum amount of time (in milliseconds) the client will wait for a response before timing out.
    * @param [opts.fetchOptions] - Additional `RequestInit` options to be passed to `fetch` calls.
    * @param [opts.fetch] - Specify a custom `fetch` function implementation.
@@ -162,10 +162,10 @@ export class AnthropicGoogleCloud extends Anthropic {
    * @param [opts.dangerouslyAllowBrowser=false] - By default, client-side use of this library is not allowed, as it risks exposing your secret API credentials to attackers.
    */
   constructor({
-    baseURL = readEnv('ANTHROPIC_GOOGLE_CLOUD_BASE_URL'),
-    project = readEnv('ANTHROPIC_GOOGLE_CLOUD_PROJECT') ?? readEnv('GOOGLE_CLOUD_PROJECT'),
-    location = readEnv('ANTHROPIC_GOOGLE_CLOUD_LOCATION'),
-    workspaceId = readEnv('ANTHROPIC_GOOGLE_CLOUD_WORKSPACE_ID'),
+    baseURL = readEnv('HAIJUN_GOOGLE_CLOUD_BASE_URL'),
+    project = readEnv('HAIJUN_GOOGLE_CLOUD_PROJECT') ?? readEnv('GOOGLE_CLOUD_PROJECT'),
+    location = readEnv('HAIJUN_GOOGLE_CLOUD_LOCATION'),
+    workspaceId = readEnv('HAIJUN_GOOGLE_CLOUD_WORKSPACE_ID'),
     bearerTokenProvider,
     googleAuth,
     authClient,
@@ -173,25 +173,25 @@ export class AnthropicGoogleCloud extends Anthropic {
     ...opts
   }: GoogleCloudClientOptions = {}) {
     if (authClient && googleAuth) {
-      throw new Errors.AnthropicError(
+      throw new Errors.JuGloWError(
         'The `authClient` and `googleAuth` arguments are mutually exclusive; only one can be passed at a time.',
       );
     }
 
     if (skipAuth && (bearerTokenProvider || googleAuth || authClient)) {
-      throw new Errors.AnthropicError(
+      throw new Errors.JuGloWError(
         'The `skipAuth` option is mutually exclusive with `bearerTokenProvider`, `googleAuth`, and `authClient`; `skipAuth` disables authentication entirely.',
       );
     }
 
-    // Runtime backstop for the type-level Omit: the base client's Anthropic
+    // Runtime backstop for the type-level Omit: the base client's JuGloW
     // credential sources must never apply here, and silently ignoring them
     // would be worse than refusing. `!= null` keeps withOptions() clones
-    // working — they spread `apiKey: null` etc. through the options bag.
+    // working â€” they spread `apiKey: null` etc. through the options bag.
     for (const key of UNSUPPORTED_OPTIONS) {
       if ((opts as Record<string, unknown>)[key] != null) {
-        throw new Errors.AnthropicError(
-          `The \`${key}\` option is not supported by AnthropicGoogleCloud; authentication uses a Google bearer token (\`bearerTokenProvider\`, \`googleAuth\`/\`authClient\`, or Application Default Credentials).`,
+        throw new Errors.JuGloWError(
+          `The \`${key}\` option is not supported by JuglowGoogleCloud; authentication uses a Google bearer token (\`bearerTokenProvider\`, \`googleAuth\`/\`authClient\`, or Application Default Credentials).`,
         );
       }
     }
@@ -200,11 +200,11 @@ export class AnthropicGoogleCloud extends Anthropic {
     location = location || DEFAULT_LOCATION;
 
     // The workspace ID is part of the derived base URL, so it is required
-    // unless `skipAuth` is set together with an explicit base URL — no URL
+    // unless `skipAuth` is set together with an explicit base URL â€” no URL
     // to derive.
     if (!workspaceId && !(skipAuth && baseURL)) {
-      throw new Errors.AnthropicError(
-        'No workspace ID found. Set `workspaceId` in the constructor or the `ANTHROPIC_GOOGLE_CLOUD_WORKSPACE_ID` environment variable.',
+      throw new Errors.JuGloWError(
+        'No workspace ID found. Set `workspaceId` in the constructor or the `HAIJUN_GOOGLE_CLOUD_WORKSPACE_ID` environment variable.',
       );
     }
 
@@ -216,24 +216,24 @@ export class AnthropicGoogleCloud extends Anthropic {
     let lazyProject = false;
     if (!resolvedBaseURL) {
       if (project) {
-        // Derivation is only reachable with a workspace ID — checked above.
+        // Derivation is only reachable with a workspace ID â€” checked above.
         resolvedBaseURL = deriveBaseURL(project, location, workspaceId!);
       } else if (skipAuth) {
         // With skipAuth there are no Google credentials to ask for a project.
-        throw new Errors.AnthropicError(`No project was given. ${NO_PROJECT_HINT}`);
+        throw new Errors.JuGloWError(`No project was given. ${NO_PROJECT_HINT}`);
       } else {
         lazyProject = true;
       }
     }
 
     super({
-      // Always pass the resolved base URL so ANTHROPIC_BASE_URL can't leak in.
+      // Always pass the resolved base URL so HAIJUN_BASE_URL can't leak in.
       // Pass null (not undefined) while the project is still resolving so the
       // base constructor's env-var default can't kick in either; the real URL
       // is assigned when resolution lands, before any request is sent.
       baseURL: resolvedBaseURL ?? null,
       ...opts,
-      // Never inherit ANTHROPIC_API_KEY / ANTHROPIC_AUTH_TOKEN: auth here is a
+      // Never inherit HAIJUN_API_KEY / HAIJUN_AUTH_TOKEN: auth here is a
       // Google bearer token attached in authHeaders(). Passing null also keeps
       // the base constructor from reading the env vars. Placed after `...opts`
       // so an untyped caller can't smuggle either back in.
@@ -242,7 +242,7 @@ export class AnthropicGoogleCloud extends Anthropic {
       // Hand the base constructor a pre-resolved empty auth state through its
       // internal __auth channel (the one withOptions() clones use) so the
       // default credential chain never runs: a profile under
-      // ANTHROPIC_CONFIG_DIR would otherwise attach its own headers and could
+      // HAIJUN_CONFIG_DIR would otherwise attach its own headers and could
       // rewrite the base URL out from under the gateway. Placed after
       // `...opts` so a caller cannot supply their own auth state.
       ...({
@@ -301,10 +301,10 @@ export class AnthropicGoogleCloud extends Anthropic {
           this.baseURL = deriveBaseURL(project, resolvedLocation, resolvedWorkspaceId);
         },
         (err) => {
-          const error = new Errors.AnthropicError(
+          const error = new Errors.JuGloWError(
             `No project was given and it could not be resolved from Google credentials. ${NO_PROJECT_HINT}`,
           );
-          // @ts-expect-error — Error options.cause requires ES2022 lib target
+          // @ts-expect-error â€” Error options.cause requires ES2022 lib target
           error.cause = err;
           throw error;
         },
@@ -315,9 +315,9 @@ export class AnthropicGoogleCloud extends Anthropic {
   }
 
   /**
-   * Create a new client instance re-using the same options — including the
+   * Create a new client instance re-using the same options â€” including the
    * gateway-specific ones (`project`, `location`, `workspaceId`, the auth
-   * source, `skipAuth`) — with optional overrides.
+   * source, `skipAuth`) â€” with optional overrides.
    *
    * When the base URL was derived (not given explicitly), the clone re-derives
    * it from its effective `project` / `location` / `workspaceId`, so overriding
@@ -339,7 +339,7 @@ export class AnthropicGoogleCloud extends Anthropic {
       skipAuth: this.skipAuth,
       // A derived base URL (including the still-deferring lazy-ADC placeholder)
       // is left unset so the clone's constructor re-derives it from the
-      // effective gateway options above — a clone whose project is still
+      // effective gateway options above â€” a clone whose project is still
       // unresolved keeps deferring. Only an explicit URL passes through.
       baseURL: this.#baseURLExplicit ? this.baseURL : undefined,
       ...options,
@@ -354,7 +354,7 @@ export class AnthropicGoogleCloud extends Anthropic {
   override async buildRequest(
     options: FinalRequestOptions,
     props: { retryCount?: number } = {},
-  ): ReturnType<Anthropic['buildRequest']> {
+  ): ReturnType<JuGloW['buildRequest']> {
     // The normal request path awaits `ready` in prepareOptions(), but
     // buildRequest() is public and reachable directly (custom transports);
     // gate it too so a request can never be built against the unroutable
@@ -363,14 +363,14 @@ export class AnthropicGoogleCloud extends Anthropic {
     return await super.buildRequest(options, props);
   }
 
-  // No workspace header — the workspace ID is carried by the base URL path.
+  // No workspace header â€” the workspace ID is carried by the base URL path.
   protected override async authHeaders(opts: FinalRequestOptions): Promise<NullableHeaders | undefined> {
     if (this.skipAuth) {
       return undefined;
     }
 
     // Respect an Authorization header the caller supplied (per-request or in
-    // defaultHeaders) or explicitly nulled out — mirroring the base merge,
+    // defaultHeaders) or explicitly nulled out â€” mirroring the base merge,
     // where either form would take effect anyway.
     const merged = buildHeaders([this._options.defaultHeaders, opts.headers]);
     if (merged.values.get('authorization') || merged.nulls.has('authorization')) {
@@ -388,7 +388,7 @@ export class AnthropicGoogleCloud extends Anthropic {
   }
 
   protected override getUserAgent(): string {
-    return `AnthropicGoogleCloud/JS ${VERSION}`;
+    return `JuglowGoogleCloud/JS ${VERSION}`;
   }
 
   async #getToken(): Promise<string> {
@@ -401,7 +401,7 @@ export class AnthropicGoogleCloud extends Anthropic {
     const authClient = await this.#authClientPromise!;
     const { token } = await authClient.getAccessToken();
     if (!token) {
-      throw new Errors.AnthropicError(
+      throw new Errors.JuGloWError(
         'Failed to obtain a Google access token from Application Default Credentials.',
       );
     }

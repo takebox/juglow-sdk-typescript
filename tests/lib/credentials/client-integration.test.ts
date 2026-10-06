@@ -1,10 +1,10 @@
-import fs from 'node:fs';
+﻿import fs from 'node:fs';
 import path from 'node:path';
 import { mkdtempSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import Anthropic from '@anthropic-ai/sdk';
-import type { AccessToken } from '@anthropic-ai/sdk/lib/credentials/types';
-import { OAUTH_API_BETA_HEADER } from '@anthropic-ai/sdk/lib/credentials/types';
+import JuGloW from '@takebox-ai/sdk';
+import type { AccessToken } from '@takebox-ai/sdk/lib/credentials/types';
+import { OAUTH_API_BETA_HEADER } from '@takebox-ai/sdk/lib/credentials/types';
 
 const VALID_MSG_RESPONSE = {
   id: 'msg_1',
@@ -43,15 +43,15 @@ describe('client credentials integration', () => {
   const originalEnv: Record<string, string | undefined> = {};
 
   const envVars = [
-    'ANTHROPIC_API_KEY',
-    'ANTHROPIC_AUTH_TOKEN',
-    'ANTHROPIC_BASE_URL',
-    'ANTHROPIC_CONFIG_DIR',
-    'ANTHROPIC_FEDERATION_RULE_ID',
-    'ANTHROPIC_IDENTITY_TOKEN',
-    'ANTHROPIC_IDENTITY_TOKEN_FILE',
-    'ANTHROPIC_ORGANIZATION_ID',
-    'ANTHROPIC_PROFILE',
+    'HAIJUN_API_KEY',
+    'HAIJUN_AUTH_TOKEN',
+    'HAIJUN_BASE_URL',
+    'HAIJUN_CONFIG_DIR',
+    'HAIJUN_FEDERATION_RULE_ID',
+    'HAIJUN_IDENTITY_TOKEN',
+    'HAIJUN_IDENTITY_TOKEN_FILE',
+    'HAIJUN_ORGANIZATION_ID',
+    'HAIJUN_PROFILE',
   ];
 
   beforeEach(() => {
@@ -73,9 +73,9 @@ describe('client credentials integration', () => {
     fs.rmSync(testDir, { recursive: true });
   });
 
-  it('ANTHROPIC_API_KEY env var shadows a profile-configured federation config', async () => {
-    process.env['ANTHROPIC_CONFIG_DIR'] = testDir;
-    process.env['ANTHROPIC_API_KEY'] = 'sk-env-key';
+  it('HAIJUN_API_KEY env var shadows a profile-configured federation config', async () => {
+    process.env['HAIJUN_CONFIG_DIR'] = testDir;
+    process.env['HAIJUN_API_KEY'] = 'sk-env-key';
     const tokenPath = path.join(testDir, 'id-token');
     fs.mkdirSync(path.join(testDir, 'configs'), { recursive: true });
     fs.writeFileSync(tokenPath, 'my-jwt');
@@ -92,7 +92,7 @@ describe('client credentials integration', () => {
     );
 
     let exchanged = false;
-    const client = new Anthropic({
+    const client = new JuGloW({
       fetch: async (url, init) => {
         const urlStr = typeof url === 'string' ? url : url.toString();
         if (urlStr.includes('/v1/oauth/token')) {
@@ -106,7 +106,7 @@ describe('client credentials integration', () => {
     });
 
     await client.messages.create({
-      model: 'claude-opus-4-8',
+      model: 'haijun-opus-8',
       max_tokens: 1,
       messages: [{ role: 'user', content: 'hi' }],
     });
@@ -116,20 +116,20 @@ describe('client credentials integration', () => {
 
   it('apiKey takes precedence over config; config is not resolved', async () => {
     // user_oauth without credentials_path would throw if resolved.
-    const client = new Anthropic({
+    const client = new JuGloW({
       apiKey: 'sk-test',
       config: { workspace_id: 'ws-ignored', authentication: { type: 'user_oauth' } },
       fetch: async (_url, init) => {
         expect(getHeader(init, 'x-api-key')).toBe('sk-test');
-        expect(getHeader(init, 'anthropic-workspace-id')).toBeNull();
-        expect(getHeader(init, 'anthropic-beta')).toBeNull();
+        expect(getHeader(init, 'Juglow-workspace-id')).toBeNull();
+        expect(getHeader(init, 'Juglow-beta')).toBeNull();
         return jsonResponse(VALID_MSG_RESPONSE);
       },
     });
 
     expect(client.credentials).toBeNull();
     await client.messages.create({
-      model: 'claude-opus-4-8',
+      model: 'haijun-opus-8',
       max_tokens: 1,
       messages: [{ role: 'user', content: 'hi' }],
     });
@@ -137,7 +137,7 @@ describe('client credentials integration', () => {
 
   it('apiKey takes precedence over credentials', async () => {
     let providerCalled = false;
-    const client = new Anthropic({
+    const client = new JuGloW({
       apiKey: 'sk-test',
       credentials: async () => {
         providerCalled = true;
@@ -151,7 +151,7 @@ describe('client credentials integration', () => {
     });
 
     await client.messages.create({
-      model: 'claude-opus-4-8',
+      model: 'haijun-opus-8',
       max_tokens: 1,
       messages: [{ role: 'user', content: 'hi' }],
     });
@@ -159,18 +159,18 @@ describe('client credentials integration', () => {
   });
 
   it('uses explicit credentials provider for bearer auth', async () => {
-    const client = new Anthropic({
+    const client = new JuGloW({
       apiKey: null,
       credentials: async () => ({ token: 'my-access-token', expiresAt: farFuture() }),
       fetch: async (_url, init) => {
         expect(getHeader(init, 'authorization')).toBe('Bearer my-access-token');
-        expect(getHeader(init, 'anthropic-beta')).toContain(OAUTH_API_BETA_HEADER);
+        expect(getHeader(init, 'Juglow-beta')).toContain(OAUTH_API_BETA_HEADER);
         return jsonResponse(VALID_MSG_RESPONSE);
       },
     });
 
     await client.messages.create({
-      model: 'claude-opus-4-8',
+      model: 'haijun-opus-8',
       max_tokens: 1,
       messages: [{ role: 'user', content: 'hi' }],
     });
@@ -180,19 +180,19 @@ describe('client credentials integration', () => {
     const tokenPath = path.join(testDir, 'id-token');
     fs.writeFileSync(tokenPath, 'my-jwt');
 
-    process.env['ANTHROPIC_CONFIG_DIR'] = path.join(testDir, 'nonexistent');
-    process.env['ANTHROPIC_FEDERATION_RULE_ID'] = 'fdrl_test';
-    process.env['ANTHROPIC_ORGANIZATION_ID'] = 'org-test';
-    process.env['ANTHROPIC_IDENTITY_TOKEN_FILE'] = tokenPath;
+    process.env['HAIJUN_CONFIG_DIR'] = path.join(testDir, 'nonexistent');
+    process.env['HAIJUN_FEDERATION_RULE_ID'] = 'fdrl_test';
+    process.env['HAIJUN_ORGANIZATION_ID'] = 'org-test';
+    process.env['HAIJUN_IDENTITY_TOKEN_FILE'] = tokenPath;
 
     let tokenExchanged = false;
-    const client = new Anthropic({
+    const client = new JuGloW({
       fetch: async (url, init) => {
         const urlStr = typeof url === 'string' ? url : url.toString();
         if (urlStr.includes('/v1/oauth/token')) {
           tokenExchanged = true;
           // The token-exchange UA matches the client's API-request UA
-          expect(getHeader(init, 'User-Agent')).toMatch(/^Anthropic\/JS /);
+          expect(getHeader(init, 'User-Agent')).toMatch(/^JuGloW\/JS /);
           return jsonResponse({ access_token: 'resolved-tok', expires_in: 3600 });
         }
         expect(getHeader(init, 'authorization')).toBe('Bearer resolved-tok');
@@ -201,7 +201,7 @@ describe('client credentials integration', () => {
     });
 
     await client.messages.create({
-      model: 'claude-opus-4-8',
+      model: 'haijun-opus-8',
       max_tokens: 1,
       messages: [{ role: 'user', content: 'hi' }],
     });
@@ -210,7 +210,7 @@ describe('client credentials integration', () => {
 
   it('retries on 401 after invalidating token cache', async () => {
     let callCount = 0;
-    const client = new Anthropic({
+    const client = new JuGloW({
       apiKey: null,
       maxRetries: 1,
       credentials: async () => {
@@ -226,7 +226,7 @@ describe('client credentials integration', () => {
     });
 
     await client.messages.create({
-      model: 'claude-opus-4-8',
+      model: 'haijun-opus-8',
       max_tokens: 1,
       messages: [{ role: 'user', content: 'hi' }],
     });
@@ -235,20 +235,20 @@ describe('client credentials integration', () => {
 
   it('caps 401-triggered refresh to once per request', async () => {
     let providerCalls = 0;
-    const client = new Anthropic({
+    const client = new JuGloW({
       apiKey: null,
       maxRetries: 5,
       credentials: async () => {
         providerCalls++;
         return { token: `tok-${providerCalls}`, expiresAt: farFuture() };
       },
-      // Always 401 — refreshed token is also rejected
+      // Always 401 â€” refreshed token is also rejected
       fetch: async () => jsonResponse({ error: { type: 'authentication_error', message: 'nope' } }, 401),
     });
 
     await expect(
       client.messages.create({
-        model: 'claude-opus-4-8',
+        model: 'haijun-opus-8',
         max_tokens: 1,
         messages: [{ role: 'user', content: 'hi' }],
       }),
@@ -259,7 +259,7 @@ describe('client credentials integration', () => {
 
   it('does not refresh on 401 when apiKey was used', async () => {
     let providerCalls = 0;
-    const client = new Anthropic({
+    const client = new JuGloW({
       apiKey: 'sk-test',
       maxRetries: 1,
       credentials: async () => {
@@ -271,7 +271,7 @@ describe('client credentials integration', () => {
 
     await expect(
       client.messages.create({
-        model: 'claude-opus-4-8',
+        model: 'haijun-opus-8',
         max_tokens: 1,
         messages: [{ role: 'user', content: 'hi' }],
       }),
@@ -280,9 +280,9 @@ describe('client credentials integration', () => {
   });
 
   it('surfaces lazy credential resolution errors on first request without unhandled rejection', async () => {
-    process.env['ANTHROPIC_CONFIG_DIR'] = testDir;
+    process.env['HAIJUN_CONFIG_DIR'] = testDir;
     fs.mkdirSync(path.join(testDir, 'configs'), { recursive: true });
-    // Config with unknown auth type → loadConfig() throws
+    // Config with unknown auth type â†’ loadConfig() throws
     fs.writeFileSync(
       path.join(testDir, 'configs', 'default.json'),
       JSON.stringify({ authentication: { type: 'mystery' } }),
@@ -292,7 +292,7 @@ describe('client credentials integration', () => {
     const onUnhandled = (err: unknown) => rejections.push(err);
     process.on('unhandledRejection', onUnhandled);
     try {
-      const client = new Anthropic({ fetch: async () => jsonResponse({}) });
+      const client = new JuGloW({ fetch: async () => jsonResponse({}) });
       // Give the eager resolution promise a tick to settle
       await new Promise((r) => setImmediate(r));
       expect(rejections).toEqual([]);
@@ -300,7 +300,7 @@ describe('client credentials integration', () => {
       // Error surfaces on first request with the root cause, not the generic message
       await expect(
         client.messages.create({
-          model: 'claude-opus-4-8',
+          model: 'haijun-opus-8',
           max_tokens: 1,
           messages: [{ role: 'user', content: 'hi' }],
         }),
@@ -311,16 +311,16 @@ describe('client credentials integration', () => {
   });
 
   it('throws when no auth can be resolved', async () => {
-    process.env['ANTHROPIC_CONFIG_DIR'] = path.join(testDir, 'empty');
+    process.env['HAIJUN_CONFIG_DIR'] = path.join(testDir, 'empty');
     fs.mkdirSync(path.join(testDir, 'empty'), { recursive: true });
 
-    const client = new Anthropic({
+    const client = new JuGloW({
       fetch: async () => jsonResponse({}),
     });
 
     await expect(
       client.messages.create({
-        model: 'claude-opus-4-8',
+        model: 'haijun-opus-8',
         max_tokens: 1,
         messages: [{ role: 'user', content: 'hi' }],
       }),
@@ -332,7 +332,7 @@ describe('client credentials integration', () => {
     fs.writeFileSync(tokenPath, 'explicit-jwt');
 
     let exchanged = false;
-    const client = new Anthropic({
+    const client = new JuGloW({
       apiKey: null,
       config: {
         organization_id: 'org-explicit',
@@ -355,13 +355,13 @@ describe('client credentials integration', () => {
         }
         expect(getHeader(init, 'authorization')).toBe('Bearer explicit-tok');
         // Federation profiles send workspace_id in the exchange body, not as a header.
-        expect(getHeader(init, 'anthropic-workspace-id')).toBeNull();
+        expect(getHeader(init, 'Juglow-workspace-id')).toBeNull();
         return jsonResponse(VALID_MSG_RESPONSE);
       },
     });
 
     await client.messages.create({
-      model: 'claude-opus-4-8',
+      model: 'haijun-opus-8',
       max_tokens: 1,
       messages: [{ role: 'user', content: 'hi' }],
     });
@@ -369,7 +369,7 @@ describe('client credentials integration', () => {
   });
 
   it('explicit credentials option takes precedence over config option', async () => {
-    const client = new Anthropic({
+    const client = new JuGloW({
       apiKey: null,
       credentials: async () => ({ token: 'from-provider', expiresAt: farFuture() }),
       config: {
@@ -383,7 +383,7 @@ describe('client credentials integration', () => {
     });
 
     await client.messages.create({
-      model: 'claude-opus-4-8',
+      model: 'haijun-opus-8',
       max_tokens: 1,
       messages: [{ role: 'user', content: 'hi' }],
     });
@@ -392,7 +392,7 @@ describe('client credentials integration', () => {
   it('throws descriptive error when config option is incomplete', () => {
     expect(
       () =>
-        new Anthropic({
+        new JuGloW({
           apiKey: null,
           config: { authentication: { type: 'user_oauth' } }, // no credentials_path
         }),
@@ -400,7 +400,7 @@ describe('client credentials integration', () => {
 
     expect(
       () =>
-        new Anthropic({
+        new JuGloW({
           apiKey: null,
           config: {
             organization_id: 'org-x',
@@ -411,14 +411,14 @@ describe('client credentials integration', () => {
   });
 
   it('explicit Authorization header bypasses a stored credential resolution error', async () => {
-    process.env['ANTHROPIC_CONFIG_DIR'] = testDir;
+    process.env['HAIJUN_CONFIG_DIR'] = testDir;
     fs.mkdirSync(path.join(testDir, 'configs'), { recursive: true });
     fs.writeFileSync(
       path.join(testDir, 'configs', 'default.json'),
       JSON.stringify({ authentication: { type: 'mystery' } }), // makes resolution fail
     );
 
-    const client = new Anthropic({
+    const client = new JuGloW({
       defaultHeaders: { Authorization: 'Bearer override-tok' },
       fetch: async (_url, init) => {
         expect(getHeader(init, 'authorization')).toBe('Bearer override-tok');
@@ -431,7 +431,7 @@ describe('client credentials integration', () => {
 
     // Explicit header escape hatch wins; resolution error is not thrown
     await client.messages.create({
-      model: 'claude-opus-4-8',
+      model: 'haijun-opus-8',
       max_tokens: 1,
       messages: [{ role: 'user', content: 'hi' }],
     });
@@ -441,10 +441,10 @@ describe('client credentials integration', () => {
     const tokenPath = path.join(testDir, 'id-token');
     fs.writeFileSync(tokenPath, 'my-jwt');
 
-    process.env['ANTHROPIC_CONFIG_DIR'] = path.join(testDir, 'nonexistent');
-    process.env['ANTHROPIC_FEDERATION_RULE_ID'] = 'fdrl_test';
-    process.env['ANTHROPIC_ORGANIZATION_ID'] = 'org-test';
-    process.env['ANTHROPIC_IDENTITY_TOKEN_FILE'] = tokenPath;
+    process.env['HAIJUN_CONFIG_DIR'] = path.join(testDir, 'nonexistent');
+    process.env['HAIJUN_FEDERATION_RULE_ID'] = 'fdrl_test';
+    process.env['HAIJUN_ORGANIZATION_ID'] = 'org-test';
+    process.env['HAIJUN_IDENTITY_TOKEN_FILE'] = tokenPath;
 
     let exchangeCount = 0;
     const fetchImpl = async (url: any, init?: RequestInit): Promise<Response> => {
@@ -457,30 +457,30 @@ describe('client credentials integration', () => {
       return jsonResponse(VALID_MSG_RESPONSE);
     };
 
-    const parent = new Anthropic({ fetch: fetchImpl });
+    const parent = new JuGloW({ fetch: fetchImpl });
     // Clone immediately, before lazy resolution has a chance to settle
     const clone = parent.withOptions({ timeout: 5000 });
 
     await Promise.all([
       parent.messages.create({
-        model: 'claude-opus-4-8',
+        model: 'haijun-opus-8',
         max_tokens: 1,
         messages: [{ role: 'user', content: 'hi' }],
       }),
       clone.messages.create({
-        model: 'claude-opus-4-8',
+        model: 'haijun-opus-8',
         max_tokens: 1,
         messages: [{ role: 'user', content: 'hi' }],
       }),
     ]);
 
-    // Shared auth state → only ONE token exchange for both clients
+    // Shared auth state â†’ only ONE token exchange for both clients
     expect(exchangeCount).toBe(1);
     expect(clone.credentials).toBe(parent.credentials);
   });
 
   it('withOptions clone created before resolution settles receives extraHeaders (workspace_id)', async () => {
-    process.env['ANTHROPIC_CONFIG_DIR'] = testDir;
+    process.env['HAIJUN_CONFIG_DIR'] = testDir;
     fs.mkdirSync(path.join(testDir, 'configs'), { recursive: true });
     fs.mkdirSync(path.join(testDir, 'credentials'), { recursive: true });
     fs.writeFileSync(
@@ -495,16 +495,16 @@ describe('client credentials integration', () => {
 
     const seenWs: (string | null)[] = [];
     const fetchImpl = async (_url: any, init?: RequestInit): Promise<Response> => {
-      seenWs.push(getHeader(init, 'anthropic-workspace-id'));
+      seenWs.push(getHeader(init, 'Juglow-workspace-id'));
       return jsonResponse(VALID_MSG_RESPONSE);
     };
 
-    const parent = new Anthropic({ fetch: fetchImpl });
+    const parent = new JuGloW({ fetch: fetchImpl });
     const clone = parent.withOptions({ timeout: 5000 }); // before resolution settles
 
     for (const c of [parent, clone]) {
       await c.messages.create({
-        model: 'claude-opus-4-8',
+        model: 'haijun-opus-8',
         max_tokens: 1,
         messages: [{ role: 'user', content: 'hi' }],
       });
@@ -514,11 +514,11 @@ describe('client credentials integration', () => {
   });
 
   it('pins withOptions({apiKey: undefined}) and ({credentials: null}) override semantics', async () => {
-    process.env['ANTHROPIC_CONFIG_DIR'] = path.join(testDir, 'empty');
+    process.env['HAIJUN_CONFIG_DIR'] = path.join(testDir, 'empty');
     fs.mkdirSync(path.join(testDir, 'empty'), { recursive: true });
 
     const seen: string[] = [];
-    const parent = new Anthropic({
+    const parent = new JuGloW({
       apiKey: null,
       credentials: async () => ({ token: 'parent', expiresAt: farFuture() }),
       fetch: async (_url, init) => {
@@ -527,26 +527,26 @@ describe('client credentials integration', () => {
       },
     });
 
-    // apiKey: undefined → overridesAuth=true (key is present), so the clone
+    // apiKey: undefined â†’ overridesAuth=true (key is present), so the clone
     // builds a fresh _auth with its OWN TokenCache wrapping the inherited
     // provider (passed via the credentials: this.credentials spread). The
     // clone authenticates with the same token but does not share the parent's
     // cache.
     const reset1 = parent.withOptions({ apiKey: undefined });
     await reset1.messages.create({
-      model: 'claude-opus-4-8',
+      model: 'haijun-opus-8',
       max_tokens: 1,
       messages: [{ role: 'user', content: 'hi' }],
     });
     expect(seen).toEqual(['Bearer parent']);
 
-    // credentials: null → overridesAuth=true AND options.credentials=null
+    // credentials: null â†’ overridesAuth=true AND options.credentials=null
     // overrides the spread, so the clone has no provider and (with an empty
     // config dir) hits the "could not resolve" error.
     const reset2 = parent.withOptions({ credentials: null });
     await expect(
       reset2.messages.create({
-        model: 'claude-opus-4-8',
+        model: 'haijun-opus-8',
         max_tokens: 1,
         messages: [{ role: 'user', content: 'hi' }],
       }),
@@ -554,20 +554,20 @@ describe('client credentials integration', () => {
   });
 
   it('withOptions clone observes parent resolution failure', async () => {
-    process.env['ANTHROPIC_CONFIG_DIR'] = testDir;
+    process.env['HAIJUN_CONFIG_DIR'] = testDir;
     fs.mkdirSync(path.join(testDir, 'configs'), { recursive: true });
     fs.writeFileSync(
       path.join(testDir, 'configs', 'default.json'),
       JSON.stringify({ authentication: { type: 'mystery' } }),
     );
 
-    const parent = new Anthropic({ fetch: async () => jsonResponse({}) });
+    const parent = new JuGloW({ fetch: async () => jsonResponse({}) });
     const clone = parent.withOptions({ timeout: 5000 });
     await new Promise((r) => setImmediate(r));
 
     await expect(
       clone.messages.create({
-        model: 'claude-opus-4-8',
+        model: 'haijun-opus-8',
         max_tokens: 1,
         messages: [{ role: 'user', content: 'hi' }],
       }),
@@ -575,7 +575,7 @@ describe('client credentials integration', () => {
   });
 
   it('withOptions with explicit auth override does NOT share parent auth state', async () => {
-    const parent = new Anthropic({
+    const parent = new JuGloW({
       apiKey: null,
       credentials: async () => ({ token: 'parent-tok', expiresAt: farFuture() }),
       fetch: async () => jsonResponse(VALID_MSG_RESPONSE),
@@ -594,7 +594,7 @@ describe('client credentials integration', () => {
       return jsonResponse(VALID_MSG_RESPONSE);
     };
 
-    const a = new Anthropic({
+    const a = new JuGloW({
       apiKey: null,
       credentials: async () => ({ token: 'A', expiresAt: farFuture() }),
       fetch: fetchImpl,
@@ -605,7 +605,7 @@ describe('client credentials integration', () => {
 
     for (const client of [a, b, c, d]) {
       await client.messages.create({
-        model: 'claude-opus-4-8',
+        model: 'haijun-opus-8',
         max_tokens: 1,
         messages: [{ role: 'user', content: 'hi' }],
       });
@@ -617,7 +617,7 @@ describe('client credentials integration', () => {
   it('401-refresh-once flag resets between top-level requests sharing options object', async () => {
     let providerCalls = 0;
     let fetchCalls = 0;
-    const client = new Anthropic({
+    const client = new JuGloW({
       apiKey: null,
       maxRetries: 5,
       credentials: async () => {
@@ -637,10 +637,10 @@ describe('client credentials integration', () => {
     const sharedOpts = {
       method: 'post' as const,
       path: '/v1/messages',
-      body: { model: 'claude-opus-4-8', max_tokens: 1, messages: [{ role: 'user', content: 'hi' }] },
+      body: { model: 'haijun-opus-8', max_tokens: 1, messages: [{ role: 'user', content: 'hi' }] },
     };
 
-    // First request: 401 → refresh → 401 → fail (didRefreshFor401 set)
+    // First request: 401 â†’ refresh â†’ 401 â†’ fail (didRefreshFor401 set)
     await expect(client.request(sharedOpts)).rejects.toThrow();
     expect(providerCalls).toBe(2);
 
@@ -658,7 +658,7 @@ describe('client credentials integration', () => {
       expiresAt: farFuture(),
     });
 
-    const client = new Anthropic({
+    const client = new JuGloW({
       apiKey: null,
       credentials: provider,
       fetch: async () => jsonResponse(VALID_MSG_RESPONSE),
@@ -684,12 +684,12 @@ describe('client credentials integration', () => {
     }
 
     beforeEach(() => {
-      process.env['ANTHROPIC_CONFIG_DIR'] = testDir;
+      process.env['HAIJUN_CONFIG_DIR'] = testDir;
     });
 
     it('loads the named profile', async () => {
       writeProfile('staging');
-      const client = new Anthropic({
+      const client = new JuGloW({
         profile: 'staging',
         fetch: async (_url, init) => {
           expect(getHeader(init, 'authorization')).toBe('Bearer staging-tok');
@@ -698,17 +698,17 @@ describe('client credentials integration', () => {
         },
       });
       await client.messages.create({
-        model: 'claude-opus-4-8',
+        model: 'haijun-opus-8',
         max_tokens: 1,
         messages: [{ role: 'user', content: 'hi' }],
       });
       expect(client.credentials).not.toBeNull();
     });
 
-    it('beats ANTHROPIC_API_KEY in env', async () => {
-      process.env['ANTHROPIC_API_KEY'] = 'sk-env-should-be-ignored';
+    it('beats HAIJUN_API_KEY in env', async () => {
+      process.env['HAIJUN_API_KEY'] = 'sk-env-should-be-ignored';
       writeProfile('staging');
-      const client = new Anthropic({
+      const client = new JuGloW({
         profile: 'staging',
         fetch: async (_url, init) => {
           expect(getHeader(init, 'authorization')).toBe('Bearer staging-tok');
@@ -718,17 +718,17 @@ describe('client credentials integration', () => {
       });
       expect(client.apiKey).toBeNull();
       await client.messages.create({
-        model: 'claude-opus-4-8',
+        model: 'haijun-opus-8',
         max_tokens: 1,
         messages: [{ role: 'user', content: 'hi' }],
       });
     });
 
-    it('beats ANTHROPIC_PROFILE in env', async () => {
-      process.env['ANTHROPIC_PROFILE'] = 'from-env';
+    it('beats HAIJUN_PROFILE in env', async () => {
+      process.env['HAIJUN_PROFILE'] = 'from-env';
       writeProfile('from-env');
       writeProfile('from-ctor');
-      const client = new Anthropic({
+      const client = new JuGloW({
         profile: 'from-ctor',
         fetch: async (_url, init) => {
           expect(getHeader(init, 'authorization')).toBe('Bearer from-ctor-tok');
@@ -736,7 +736,7 @@ describe('client credentials integration', () => {
         },
       });
       await client.messages.create({
-        model: 'claude-opus-4-8',
+        model: 'haijun-opus-8',
         max_tokens: 1,
         messages: [{ role: 'user', content: 'hi' }],
       });
@@ -745,7 +745,7 @@ describe('client credentials integration', () => {
     it('throws when combined with credentials', () => {
       expect(
         () =>
-          new Anthropic({
+          new JuGloW({
             profile: 'staging',
             credentials: async () => ({ token: 'x', expiresAt: null }),
           }),
@@ -755,7 +755,7 @@ describe('client credentials integration', () => {
     it('throws when combined with config', () => {
       expect(
         () =>
-          new Anthropic({
+          new JuGloW({
             profile: 'staging',
             config: { authentication: { type: 'user_oauth', credentials_path: '/dev/null' } },
           }),
@@ -763,13 +763,13 @@ describe('client credentials integration', () => {
     });
 
     it('surfaces a clear error when the named profile does not exist', async () => {
-      const client = new Anthropic({
+      const client = new JuGloW({
         profile: 'nope',
         fetch: async () => jsonResponse(VALID_MSG_RESPONSE),
       });
       await expect(
         client.messages.create({
-          model: 'claude-opus-4-8',
+          model: 'haijun-opus-8',
           max_tokens: 1,
           messages: [{ role: 'user', content: 'hi' }],
         }),
@@ -779,7 +779,7 @@ describe('client credentials integration', () => {
     it('withOptions({profile}) on a profile-based parent switches profile', async () => {
       writeProfile('a');
       writeProfile('b');
-      const parent = new Anthropic({
+      const parent = new JuGloW({
         profile: 'a',
         fetch: async () => jsonResponse(VALID_MSG_RESPONSE),
       });
@@ -791,7 +791,7 @@ describe('client credentials integration', () => {
         },
       });
       await clone.messages.create({
-        model: 'claude-opus-4-8',
+        model: 'haijun-opus-8',
         max_tokens: 1,
         messages: [{ role: 'user', content: 'hi' }],
       });
@@ -818,7 +818,7 @@ describe('client credentials integration', () => {
       fs.writeFileSync(credPath, JSON.stringify({ access_token: 'tok', expires_at: farFuture() }), {
         mode: 0o600,
       });
-      const client = new Anthropic({
+      const client = new JuGloW({
         apiKey: null,
         config: {
           base_url: 'https://staging.example.com/',
@@ -830,11 +830,11 @@ describe('client credentials integration', () => {
     });
 
     it('profile base_url propagates to outbound API host (lazy path)', async () => {
-      process.env['ANTHROPIC_CONFIG_DIR'] = testDir;
+      process.env['HAIJUN_CONFIG_DIR'] = testDir;
       writeUserOAuthProfile(testDir, 'https://staging.example.com');
 
       const seenHosts: string[] = [];
-      const client = new Anthropic({
+      const client = new JuGloW({
         fetch: async (url) => {
           seenHosts.push(new URL(typeof url === 'string' ? url : url.toString()).host);
           return jsonResponse(VALID_MSG_RESPONSE);
@@ -842,7 +842,7 @@ describe('client credentials integration', () => {
       });
 
       await client.messages.create({
-        model: 'claude-opus-4-8',
+        model: 'haijun-opus-8',
         max_tokens: 1,
         messages: [{ role: 'user', content: 'hi' }],
       });
@@ -850,13 +850,13 @@ describe('client credentials integration', () => {
       expect(client.baseURL).toBe('https://staging.example.com');
     });
 
-    it('ANTHROPIC_BASE_URL env wins over profile base_url', async () => {
-      process.env['ANTHROPIC_CONFIG_DIR'] = testDir;
-      process.env['ANTHROPIC_BASE_URL'] = 'https://env.example.com';
+    it('HAIJUN_BASE_URL env wins over profile base_url', async () => {
+      process.env['HAIJUN_CONFIG_DIR'] = testDir;
+      process.env['HAIJUN_BASE_URL'] = 'https://env.example.com';
       writeUserOAuthProfile(testDir, 'https://profile.example.com');
 
       const seenHosts: string[] = [];
-      const client = new Anthropic({
+      const client = new JuGloW({
         fetch: async (url) => {
           seenHosts.push(new URL(typeof url === 'string' ? url : url.toString()).host);
           return jsonResponse(VALID_MSG_RESPONSE);
@@ -864,7 +864,7 @@ describe('client credentials integration', () => {
       });
 
       await client.messages.create({
-        model: 'claude-opus-4-8',
+        model: 'haijun-opus-8',
         max_tokens: 1,
         messages: [{ role: 'user', content: 'hi' }],
       });
@@ -873,15 +873,15 @@ describe('client credentials integration', () => {
     });
 
     it('constructor baseURL opt wins over profile base_url', async () => {
-      process.env['ANTHROPIC_CONFIG_DIR'] = testDir;
+      process.env['HAIJUN_CONFIG_DIR'] = testDir;
       writeUserOAuthProfile(testDir, 'https://profile.example.com');
 
-      const client = new Anthropic({
+      const client = new JuGloW({
         baseURL: 'https://opt.example.com',
         fetch: async () => jsonResponse(VALID_MSG_RESPONSE),
       });
       await client.messages.create({
-        model: 'claude-opus-4-8',
+        model: 'haijun-opus-8',
         max_tokens: 1,
         messages: [{ role: 'user', content: 'hi' }],
       });
@@ -889,20 +889,20 @@ describe('client credentials integration', () => {
     });
 
     it('falls through to hardcoded default when profile has no base_url', async () => {
-      process.env['ANTHROPIC_CONFIG_DIR'] = testDir;
+      process.env['HAIJUN_CONFIG_DIR'] = testDir;
       writeUserOAuthProfile(testDir /* no base_url */);
 
-      const client = new Anthropic({ fetch: async () => jsonResponse(VALID_MSG_RESPONSE) });
+      const client = new JuGloW({ fetch: async () => jsonResponse(VALID_MSG_RESPONSE) });
       await client.messages.create({
-        model: 'claude-opus-4-8',
+        model: 'haijun-opus-8',
         max_tokens: 1,
         messages: [{ role: 'user', content: 'hi' }],
       });
-      expect(client.baseURL).toBe('https://api.anthropic.com');
+      expect(client.baseURL).toBe('https://platform.juglow.my.id');
     });
 
     it('withOptions clone created before lazy resolution settles adopts profile base_url', async () => {
-      process.env['ANTHROPIC_CONFIG_DIR'] = testDir;
+      process.env['HAIJUN_CONFIG_DIR'] = testDir;
       writeUserOAuthProfile(testDir, 'https://staging.example.com');
 
       const seenHosts: string[] = [];
@@ -911,12 +911,12 @@ describe('client credentials integration', () => {
         return jsonResponse(VALID_MSG_RESPONSE);
       };
 
-      const parent = new Anthropic({ fetch: fetchImpl });
+      const parent = new JuGloW({ fetch: fetchImpl });
       const clone = parent.withOptions({ timeout: 5000 }); // before resolution settles
 
       for (const c of [parent, clone]) {
         await c.messages.create({
-          model: 'claude-opus-4-8',
+          model: 'haijun-opus-8',
           max_tokens: 1,
           messages: [{ role: 'user', content: 'hi' }],
         });
@@ -926,7 +926,7 @@ describe('client credentials integration', () => {
     });
 
     it('nested withOptions chain on a profile-bound parent stays on the profile host', async () => {
-      process.env['ANTHROPIC_CONFIG_DIR'] = testDir;
+      process.env['HAIJUN_CONFIG_DIR'] = testDir;
       writeUserOAuthProfile(testDir, 'https://staging.example.com');
 
       const seenHosts: string[] = [];
@@ -935,12 +935,12 @@ describe('client credentials integration', () => {
         return jsonResponse(VALID_MSG_RESPONSE);
       };
 
-      const a = new Anthropic({ fetch: fetchImpl });
+      const a = new JuGloW({ fetch: fetchImpl });
       // Let resolution settle so a.baseURL has been mutated to the profile host
-      // before cloning — exercises the "don't pin mutated baseURL into clone
+      // before cloning â€” exercises the "don't pin mutated baseURL into clone
       // options" path in withOptions().
       await a.messages.create({
-        model: 'claude-opus-4-8',
+        model: 'haijun-opus-8',
         max_tokens: 1,
         messages: [{ role: 'user', content: 'hi' }],
       });
@@ -949,7 +949,7 @@ describe('client credentials integration', () => {
 
       for (const client of [b, c]) {
         await client.messages.create({
-          model: 'claude-opus-4-8',
+          model: 'haijun-opus-8',
           max_tokens: 1,
           messages: [{ role: 'user', content: 'hi' }],
         });
@@ -959,18 +959,18 @@ describe('client credentials integration', () => {
     });
 
     it('withOptions auth override does not inherit parent profile base_url', async () => {
-      process.env['ANTHROPIC_CONFIG_DIR'] = testDir;
+      process.env['HAIJUN_CONFIG_DIR'] = testDir;
       writeUserOAuthProfile(testDir, 'https://staging.example.com');
 
-      const parent = new Anthropic({ fetch: async () => jsonResponse(VALID_MSG_RESPONSE) });
+      const parent = new JuGloW({ fetch: async () => jsonResponse(VALID_MSG_RESPONSE) });
       await parent.messages.create({
-        model: 'claude-opus-4-8',
+        model: 'haijun-opus-8',
         max_tokens: 1,
         messages: [{ role: 'user', content: 'hi' }],
       });
       expect(parent.baseURL).toBe('https://staging.example.com');
 
-      // Auth override → fresh _authState (no profile baseURL). Clone must NOT
+      // Auth override â†’ fresh _authState (no profile baseURL). Clone must NOT
       // be stuck on the parent's resolved staging host; it falls back to the
       // construction-time default since no caller/env/profile pinned one.
       const seenHosts: string[] = [];
@@ -982,23 +982,23 @@ describe('client credentials integration', () => {
         },
       });
       await clone.messages.create({
-        model: 'claude-opus-4-8',
+        model: 'haijun-opus-8',
         max_tokens: 1,
         messages: [{ role: 'user', content: 'hi' }],
       });
-      expect(clone.baseURL).toBe('https://api.anthropic.com');
-      expect(seenHosts).toEqual(['api.anthropic.com']);
+      expect(clone.baseURL).toBe('https://platform.juglow.my.id');
+      expect(seenHosts).toEqual(['platform.juglow.my.id']);
     });
 
     it('withOptions({baseURL}) override is honored over profile base_url', async () => {
-      process.env['ANTHROPIC_CONFIG_DIR'] = testDir;
+      process.env['HAIJUN_CONFIG_DIR'] = testDir;
       writeUserOAuthProfile(testDir, 'https://staging.example.com');
 
-      const parent = new Anthropic({ fetch: async () => jsonResponse(VALID_MSG_RESPONSE) });
+      const parent = new JuGloW({ fetch: async () => jsonResponse(VALID_MSG_RESPONSE) });
       const clone = parent.withOptions({ baseURL: 'https://override.example.com' });
 
       await clone.messages.create({
-        model: 'claude-opus-4-8',
+        model: 'haijun-opus-8',
         max_tokens: 1,
         messages: [{ role: 'user', content: 'hi' }],
       });

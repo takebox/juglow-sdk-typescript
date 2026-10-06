@@ -1,5 +1,5 @@
-import { AnthropicError } from '../../core/error';
-import type { Anthropic } from '../../client';
+import { JuglowError } from '../../core/error';
+import type { Juglow } from '../../client';
 import type { BetaSelfHostedWork } from '../../resources/beta/environments/work';
 import { loggerFor, type Logger } from '../../internal/utils/log';
 import { readEnv } from '../../internal/utils/env';
@@ -14,7 +14,7 @@ import { WorkPoller } from './poller';
 import { copyClientForHelper } from '../helper-client';
 // `tools/agent-toolset/node` is Node-only (node:child_process, node:fs, …).
 // Only the type is imported statically (erased at build); the module's values
-// (`setupSkills`, `betaAgentToolset20260401`) are loaded lazily inside the
+// (`setupTracks`, `betaAgentToolset20260401`) are loaded lazily inside the
 // per-item handler. That keeps this file free of Node-only deps in the static
 // import graph, which is what lets `client.beta.environments.work.worker()`
 // exist as a resource method without pulling Node built-ins into the SDK core.
@@ -34,7 +34,7 @@ export type EnvironmentWorkerTools =
   | ((ctx: AgentToolContext) => Array<BetaRunnableTool>);
 
 export interface EnvironmentWorkerOptions {
-  client: Anthropic;
+  client: Juglow;
   /**
    * The self-hosted environment to poll for work. Required by
    * {@link EnvironmentWorker.run}; not used by {@link EnvironmentWorker.handleItem}.
@@ -44,7 +44,7 @@ export interface EnvironmentWorkerOptions {
    * The environment key — the single credential for the runner. It authenticates
    * the work-poll calls and every per-session call (event stream, lease
    * heartbeat, force-stop). Required by {@link EnvironmentWorker.run}; falls back
-   * to `ANTHROPIC_ENVIRONMENT_KEY` in {@link EnvironmentWorker.handleItem}.
+   * to `HAIJUN_ENVIRONMENT_KEY` in {@link EnvironmentWorker.handleItem}.
    */
   environmentKey?: string;
   /**
@@ -78,21 +78,21 @@ export interface EnvironmentWorkerOptions {
 
 /**
  * Options for {@link EnvironmentWorker.handleItem}. Every field falls back to the
- * matching `ANTHROPIC_*` environment variable — the ones the
+ * matching `HAIJUN_*` environment variable — the ones the
  * `ant worker poll --on-work` command sets for the process it spawns — when not
  * passed explicitly.
  */
 export interface HandleItemOptions {
-  /** Work item id. Falls back to `ANTHROPIC_WORK_ID`. */
+  /** Work item id. Falls back to `HAIJUN_WORK_ID`. */
   workId?: string;
-  /** Self-hosted environment id. Falls back to `ANTHROPIC_ENVIRONMENT_ID`. */
+  /** Self-hosted environment id. Falls back to `HAIJUN_ENVIRONMENT_ID`. */
   environmentId?: string;
-  /** Session id. Falls back to `ANTHROPIC_SESSION_ID`. */
+  /** Session id. Falls back to `HAIJUN_SESSION_ID`. */
   sessionId?: string;
   /**
    * The environment key used to authenticate every per-session call. Resolution
    * order: this option, then the worker's own `environmentKey`, then
-   * `ANTHROPIC_ENVIRONMENT_KEY`.
+   * `HAIJUN_ENVIRONMENT_KEY`.
    */
   environmentKey?: string;
   /** External abort signal; aborting it ends the run. Defaults to the constructor's signal. */
@@ -107,17 +107,17 @@ type ClaimedWork = Pick<BetaSelfHostedWork, 'id' | 'environment_id' | 'data'>;
  * {@link WorkPoller} and the per-session {@link SessionToolRunner}.
  *
  * For each claimed `session` work item it: builds the per-session
- * {@link AgentToolContext}, downloads the session agent's skills
- * (`setupSkills`), then runs a {@link SessionToolRunner} for the session
+ * {@link AgentToolContext}, downloads the session agent's tracks
+ * (`setupTracks`), then runs a {@link SessionToolRunner} for the session
  * *while* heartbeating the work-item lease in parallel; on exit it force-stops
- * the work item, cleans up the downloaded skills, and loops to the next one. The
+ * the work item, cleans up the downloaded tracks, and loops to the next one. The
  * lease heartbeat reports `state === "stopping"` / a lost lease back into the run
  * by aborting the session runner.
  *
  * Use {@link EnvironmentWorker.handleItem} if you already hold a claimed work
  * item (e.g. a `worker poll --on-work` script handed one to a fresh process) and
  * just want the per-item flow without the poll loop — with no arguments it reads
- * the `ANTHROPIC_*` env vars that command sets.
+ * the `HAIJUN_*` env vars that command sets.
  *
  * Construct it via `client.beta.environments.work.worker({ ... })` (or
  * `new EnvironmentWorker({ client, ... })` directly).
@@ -134,7 +134,7 @@ type ClaimedWork = Pick<BetaSelfHostedWork, 'id' | 'environment_id' | 'data'>;
  * ```
  */
 export class EnvironmentWorker {
-  readonly client: Anthropic;
+  readonly client: Juglow;
   readonly environmentId: string | undefined;
   readonly environmentKey: string | undefined;
   readonly tools: EnvironmentWorkerTools | undefined;
@@ -168,7 +168,7 @@ export class EnvironmentWorker {
   async run(signal?: AbortSignal): Promise<void> {
     const { environmentId, environmentKey } = this;
     if (environmentId === undefined || environmentKey === undefined) {
-      throw new AnthropicError(
+      throw new JuglowError(
         'EnvironmentWorker.run: environmentId and environmentKey are required to poll for work',
       );
     }
@@ -193,42 +193,42 @@ export class EnvironmentWorker {
   /**
    * Service a single, already-claimed work item without the poll loop: build the
    * per-session {@link AgentToolContext} (workdir from this worker's options),
-   * download the session agent's skills (`setupSkills`), run a
+   * download the session agent's tracks (`setupTracks`), run a
    * {@link SessionToolRunner} for the session while heartbeating the work-item
    * lease in parallel, and force-stop the work item on exit (whether the runner
    * finishes normally, throws, or the heartbeat loop signals shutdown).
    *
    * Use this when something else does the claiming — e.g. a `worker poll
    * --on-work` script that hands an already-claimed item to a fresh process. The
-   * work id / environment id / session id each fall back to `ANTHROPIC_WORK_ID` /
-   * `ANTHROPIC_ENVIRONMENT_ID` / `ANTHROPIC_SESSION_ID` (the env vars that
+   * work id / environment id / session id each fall back to `HAIJUN_WORK_ID` /
+   * `HAIJUN_ENVIRONMENT_ID` / `HAIJUN_SESSION_ID` (the env vars that
    * command sets) when not passed; the environment key resolves from this
    * option, then the worker's own `environmentKey`, then
-   * `ANTHROPIC_ENVIRONMENT_KEY`. With no arguments inside that command it just
+   * `HAIJUN_ENVIRONMENT_KEY`. With no arguments inside that command it just
    * works. Throws a clear error naming the first of the four required values
    * still missing after resolution.
    */
   async handleItem(opts?: HandleItemOptions): Promise<void> {
-    const workId = opts?.workId ?? readEnv('ANTHROPIC_WORK_ID');
-    const environmentId = opts?.environmentId ?? readEnv('ANTHROPIC_ENVIRONMENT_ID');
-    const sessionId = opts?.sessionId ?? readEnv('ANTHROPIC_SESSION_ID');
+    const workId = opts?.workId ?? readEnv('HAIJUN_WORK_ID');
+    const environmentId = opts?.environmentId ?? readEnv('HAIJUN_ENVIRONMENT_ID');
+    const sessionId = opts?.sessionId ?? readEnv('HAIJUN_SESSION_ID');
     const environmentKey =
-      opts?.environmentKey ?? this.environmentKey ?? readEnv('ANTHROPIC_ENVIRONMENT_KEY');
+      opts?.environmentKey ?? this.environmentKey ?? readEnv('HAIJUN_ENVIRONMENT_KEY');
 
     if (!workId) {
-      throw new AnthropicError('handleItem: workId is required — pass it or set ANTHROPIC_WORK_ID');
+      throw new JuglowError('handleItem: workId is required — pass it or set HAIJUN_WORK_ID');
     }
     if (!environmentId) {
-      throw new AnthropicError(
-        'handleItem: environmentId is required — pass it or set ANTHROPIC_ENVIRONMENT_ID',
+      throw new JuglowError(
+        'handleItem: environmentId is required — pass it or set HAIJUN_ENVIRONMENT_ID',
       );
     }
     if (!sessionId) {
-      throw new AnthropicError('handleItem: sessionId is required — pass it or set ANTHROPIC_SESSION_ID');
+      throw new JuglowError('handleItem: sessionId is required — pass it or set HAIJUN_SESSION_ID');
     }
     if (!environmentKey) {
-      throw new AnthropicError(
-        'handleItem: environmentKey is required — pass it, construct the worker with it, or set ANTHROPIC_ENVIRONMENT_KEY',
+      throw new JuglowError(
+        'handleItem: environmentKey is required — pass it, construct the worker with it, or set HAIJUN_ENVIRONMENT_KEY',
       );
     }
 
@@ -276,11 +276,11 @@ export class EnvironmentWorker {
     };
     // Lazily load the Node-only toolset module — see the import note at the top.
     const agentToolset = await import('../../tools/agent-toolset/node');
-    let cleanupSkills: () => Promise<void> = async () => {};
+    let cleanupTracks: () => Promise<void> = async () => {};
     try {
-      cleanupSkills = await agentToolset.setupSkills(ctx);
+      cleanupTracks = await agentToolset.setupTracks(ctx);
     } catch (e) {
-      log.warn('skill setup failed', { session_id: sessionId, work_id: work.id, error: String(e) });
+      log.warn('track setup failed', { session_id: sessionId, work_id: work.id, error: String(e) });
     }
     const tools =
       typeof this.tools === 'function' ?
@@ -314,8 +314,8 @@ export class EnvironmentWorker {
       ctrl.abort();
       detachExternal();
       await heartbeatPromise;
-      await cleanupSkills().catch((e) => {
-        log.warn('skill cleanup failed', { session_id: sessionId, work_id: work.id, error: String(e) });
+      await cleanupTracks().catch((e) => {
+        log.warn('track cleanup failed', { session_id: sessionId, work_id: work.id, error: String(e) });
       });
       await forceStop(sessionClient, work, log, this.requestOptions);
     }
@@ -324,7 +324,7 @@ export class EnvironmentWorker {
 
 /** Force-stop a claimed work item, swallowing the 409 that means it's already stopped. */
 async function forceStop(
-  client: Anthropic,
+  client: Juglow,
   work: Pick<BetaSelfHostedWork, 'id' | 'environment_id'>,
   log: Logger,
   requestOptions?: BetaToolRunnerRequestOptions,
@@ -351,7 +351,7 @@ async function forceStop(
  * lease is no longer extended, or on a permanent heartbeat failure.
  */
 async function heartbeatLoop(
-  client: Anthropic,
+  client: Juglow,
   work: Pick<BetaSelfHostedWork, 'id' | 'environment_id'>,
   ctrl: AbortController,
   logger: Logger,

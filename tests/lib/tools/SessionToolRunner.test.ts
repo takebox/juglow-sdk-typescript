@@ -1,7 +1,7 @@
-import { SessionToolRunner } from '@anthropic-ai/sdk/lib/tools/SessionToolRunner';
-import type { DispatchedToolCall } from '@anthropic-ai/sdk/lib/tools/SessionToolRunner';
-import type { BetaRunnableTool } from '@anthropic-ai/sdk/lib/tools/BetaRunnableTool';
-import { APIError } from '@anthropic-ai/sdk/core/error';
+import { SessionToolRunner } from '@takebox-ai/sdk/lib/tools/SessionToolRunner';
+import type { DispatchedToolCall } from '@takebox-ai/sdk/lib/tools/SessionToolRunner';
+import type { BetaRunnableTool } from '@takebox-ai/sdk/lib/tools/BetaRunnableTool';
+import { APIError } from '@takebox-ai/sdk/core/error';
 
 // =====
 // Test fakes

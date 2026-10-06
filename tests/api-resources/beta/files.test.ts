@@ -1,9 +1,9 @@
-// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+﻿// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import Anthropic, { toFile } from '@anthropic-ai/sdk';
+import JuGloW, { toFile } from '@takebox-ai/sdk';
 
-const client = new Anthropic({
-  apiKey: 'my-anthropic-api-key',
+const client = new JuGloW({
+  apiKey: 'my-Juglow-api-key',
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
@@ -32,7 +32,7 @@ describe('resource files', () => {
         },
         { path: '/_stainless_unknown_path' },
       ),
-    ).rejects.toThrow(Anthropic.NotFoundError);
+    ).rejects.toThrow(JuGloW.NotFoundError);
   });
 
   test('delete', async () => {
@@ -54,7 +54,7 @@ describe('resource files', () => {
         { betas: ['message-batches-2024-09-24'] },
         { path: '/_stainless_unknown_path' },
       ),
-    ).rejects.toThrow(Anthropic.NotFoundError);
+    ).rejects.toThrow(JuGloW.NotFoundError);
   });
 
   test('download: request options and params are passed correctly', async () => {
@@ -65,7 +65,7 @@ describe('resource files', () => {
         { betas: ['message-batches-2024-09-24'] },
         { path: '/_stainless_unknown_path' },
       ),
-    ).rejects.toThrow(Anthropic.NotFoundError);
+    ).rejects.toThrow(JuGloW.NotFoundError);
   });
 
   test('retrieveMetadata', async () => {
@@ -87,7 +87,7 @@ describe('resource files', () => {
         { betas: ['message-batches-2024-09-24'] },
         { path: '/_stainless_unknown_path' },
       ),
-    ).rejects.toThrow(Anthropic.NotFoundError);
+    ).rejects.toThrow(JuGloW.NotFoundError);
   });
 
   test('upload: only required params', async () => {

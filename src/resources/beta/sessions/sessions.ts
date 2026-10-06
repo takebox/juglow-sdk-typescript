@@ -151,7 +151,7 @@ export class Sessions extends APIResource {
       body,
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
         options?.headers,
       ]),
     });
@@ -177,7 +177,7 @@ export class Sessions extends APIResource {
     return this._client.get(path`/v1/sessions/${sessionID}?beta=true`, {
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
         options?.headers,
       ]),
     });
@@ -204,7 +204,7 @@ export class Sessions extends APIResource {
       body,
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
         options?.headers,
       ]),
     });
@@ -233,7 +233,7 @@ export class Sessions extends APIResource {
         query,
         ...options,
         headers: buildHeaders([
-          { 'anthropic-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
+          { 'Juglow-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
           options?.headers,
         ]),
       },
@@ -260,7 +260,7 @@ export class Sessions extends APIResource {
     return this._client.delete(path`/v1/sessions/${sessionID}?beta=true`, {
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
         options?.headers,
       ]),
     });
@@ -286,7 +286,7 @@ export class Sessions extends APIResource {
     return this._client.post(path`/v1/sessions/${sessionID}/archive?beta=true`, {
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
         options?.headers,
       ]),
     });
@@ -299,12 +299,12 @@ export type BetaManagedAgentsSessionsBidirectionalPageCursor =
 /**
  * Platform advisor roster entry: a model the session's primary thread may consult
  * mid-turn. At most one per roster; the entry occupies the roster name
- * `anthropic.advisor`.
+ * `Juglow.advisor`.
  */
 export interface BetaManagedAgentsAdvisorParams {
   /**
-   * A Claude model id. The model must be permitted as an advisor for this agent's
-   * model — see the sessions/threads/advisor spec.
+   * A haijun model id. The model must be permitted as an advisor for this agent's
+   * model â€” see the sessions/threads/advisor spec.
    */
   model: string;
 
@@ -342,7 +342,7 @@ export interface BetaManagedAgentsAgentParams {
 
 export interface BetaManagedAgentsAgentThinkingPreview {
   /**
-   * The id the buffered agent.thinking will carry if it is emitted. Start-only — no
+   * The id the buffered agent.thinking will carry if it is emitted. Start-only â€” no
    * event_delta events follow.
    */
   id: string;
@@ -370,16 +370,16 @@ export interface BetaManagedAgentsAgentWithOverridesParams {
   mcp_servers?: Array<AgentsAPI.BetaManagedAgentsURLMCPServerParams>;
 
   /**
-   * Replacement model. Accepts the model string, e.g. `claude-opus-4-6`, or a
+   * Replacement model. Accepts the model string, e.g. `haijun-kamsa`, or a
    * `model_config` object. Omit to use the agent's model.
    */
   model?: AgentsAPI.BetaManagedAgentsModel | AgentsAPI.BetaManagedAgentsModelConfigParams;
 
   /**
-   * Replacement skill list. Full replacement: the provided array becomes the skills.
-   * Send an empty array to clear; omit to preserve the agent's skills.
+   * Replacement track list. Full replacement: the provided array becomes the tracks.
+   * Send an empty array to clear; omit to preserve the agent's tracks.
    */
-  skills?: Array<AgentsAPI.BetaManagedAgentsSkillParams>;
+  tracks?: Array<AgentsAPI.BetaManagedAgentsTrackParams>;
 
   /**
    * Replacement system prompt. Up to 100,000 characters. Set to null to clear the
@@ -478,7 +478,7 @@ export interface BetaManagedAgentsDeltaContent {
  * An incremental update to an event that is still being streamed. Deltas are
  * best-effort and may stop early; when the buffered event with id == event_id is
  * produced it carries the complete content. A model request that ends early (an
- * error or interrupt) produces no buffered event — its terminal
+ * error or interrupt) produces no buffered event â€” its terminal
  * span.model_request_end closes the preview. Only sent on stream connections that
  * opt in via event_deltas; never appears in event history.
  */
@@ -591,7 +591,7 @@ export interface BetaManagedAgentsMultiagent {
  */
 export interface BetaManagedAgentsMultiagentParams {
   /**
-   * Agents the coordinator may spawn as session threads. 1–20 entries. Each entry is
+   * Agents the coordinator may spawn as session threads. 1â€“20 entries. Each entry is
    * an agent ID string, a versioned `{"type":"agent","id","version"}` reference, or
    * `{"type":"self"}` to allow recursive self-invocation. Entries must reference
    * distinct agents (after resolving `self` and string forms); at most one `self`.
@@ -770,7 +770,7 @@ export interface BetaManagedAgentsSessionAgent {
 
   name: string;
 
-  skills: Array<AgentsAPI.BetaManagedAgentsAnthropicSkill | AgentsAPI.BetaManagedAgentsCustomSkill>;
+  tracks: Array<AgentsAPI.BetaManagedAgentsJuglowTrack | AgentsAPI.BetaManagedAgentsCustomTrack>;
 
   system: string | null;
 
@@ -963,7 +963,7 @@ export interface BetaManagedAgentsStartEvent {
   /**
    * The previewed event's type and id. The event type determines which delta types
    * the preview's event_delta events carry: agent.message events stream
-   * content_delta fragments; agent.thinking previews are start-only — no deltas
+   * content_delta fragments; agent.thinking previews are start-only â€” no deltas
    * follow, and the buffered agent.thinking with the same id concludes them.
    */
   event: BetaManagedAgentsStartEventPreview;
@@ -1024,7 +1024,7 @@ export interface BetaManagedAgentsUserToolResultEvent {
   /**
    * The id of the `agent.tool_use` event this result corresponds to, which can be
    * found in the last `session.status_idle`
-   * [event's](https://platform.claude.com/docs/en/api/beta/sessions/events/list#beta_managed_agents_session_requires_action.event_ids)
+   * [event's](https://raw.haijun.my.id/docs/en/api/beta/sessions/events/list#beta_managed_agents_session_requires_action.event_ids)
    * `stop_reason.event_ids` field.
    */
   tool_use_id: string;
@@ -1118,14 +1118,14 @@ export interface SessionCreateParams {
   /**
    * Header param: Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface SessionRetrieveParams {
   /**
    * Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface SessionUpdateParams {
@@ -1163,7 +1163,7 @@ export interface SessionUpdateParams {
   /**
    * Header param: Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface SessionListParams extends BidirectionalPageCursorParams {
@@ -1229,21 +1229,21 @@ export interface SessionListParams extends BidirectionalPageCursorParams {
   /**
    * Header param: Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface SessionDeleteParams {
   /**
    * Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface SessionArchiveParams {
   /**
    * Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 Sessions.Events = Events;

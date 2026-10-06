@@ -1,4 +1,4 @@
-import { z } from 'zod/v4';
+﻿import { z } from 'zod/v4';
 import { zodOutputFormat } from '../../../src/helpers/zod';
 import { Messages } from '../../../src/resources/messages/messages';
 
@@ -31,7 +31,7 @@ describe('Messages.parse()', () => {
       id: 'msg_123',
       type: 'message',
       role: 'assistant',
-      model: 'claude-3-5-sonnet-latest',
+      model: 'haijun-3-5-sonnet-latest',
       content: [
         {
           type: 'text',
@@ -49,7 +49,7 @@ describe('Messages.parse()', () => {
     mockPost.mockResolvedValue(mockResponse);
 
     const result = await messages.parse({
-      model: 'claude-3-5-sonnet-latest',
+      model: 'haijun-3-5-sonnet-latest',
       max_tokens: 1024,
       messages: [{ role: 'user', content: 'What is the weather in SF?' }],
       output_config: {
@@ -61,7 +61,7 @@ describe('Messages.parse()', () => {
       '/v1/messages',
       expect.objectContaining({
         body: expect.objectContaining({
-          model: 'claude-3-5-sonnet-latest',
+          model: 'haijun-3-5-sonnet-latest',
           max_tokens: 1024,
           messages: [{ role: 'user', content: 'What is the weather in SF?' }],
           output_config: {
@@ -105,7 +105,7 @@ describe('Messages.parse()', () => {
       id: 'msg_123',
       type: 'message',
       role: 'assistant',
-      model: 'claude-3-5-sonnet-latest',
+      model: 'haijun-3-5-sonnet-latest',
       content: [
         {
           type: 'text',
@@ -124,7 +124,7 @@ describe('Messages.parse()', () => {
 
     await expect(
       messages.parse({
-        model: 'claude-3-5-sonnet-latest',
+        model: 'haijun-3-5-sonnet-latest',
         max_tokens: 1024,
         messages: [{ role: 'user', content: 'Generate some data' }],
         output_config: {

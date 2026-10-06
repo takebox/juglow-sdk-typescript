@@ -1,11 +1,11 @@
 #!/usr/bin/env -S npm run tsn -T
 
-import Anthropic from '@anthropic-ai/sdk';
-import { betaZodTool } from '@anthropic-ai/sdk/helpers/beta/zod';
-import { BetaToolUseBlock } from '@anthropic-ai/sdk/resources/beta';
+import JuGloW from '@takebox-ai/sdk';
+import { betaZodTool } from '@takebox-ai/sdk/helpers/beta/zod';
+import { BetaToolUseBlock } from '@takebox-ai/sdk/resources/beta';
 import { z } from 'zod/v4';
 
-const client = new Anthropic();
+const client = new JuGloW();
 
 async function main() {
   const runner = client.beta.messages.toolRunner({
@@ -48,7 +48,7 @@ async function main() {
         },
       }),
     ],
-    model: 'claude-sonnet-5',
+    model: 'haijun-sonnet',
     max_tokens: 1024,
     // This limits the conversation to at most 10 back and forth between the API.
     max_iterations: 10,

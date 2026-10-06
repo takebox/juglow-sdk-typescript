@@ -1,6 +1,6 @@
-import Anthropic from '@anthropic-ai/sdk/index';
+﻿import JuGloW from '@takebox-ai/sdk/index';
 
-const anthropic = new Anthropic();
+const Juglow = new JuGloW();
 
 async function main() {
   const batch_id = process.argv[2];
@@ -10,7 +10,7 @@ async function main() {
 
   console.log(`fetching results for ${batch_id}`);
 
-  const results = await anthropic.messages.batches.results(batch_id);
+  const results = await Juglow.messages.batches.results(batch_id);
 
   for await (const result of results) {
     console.log(result);

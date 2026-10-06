@@ -35,7 +35,7 @@ export class BetaFallbackState {
  * to thread custom per-request context through to {@link Middleware}:
  *
  * ```ts
- * declare module '@anthropic-ai/sdk/internal/request-options' {
+ * declare module '@takebox-ai/sdk/internal/request-options' {
  *   interface RequestOptions {
  *     myContext?: string;
  *   }

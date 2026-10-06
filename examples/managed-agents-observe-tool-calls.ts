@@ -25,31 +25,31 @@
 //     `EnvironmentWorker` instead unless you specifically need to see each call.
 //
 // Requires:
-//   ANTHROPIC_API_KEY          - your API key (read by the SDK client)
-//   ANTHROPIC_ENVIRONMENT_ID   - the environment the session runs in
-//   ANTHROPIC_ENVIRONMENT_KEY  - the environment key, the runner's single
+//   HAIJUN_API_KEY          - your API key (read by the SDK client)
+//   HAIJUN_ENVIRONMENT_ID   - the environment the session runs in
+//   HAIJUN_ENVIRONMENT_KEY  - the environment key, the runner's single
 //                                credential (only the secondary scenario needs it)
 //
 // Security model: the tools execute bash and file operations directly on the
 // host. Run inside a container or other isolation boundary you control.
 
-import Anthropic from '@anthropic-ai/sdk';
-import { betaZodTool } from '@anthropic-ai/sdk/helpers/beta/zod';
-import type { DispatchedToolCall } from '@anthropic-ai/sdk/helpers/beta/environments';
+import JuGloW from '@takebox-ai/sdk';
+import { betaZodTool } from '@takebox-ai/sdk/helpers/beta/zod';
+import type { DispatchedToolCall } from '@takebox-ai/sdk/helpers/beta/environments';
 import {
   betaAgentToolset20260401,
-  setupSkills,
+  setupTracks,
   type AgentToolContext,
-} from '@anthropic-ai/sdk/tools/agent-toolset/node';
+} from '@takebox-ai/sdk/tools/agent-toolset/node';
 import { z } from 'zod/v4';
 
 // Required for sessions to accept a self-hosted environment_id.
 const MANAGED_AGENTS_BETA = 'managed-agents-2026-04-01';
 
-const client = new Anthropic();
+const client = new JuGloW();
 
-const environmentId = requireEnv('ANTHROPIC_ENVIRONMENT_ID');
-const workdir = process.env['ANTHROPIC_WORKDIR'] ?? '.';
+const environmentId = requireEnv('HAIJUN_ENVIRONMENT_ID');
+const workdir = process.env['HAIJUN_WORKDIR'] ?? '.';
 
 // A custom tool built with the `betaZodTool` helper — the same
 // `BetaRunnableTool` shape `client.beta.messages.toolRunner` accepts, with the
@@ -71,7 +71,7 @@ async function main() {
   //    tool, then a session and the initial prompt.
   const agent = await client.beta.agents.create({
     name: 'observe-tool-calls-example',
-    model: 'claude-haiku-4-5',
+    model: 'haijun-haiku',
     system: 'You are running in a sandbox. Use the available tools to answer.',
     tools: [
       { type: 'agent_toolset_20260401' },
@@ -94,10 +94,10 @@ async function main() {
   console.log('created session', session.id);
 
   // 2. Build the per-session agent tool context: the workdir the file tools
-  //    confine to, plus the session id `setupSkills` uses to download the
-  //    agent's skills into `{workdir}/skills/`. `cleanupSkills` removes them.
+  //    confine to, plus the session id `setupTracks` uses to download the
+  //    agent's tracks into `{workdir}/tracks/`. `cleanupTracks` removes them.
   const ctx: AgentToolContext = { workdir, client, sessionId: session.id };
-  const cleanupSkills = await setupSkills(ctx);
+  const cleanupTracks = await setupTracks(ctx);
 
   try {
     await client.beta.sessions.events.send(session.id, {
@@ -130,8 +130,8 @@ async function main() {
       printCall(call);
     }
   } finally {
-    // 4. Clean up the downloaded skills, the session, and the agent.
-    await cleanupSkills().catch(() => {});
+    // 4. Clean up the downloaded tracks, the session, and the agent.
+    await cleanupTracks().catch(() => {});
     await client.beta.sessions.delete(session.id, { betas: [MANAGED_AGENTS_BETA] }).catch(() => {});
     await client.beta.agents.archive(agent.id).catch(() => {});
   }
@@ -154,7 +154,7 @@ async function main() {
 // transient failures with backoff. Rolling your own heartbeat is the cost of
 // getting per-call visibility AND lease management together.
 async function observeAsSelfHostedWorker(): Promise<void> {
-  const environmentKey = requireEnv('ANTHROPIC_ENVIRONMENT_KEY');
+  const environmentKey = requireEnv('HAIJUN_ENVIRONMENT_KEY');
 
   // Every per-session call (the `toolRunner` event stream, the lease heartbeat,
   // the force-stop) authenticates with the environment key. `apiKey: null`
@@ -173,9 +173,9 @@ async function observeAsSelfHostedWorker(): Promise<void> {
     const sessionId = work.data.id;
     console.log('claimed work', work.id, 'for session', sessionId);
 
-    // Per-session agent tool context + skills, same as the primary scenario.
+    // Per-session agent tool context + tracks, same as the primary scenario.
     const ctx: AgentToolContext = { workdir, client, sessionId };
-    const cleanupSkills = await setupSkills(ctx);
+    const cleanupTracks = await setupTracks(ctx);
 
     // A controller shared by the heartbeat task and the `toolRunner` loop:
     // whichever finishes first aborts the other.
@@ -192,7 +192,7 @@ async function observeAsSelfHostedWorker(): Promise<void> {
     } finally {
       ctrl.abort();
       await heartbeatTask;
-      await cleanupSkills().catch(() => {});
+      await cleanupTracks().catch(() => {});
       // Force-stop the work item — `toolRunner` will not do it for you.
       await sessionClient.beta.environments.work
         .stop(work.id, { environment_id: work.environment_id, force: true })
@@ -210,7 +210,7 @@ async function observeAsSelfHostedWorker(): Promise<void> {
  * stopping/stopped or the lease was not extended.
  */
 async function heartbeatLease(
-  client: Anthropic,
+  client: JuGloW,
   work: { id: string; environment_id: string },
   signal: AbortSignal,
 ): Promise<void> {

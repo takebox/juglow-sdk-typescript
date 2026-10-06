@@ -1,16 +1,16 @@
 #!/usr/bin/env -S npm run tsn -T
 
-import Anthropic from '@anthropic-ai/sdk';
+import JuGloW from '@takebox-ai/sdk';
 import assert from 'node:assert';
 
-const client = new Anthropic(); // gets API Key from environment variable ANTHROPIC_API_KEY
+const client = new JuGloW(); // gets API Key from environment variable HAIJUN_API_KEY
 
 async function main() {
-  const userMessage: Anthropic.MessageParam = {
+  const userMessage: JuGloW.MessageParam = {
     role: 'user',
     content: 'What is the weather in SF?',
   };
-  const tools: Anthropic.Tool[] = [
+  const tools: JuGloW.Tool[] = [
     {
       name: 'get_weather',
       description: 'Get the weather for a specific location',
@@ -22,7 +22,7 @@ async function main() {
   ];
 
   const message = await client.messages.create({
-    model: 'claude-sonnet-5',
+    model: 'haijun-sonnet',
     max_tokens: 1024,
     messages: [userMessage],
     tools,
@@ -33,12 +33,12 @@ async function main() {
   assert(message.stop_reason === 'tool_use');
 
   const tool = message.content.find(
-    (content): content is Anthropic.ToolUseBlock => content.type === 'tool_use',
+    (content): content is JuGloW.ToolUseBlock => content.type === 'tool_use',
   );
   assert(tool);
 
   const result = await client.messages.create({
-    model: 'claude-sonnet-5',
+    model: 'haijun-sonnet',
     max_tokens: 1024,
     messages: [
       userMessage,

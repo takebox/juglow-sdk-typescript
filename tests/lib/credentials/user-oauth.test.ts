@@ -1,15 +1,15 @@
-import fs from 'node:fs';
+﻿import fs from 'node:fs';
 import path from 'node:path';
 import { mkdtempSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import type { Fetch } from '@anthropic-ai/sdk/internal/builtin-types';
-import { userOAuthProvider } from '@anthropic-ai/sdk/lib/credentials/user-oauth';
+import type { Fetch } from '@takebox-ai/sdk/internal/builtin-types';
+import { userOAuthProvider } from '@takebox-ai/sdk/lib/credentials/user-oauth';
 import {
   WorkloadIdentityError,
   OAUTH_API_BETA_HEADER,
   FEDERATION_BETA_HEADER,
   writeCredentialsFileAtomic,
-} from '@anthropic-ai/sdk/lib/credentials/types';
+} from '@takebox-ai/sdk/lib/credentials/types';
 
 const NOW_IN_SECONDS = 1700000000;
 
@@ -42,7 +42,7 @@ describe('userOAuthProvider', () => {
   });
 
   const baseConfig = {
-    baseURL: 'https://api.anthropic.com',
+    baseURL: 'https://platform.juglow.my.id',
     clientId: 'my-client',
   };
 
@@ -111,14 +111,14 @@ describe('userOAuthProvider', () => {
     expect(mockFetch).toHaveBeenCalledTimes(1);
 
     const [url, init] = (mockFetch as jest.Mock).mock.calls[0]!;
-    expect(url).toBe('https://api.anthropic.com/v1/oauth/token');
+    expect(url).toBe('https://platform.juglow.my.id/v1/oauth/token');
     const body = JSON.parse(init.body);
     expect(body.grant_type).toBe('refresh_token');
     expect(body.refresh_token).toBe('refresh-tok');
     expect(body.client_id).toBe('my-client');
-    expect(init.headers['anthropic-beta']).toBe(OAUTH_API_BETA_HEADER);
-    expect(init.headers['anthropic-beta']).not.toContain(FEDERATION_BETA_HEADER);
-    expect(init.headers['User-Agent']).toMatch(/^anthropic-sdk-typescript\//);
+    expect(init.headers['Juglow-beta']).toBe(OAUTH_API_BETA_HEADER);
+    expect(init.headers['Juglow-beta']).not.toContain(FEDERATION_BETA_HEADER);
+    expect(init.headers['User-Agent']).toMatch(/^Juglow-sdk-typescript\//);
   });
 
   it('writes refreshed credentials back to file with no .tmp leftover', async () => {
@@ -238,9 +238,9 @@ describe('userOAuthProvider', () => {
 
   it('writeCredentialsFileAtomic cleans up tmp file on write failure', async () => {
     // Target a path inside a non-existent dir whose parent is a regular file,
-    // so mkdir succeeds for the immediate dir? No — simpler: target a path
+    // so mkdir succeeds for the immediate dir? No â€” simpler: target a path
     // that IS a directory so the rename onto it fails (or open fails).
-    fs.mkdirSync(credPath); // credPath is now a directory → rename onto it fails
+    fs.mkdirSync(credPath); // credPath is now a directory â†’ rename onto it fails
     await expect(writeCredentialsFileAtomic(credPath, { x: 1 })).rejects.toThrow();
     // Nothing matching .tmp should be left behind in testDir
     expect(fs.readdirSync(testDir).filter((f) => f.endsWith('.tmp'))).toEqual([]);

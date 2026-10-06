@@ -1,5 +1,5 @@
 import type { Logger } from '../client';
-import { AnthropicError } from '../core/error';
+import { JuglowError } from '../core/error';
 import {
   BetaContentBlock,
   BetaJSONOutputFormat,
@@ -143,6 +143,6 @@ function parseBetaOutputFormat<Params extends BetaParseableMessageCreateParams>(
 
     return JSON.parse(content);
   } catch (error) {
-    throw new AnthropicError(`Failed to parse structured output: ${error}`);
+    throw new JuglowError(`Failed to parse structured output: ${error}`);
   }
 }

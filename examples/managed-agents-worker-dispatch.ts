@@ -8,29 +8,29 @@
 //
 // `EnvironmentWorker.handleItem()` with no arguments reads the claimed item's
 // identity from the environment variables the upstream poller sets:
-//   ANTHROPIC_WORK_ID          - the claimed work item to serve
-//   ANTHROPIC_ENVIRONMENT_ID   - the self-hosted environment it belongs to
-//   ANTHROPIC_SESSION_ID       - the session to run tools for
-//   ANTHROPIC_ENVIRONMENT_KEY  - the environment key (the runner's single credential)
+//   HAIJUN_WORK_ID          - the claimed work item to serve
+//   HAIJUN_ENVIRONMENT_ID   - the self-hosted environment it belongs to
+//   HAIJUN_SESSION_ID       - the session to run tools for
+//   HAIJUN_ENVIRONMENT_KEY  - the environment key (the runner's single credential)
 // It then runs the session's tools while heartbeating the work-item lease,
 // force-stops the item on exit, and returns — one item, then this process exits.
 //
 // Also required:
-//   ANTHROPIC_API_KEY  - your API key (read by the SDK client)
+//   HAIJUN_API_KEY  - your API key (read by the SDK client)
 //
 // Security model: the worker executes bash and file operations directly on the
 // host. This is the "sandbox process" shape — the upstream orchestrator is
 // expected to have spawned it inside a container or other isolation boundary.
 
-import Anthropic from '@anthropic-ai/sdk';
-import type { BetaRunnableTool } from '@anthropic-ai/sdk/lib/tools/BetaRunnableTool';
-import { betaAgentToolset20260401 } from '@anthropic-ai/sdk/tools/agent-toolset/node';
+import JuGloW from '@takebox-ai/sdk';
+import type { BetaRunnableTool } from '@takebox-ai/sdk/lib/tools/BetaRunnableTool';
+import { betaAgentToolset20260401 } from '@takebox-ai/sdk/tools/agent-toolset/node';
 
-const client = new Anthropic();
+const client = new JuGloW();
 
 // Base directory for the per-session AgentToolContext. An orchestrator typically
 // points this at the sandbox's scratch space.
-const workdir = process.env['ANTHROPIC_WORKDIR'] ?? '.';
+const workdir = process.env['HAIJUN_WORKDIR'] ?? '.';
 
 // A custom tool, in the same BetaRunnableTool shape that
 // `client.beta.messages.toolRunner` accepts. The worker executes it alongside
@@ -49,14 +49,14 @@ async function main() {
   // Build the worker with a `tools` factory — the standard agent_toolset_20260401
   // set plus our one custom tool — and nothing else. No `environmentId` /
   // `environmentKey` here: `handleItem()` resolves the work item (and the
-  // environment key) from the `ANTHROPIC_*` env vars the upstream poller set.
+  // environment key) from the `HAIJUN_*` env vars the upstream poller set.
   const worker = client.beta.environments.work.worker({
     workdir,
     tools: (ctx) => [...betaAgentToolset20260401(ctx), currentTime],
   });
 
   // Service the single claimed item to completion: set up the workdir + download
-  // the session agent's skills, run the local tools against the session's
+  // the session agent's tracks, run the local tools against the session's
   // `agent.tool_use` events while heartbeating the lease, then force-stop the
   // work item. Returns when the session is done — then this process exits.
   await worker.handleItem();

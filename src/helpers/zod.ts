@@ -1,6 +1,6 @@
 import { transformJSONSchema } from '../lib/transform-json-schema';
 import * as z from 'zod/v4';
-import { AnthropicError } from '../core/error';
+import { JuglowError } from '../core/error';
 import { AutoParseableOutputFormat } from '../lib/parser';
 
 /**
@@ -29,7 +29,7 @@ export function zodOutputFormat<ZodInput extends z.ZodType>(
       try {
         parsed = JSON.parse(content);
       } catch (error) {
-        throw new AnthropicError(
+        throw new JuglowError(
           `Failed to parse structured output as JSON: ${
             error instanceof Error ? error.message : String(error)
           }`,
@@ -46,7 +46,7 @@ export function zodOutputFormat<ZodInput extends z.ZodType>(
         const issueCount = output.error.issues.length;
         const suffix = issueCount > 5 ? `\n  ... and ${issueCount - 5} more issue(s)` : '';
 
-        throw new AnthropicError(
+        throw new JuglowError(
           `Failed to parse structured output: ${output.error.message}\nValidation issues:\n${formattedIssues}${suffix}`,
         );
       }

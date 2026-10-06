@@ -1,4 +1,4 @@
-// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+﻿// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../core/resource';
 import * as BetaAPI from './beta/beta';
@@ -24,7 +24,7 @@ export class Models extends APIResource {
     return this._client.get(path`/v1/models/${modelID}`, {
       ...options,
       headers: buildHeaders([
-        { ...(betas?.toString() != null ? { 'anthropic-beta': betas?.toString() } : undefined) },
+        { ...(betas?.toString() != null ? { 'Juglow-beta': betas?.toString() } : undefined) },
         options?.headers,
       ]),
     });
@@ -45,7 +45,7 @@ export class Models extends APIResource {
       query,
       ...options,
       headers: buildHeaders([
-        { ...(betas?.toString() != null ? { 'anthropic-beta': betas?.toString() } : undefined) },
+        { ...(betas?.toString() != null ? { 'Juglow-beta': betas?.toString() } : undefined) },
         options?.headers,
       ]),
     });
@@ -248,14 +248,14 @@ export interface ModelRetrieveParams {
   /**
    * Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface ModelListParams extends PageParams {
   /**
    * Header param: Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export declare namespace Models {

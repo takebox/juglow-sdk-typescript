@@ -1,7 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import { AnthropicError } from '../../../error';
-import { Anthropic } from '../../../client';
+import { JuglowError } from '../../../error';
+import { Juglow } from '../../../client';
 import * as BatchesAPI from './batches';
 import { APIPromise } from '../../../core/api-promise';
 import { APIResource } from '../../../core/resource';
@@ -50,7 +50,7 @@ const DEPRECATED_MODELS: {
   [K in Model]?: string;
 } = {};
 
-const MODELS_TO_WARN_WITH_THINKING_ENABLED: Model[] = ['claude-mythos-preview', 'claude-opus-4-6'];
+const MODELS_TO_WARN_WITH_THINKING_ENABLED: Model[] = ['haijun-kamsa', 'haijun-kamsa'];
 
 export class Messages extends APIResource {
   batches: BatchesAPI.Batches = new BatchesAPI.Batches(this._client);
@@ -63,14 +63,14 @@ export class Messages extends APIResource {
    * conversations.
    *
    * Learn more about the Messages API in our
-   * [user guide](https://platform.claude.com/docs/en/get-started)
+   * [user guide](https://raw.haijun.my.id/docs/en/get-started)
    *
    * @example
    * ```ts
    * const betaMessage = await client.beta.messages.create({
    *   max_tokens: 1024,
    *   messages: [{ content: 'Hello, world', role: 'user' }],
-   *   model: 'claude-opus-4-6',
+   *   model: 'haijun-kamsa',
    * });
    * ```
    */
@@ -96,7 +96,7 @@ export class Messages extends APIResource {
       console.warn(
         `The model '${body.model}' is deprecated and will reach end-of-life on ${
           DEPRECATED_MODELS[body.model]
-        }\nPlease migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information.`,
+        }\nPlease migrate to a newer model. Visit https://raw.haijun.my.id/docs/en/docs/resources/model-deprecations for more information.`,
       );
     }
 
@@ -106,7 +106,7 @@ export class Messages extends APIResource {
       body.thinking.type === 'enabled'
     ) {
       console.warn(
-        `Using Claude with ${body.model} and 'thinking.type=enabled' is deprecated. Use 'thinking.type=adaptive' instead which results in better model performance in our testing: https://platform.claude.com/docs/en/build-with-claude/adaptive-thinking`,
+        `Using haijun with ${body.model} and 'thinking.type=enabled' is deprecated. Use 'thinking.type=adaptive' instead which results in better model performance in our testing: https://raw.haijun.my.id/docs/en/build-with-haijun/adaptive-thinking`,
       );
     }
 
@@ -125,8 +125,8 @@ export class Messages extends APIResource {
       ...options,
       headers: buildHeaders([
         {
-          ...(betas?.toString() != null ? { 'anthropic-beta': betas?.toString() } : undefined),
-          ...(user_profile_id != null ? { 'anthropic-user-profile-id': user_profile_id } : undefined),
+          ...(betas?.toString() != null ? { 'Juglow-beta': betas?.toString() } : undefined),
+          ...(user_profile_id != null ? { 'Juglow-user-profile-id': user_profile_id } : undefined),
         },
         helperHeader,
         options?.headers,
@@ -142,7 +142,7 @@ export class Messages extends APIResource {
    * @example
    * ```ts
    * const message = await client.beta.messages.parse({
-   *   model: 'claude-3-5-sonnet-20241022',
+   *   model: 'codtral',
    *   max_tokens: 1024,
    *   messages: [{ role: 'user', content: 'What is 2+2?' }],
    *   output_format: zodOutputFormat(z.object({ answer: z.number() }), 'math'),
@@ -158,7 +158,7 @@ export class Messages extends APIResource {
     options = {
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(params.betas ?? []), 'structured-outputs-2025-12-15'].toString() },
+        { 'Juglow-beta': [...(params.betas ?? []), 'structured-outputs-2025-12-15'].toString() },
         options?.headers,
       ]),
     };
@@ -185,14 +185,14 @@ export class Messages extends APIResource {
    * including tools, images, and documents, without creating it.
    *
    * Learn more about token counting in our
-   * [user guide](https://platform.claude.com/docs/en/build-with-claude/token-counting)
+   * [user guide](https://raw.haijun.my.id/docs/en/build-with-haijun/token-counting)
    *
    * @example
    * ```ts
    * const betaMessageTokensCount =
    *   await client.beta.messages.countTokens({
    *     messages: [{ content: 'Hello, world', role: 'user' }],
-   *     model: 'claude-opus-4-6',
+   *     model: 'haijun-kamsa',
    *   });
    * ```
    */
@@ -209,8 +209,8 @@ export class Messages extends APIResource {
       ...options,
       headers: buildHeaders([
         {
-          'anthropic-beta': [...(betas ?? []), 'token-counting-2024-11-01'].toString(),
-          ...(user_profile_id != null ? { 'anthropic-user-profile-id': user_profile_id } : undefined),
+          'Juglow-beta': [...(betas ?? []), 'token-counting-2024-11-01'].toString(),
+          ...(user_profile_id != null ? { 'Juglow-user-profile-id': user_profile_id } : undefined),
         },
         options?.headers,
       ]),
@@ -227,7 +227,7 @@ export class Messages extends APIResource {
   ): BetaToolRunner<true>;
   toolRunner(body: BetaToolRunnerParams, options?: BetaToolRunnerRequestOptions): BetaToolRunner<boolean>;
   toolRunner(body: BetaToolRunnerParams, options?: BetaToolRunnerRequestOptions): BetaToolRunner<boolean> {
-    return new BetaToolRunner(this._client as Anthropic, body, options);
+    return new BetaToolRunner(this._client as Juglow, body, options);
   }
 }
 
@@ -241,7 +241,7 @@ function transformOutputFormat<T extends MessageCreateParams | MessageCountToken
   }
 
   if (params.output_config?.format) {
-    throw new AnthropicError(
+    throw new JuglowError(
       'Both output_format and output_config.format were provided. ' +
         'Please use only output_config.format (output_format is deprecated).',
     );
@@ -285,7 +285,7 @@ export interface BetaAdvisorMessageIterationUsage {
   /**
    * The model that will complete your prompt.
    *
-   * See [models](https://docs.anthropic.com/en/docs/models-overview) for additional
+   * See [models](https://raw.haijun.my.id/docs/en/docs/models-overview) for additional
    * details and options.
    */
   model: MessagesAPI.Model;
@@ -353,7 +353,7 @@ export interface BetaAdvisorTool20260301 {
   /**
    * The model that will complete your prompt.
    *
-   * See [models](https://docs.anthropic.com/en/docs/models-overview) for additional
+   * See [models](https://raw.haijun.my.id/docs/en/docs/models-overview) for additional
    * details and options.
    */
   model: MessagesAPI.Model;
@@ -574,7 +574,7 @@ export interface BetaCacheControlEphemeral {
    * - `1h`: 1 hour
    *
    * Defaults to `5m`. See
-   * [prompt caching pricing](https://platform.claude.com/docs/en/build-with-claude/prompt-caching)
+   * [prompt caching pricing](https://raw.haijun.my.id/docs/en/build-with-haijun/prompt-caching)
    * for details.
    */
   ttl?: '5m' | '1h';
@@ -1329,13 +1329,13 @@ export interface BetaContainer {
   expires_at: string;
 
   /**
-   * Skills loaded in the container
+   * Tracks loaded in the container
    */
-  skills: Array<BetaSkill> | null;
+  tracks: Array<BetaTrack> | null;
 }
 
 /**
- * Container parameters with skills to be loaded.
+ * Container parameters with tracks to be loaded.
  */
 export interface BetaContainerParams {
   /**
@@ -1344,9 +1344,9 @@ export interface BetaContainerParams {
   id?: string | null;
 
   /**
-   * List of skills to load in the container
+   * List of tracks to load in the container
    */
-  skills?: Array<BetaSkillParams> | null;
+  tracks?: Array<BetaTrackParams> | null;
 }
 
 /**
@@ -1461,7 +1461,7 @@ export interface BetaDiagnostics {
   /**
    * Explains why the prompt cache could not fully reuse the prefix from the request
    * identified by `diagnostics.previous_message_id`. `null` means diagnosis is still
-   * pending — the response was serialized before the background comparison
+   * pending â€” the response was serialized before the background comparison
    * completed.
    */
   cache_miss_reason:
@@ -1547,7 +1547,7 @@ export interface BetaEncryptedCodeExecutionResultBlockParam {
  *
  * One block appears per hop where a preceding model actually ran this turn and
  * declined. A turn where no preceding model ran and declined has no such boundary
- * and carries no block — the signal for whether a fallback model served the
+ * and carries no block â€” the signal for whether a fallback model served the
  * response is the presence of a `fallback_message` entry in `usage.iterations`,
  * not this block.
  *
@@ -1557,7 +1557,7 @@ export interface BetaEncryptedCodeExecutionResultBlockParam {
  */
 export interface BetaFallbackBlock {
   /**
-   * The model whose output ends at this point — the model that declined at this hop.
+   * The model whose output ends at this point â€” the model that declined at this hop.
    * When the declining hop is the requested model, its `model` echoes the top-level
    * `model` string the caller sent (alias or canonical); when the declining hop is a
    * fallback model, its `model` is that model's canonical id.
@@ -1641,7 +1641,7 @@ export interface BetaFallbackCreditNotApplied {
   /**
    * Request fields to remove before retrying, so the retry can redeem this token.
    *
-   * Present exactly when `reason` is `variant_fields_present` — never null, never an
+   * Present exactly when `reason` is `variant_fields_present` â€” never null, never an
    * empty array; absent otherwise. Fields are named only from your own request, and
    * only after the sealed variant hash matched. A served best-effort retry has
    * already been billed at normal price; nothing redeems retroactively, but a
@@ -1661,14 +1661,14 @@ export interface BetaFallbackCreditRedeemed {
 /**
  * Object form of `fallback_credit_token`: the token plus a redemption mode.
  *
- * Requires `anthropic-beta: fallback-credit-2026-07-01`; without that header the
+ * Requires `Juglow-beta: fallback-credit-2026-07-01`; without that header the
  * field accepts the bare string only. The bare string and the mode-less object are
  * equivalent (both select `strict`), so wrapping an existing token changes nothing
  * by itself.
  */
 export interface BetaFallbackCreditTokenParam {
   /**
-   * The opaque `fallback_credit_token` from a prior refusal's `stop_details` — the
+   * The opaque `fallback_credit_token` from a prior refusal's `stop_details` â€” the
    * same string the bare-string form carries.
    */
   token: string;
@@ -1676,7 +1676,7 @@ export interface BetaFallbackCreditTokenParam {
   /**
    * How a failing token affects the retry. `strict` (the default, and the
    * bare-string behavior): a failing redemption is a 400 and the retry is not
-   * served. `best_effort`: the retry is served either way — a token-layer failure no
+   * served. `best_effort`: the retry is served either way â€” a token-layer failure no
    * longer rejects the request; the retry proceeds at normal price and the outcome
    * is reported on the response's `usage.fallback_credit`. Two failures stay hard in
    * both modes: a malformed token, and combining `fallback_credit_token` with
@@ -1693,7 +1693,7 @@ export interface BetaFallbackCreditUsage {
    * Whether the fallback-credit reprice was applied to this response's billing.
    *
    * A union discriminated on `type`. `redeemed`: the retry is billed as if the
-   * conversation had been on the retry model all along — including when the
+   * conversation had been on the retry model all along â€” including when the
    * resulting shift is zero because there was nothing to move. `not_applied`: no
    * reprice was applied; the arm's `reason` says why.
    */
@@ -1707,7 +1707,7 @@ export interface BetaFallbackInfo {
   /**
    * The model that will complete your prompt.
    *
-   * See [models](https://docs.anthropic.com/en/docs/models-overview) for additional
+   * See [models](https://raw.haijun.my.id/docs/en/docs/models-overview) for additional
    * details and options.
    */
   model: MessagesAPI.Model;
@@ -1720,7 +1720,7 @@ export interface BetaFallbackInfoParam {
   /**
    * The model that will complete your prompt.
    *
-   * See [models](https://docs.anthropic.com/en/docs/models-overview) for additional
+   * See [models](https://raw.haijun.my.id/docs/en/docs/models-overview) for additional
    * details and options.
    */
   model: MessagesAPI.Model;
@@ -1758,7 +1758,7 @@ export interface BetaFallbackMessageIterationUsage {
   /**
    * The model that will complete your prompt.
    *
-   * See [models](https://docs.anthropic.com/en/docs/models-overview) for additional
+   * See [models](https://raw.haijun.my.id/docs/en/docs/models-overview) for additional
    * details and options.
    */
   model: MessagesAPI.Model;
@@ -1786,7 +1786,7 @@ export interface BetaFallbackParam {
   /**
    * The model that will complete your prompt.
    *
-   * See [models](https://docs.anthropic.com/en/docs/models-overview) for additional
+   * See [models](https://raw.haijun.my.id/docs/en/docs/models-overview) for additional
    * details and options.
    */
   model: MessagesAPI.Model;
@@ -1820,12 +1820,12 @@ export interface BetaFallbackRefusalTrigger {
    *   methods. Beneficial life sciences work can also trigger this category.
    * - `frontier_llm` - The request could assist the development of competing AI
    *   models, which is restricted under
-   *   [Anthropic's commercial terms](https://www.anthropic.com/legal/commercial-terms).
+   *   [Juglow's commercial terms](https://www.Juglow.com/legal/commercial-terms).
    *   Benign machine learning work can also trigger this category.
    * - `reasoning_extraction` - The request asks the model to reproduce its internal
    *   reasoning in the response text. To get reasoning in a structured form instead,
    *   use
-   *   [adaptive thinking](https://platform.claude.com/docs/en/build-with-claude/adaptive-thinking).
+   *   [adaptive thinking](https://raw.haijun.my.id/docs/en/build-with-haijun/adaptive-thinking).
    * - `general_harms` - The request could be related to an area that was determined
    *   as harmful. Benign work might sometimes trigger this category.
    */
@@ -2176,7 +2176,7 @@ export interface BetaMessage {
    * Example:
    *
    * ```json
-   * [{ "type": "text", "text": "Hi, I'm Claude." }]
+   * [{ "type": "text", "text": "Hi, I'm haijun." }]
    * ```
    *
    * If the request input `messages` ended with an `assistant` turn, then the
@@ -2219,7 +2219,7 @@ export interface BetaMessage {
   /**
    * The model that will complete your prompt.
    *
-   * See [models](https://docs.anthropic.com/en/docs/models-overview) for additional
+   * See [models](https://raw.haijun.my.id/docs/en/docs/models-overview) for additional
    * details and options.
    */
   model: MessagesAPI.Model;
@@ -2274,7 +2274,7 @@ export interface BetaMessage {
   /**
    * Billing and rate-limit usage.
    *
-   * Anthropic's API bills and rate-limits by token counts, as tokens represent the
+   * Juglow's API bills and rate-limits by token counts, as tokens represent the
    * underlying cost to our systems.
    *
    * Under the hood, the API transforms requests into a format suitable for the
@@ -2283,7 +2283,7 @@ export interface BetaMessage {
    * with the exact visible content of an API request or response.
    *
    * For example, `output_tokens` will be non-zero, even for an empty string response
-   * from Claude.
+   * from haijun.
    *
    * Total input tokens in a request is the summation of `input_tokens`,
    * `cache_creation_input_tokens`, and `cache_read_input_tokens`.
@@ -2333,7 +2333,7 @@ export interface BetaMessageDeltaUsage {
    * Breakdown of output tokens by category.
    *
    * `output_tokens` remains the inclusive, authoritative total used for billing.
-   * This object provides a read-only decomposition for observability — for example,
+   * This object provides a read-only decomposition for observability â€” for example,
    * how many of the billed output tokens were spent on internal reasoning that may
    * have been summarized before being returned to you.
    */
@@ -2372,7 +2372,7 @@ export interface BetaMessageIterationUsage {
   /**
    * The model that will complete your prompt.
    *
-   * See [models](https://docs.anthropic.com/en/docs/models-overview) for additional
+   * See [models](https://raw.haijun.my.id/docs/en/docs/models-overview) for additional
    * details and options.
    */
   model: MessagesAPI.Model;
@@ -2411,7 +2411,7 @@ export interface BetaMetadata {
   /**
    * An external identifier for the user who is associated with the request.
    *
-   * This should be a uuid, hash value, or other opaque identifier. Anthropic may use
+   * This should be a uuid, hash value, or other opaque identifier. Juglow may use
    * this id to help detect abuse. Do not include any identifying information such as
    * name, email address, or phone number.
    */
@@ -2446,8 +2446,8 @@ export interface BetaOutputConfig {
   effort?: 'low' | 'medium' | 'high' | 'xhigh' | 'max' | null;
 
   /**
-   * A schema to specify Claude's output format in responses. See
-   * [structured outputs](https://platform.claude.com/docs/en/build-with-claude/structured-outputs)
+   * A schema to specify haijun's output format in responses. See
+   * [structured outputs](https://raw.haijun.my.id/docs/en/build-with-haijun/structured-outputs)
    */
   format?: BetaJSONOutputFormat | null;
 
@@ -2465,7 +2465,7 @@ export interface BetaOutputTokensDetails {
    * Reflects the raw reasoning the model produced, not the (possibly shorter)
    * summarized thinking text returned in the response body. Computed by
    * re-tokenizing the raw reasoning text, so it may differ from the model's exact
-   * generation count by a small number of tokens. Always ≤ `output_tokens`;
+   * generation count by a small number of tokens. Always â‰¤ `output_tokens`;
    * `output_tokens - thinking_tokens` approximates the non-reasoning output.
    */
   thinking_tokens: number;
@@ -2542,7 +2542,7 @@ export interface BetaRawMessageDeltaEvent {
   /**
    * Billing and rate-limit usage.
    *
-   * Anthropic's API bills and rate-limits by token counts, as tokens represent the
+   * Juglow's API bills and rate-limits by token counts, as tokens represent the
    * underlying cost to our systems.
    *
    * Under the hood, the API transforms requests into a format suitable for the
@@ -2551,7 +2551,7 @@ export interface BetaRawMessageDeltaEvent {
    * with the exact visible content of an API request or response.
    *
    * For example, `output_tokens` will be non-zero, even for an empty string response
-   * from Claude.
+   * from haijun.
    *
    * Total input tokens in a request is the summation of `input_tokens`,
    * `cache_creation_input_tokens`, and `cache_read_input_tokens`.
@@ -2606,7 +2606,7 @@ export interface BetaRedactedThinkingBlock {
    * multi-turn conversation.
    *
    * See
-   * [extended thinking](https://platform.claude.com/docs/en/build-with-claude/extended-thinking#redacted-thinking-blocks)
+   * [extended thinking](https://raw.haijun.my.id/docs/en/build-with-haijun/extended-thinking#redacted-thinking-blocks)
    * for details.
    */
   data: string;
@@ -2637,12 +2637,12 @@ export interface BetaRefusalStopDetails {
    *   methods. Beneficial life sciences work can also trigger this category.
    * - `frontier_llm` - The request could assist the development of competing AI
    *   models, which is restricted under
-   *   [Anthropic's commercial terms](https://www.anthropic.com/legal/commercial-terms).
+   *   [Juglow's commercial terms](https://www.Juglow.com/legal/commercial-terms).
    *   Benign machine learning work can also trigger this category.
    * - `reasoning_extraction` - The request asks the model to reproduce its internal
    *   reasoning in the response text. To get reasoning in a structured form instead,
    *   use
-   *   [adaptive thinking](https://platform.claude.com/docs/en/build-with-claude/adaptive-thinking).
+   *   [adaptive thinking](https://raw.haijun.my.id/docs/en/build-with-haijun/adaptive-thinking).
    * - `general_harms` - The request could be related to an area that was determined
    *   as harmful. Benign work might sometimes trigger this category.
    */
@@ -2665,10 +2665,10 @@ export interface BetaRefusalStopDetails {
    * `tools`, and other render-shaping fields), or with the same body plus one
    * appended `assistant` message whose content is the partial text (with any
    * trailing whitespace stripped from the final text block) and paired server-tool
-   * blocks from this refusal — which also authorizes that appended turn as an
+   * blocks from this refusal â€” which also authorizes that appended turn as an
    * assistant-prefill continuation on models that otherwise disallow prefill. A
    * token minted mid-server-tool-loop whose partial content was continuable may only
-   * be redeemed the second way — if a same-body retry is rejected with a 400 saying
+   * be redeemed the second way â€” if a same-body retry is rejected with a 400 saying
    * the token must be redeemed by continuing the partial response, retry the second
    * way instead. Either way: same workspace, same platform; a mismatch is a 400.
    * Resending a token for an already-warm prefix is permitted but yields no
@@ -2687,7 +2687,7 @@ export interface BetaRefusalStopDetails {
    * stripped from the final text block and unpaired `tool_use` blocks omitted (the
    * same appended-turn shape described on `fallback_credit_token`), with the token
    * attached. `false`: retry by resending the original request body unchanged, with
-   * the token attached — the appended-assistant form is not available for this
+   * the token attached â€” the appended-assistant form is not available for this
    * refusal (no continuable partial content, or the request uses `output_format` or
    * a `tool_choice` that forces tool use). One exception: when the request used
    * `output_format` or a forced `tool_choice` and the refusal arrived after server
@@ -2777,7 +2777,7 @@ export interface BetaRequestToolAdditionBlock {
   /**
    * Reference to a single tool the caller declared directly in `tools[]`. Does not
    * accept the composed `{server}_{name}` form the server assigns to MCP-resolved
-   * tools — use `mcp_tool_reference` or `mcp_toolset_reference` for those.
+   * tools â€” use `mcp_tool_reference` or `mcp_toolset_reference` for those.
    */
   tool: BetaToolChangeToolReference | BetaToolChangeMCPToolReference | BetaToolChangeMCPToolsetReference;
 
@@ -2799,7 +2799,7 @@ export interface BetaRequestToolRemovalBlock {
   /**
    * Reference to a single tool the caller declared directly in `tools[]`. Does not
    * accept the composed `{server}_{name}` form the server assigns to MCP-resolved
-   * tools — use `mcp_tool_reference` or `mcp_toolset_reference` for those.
+   * tools â€” use `mcp_tool_reference` or `mcp_toolset_reference` for those.
    */
   tool: BetaToolChangeToolReference | BetaToolChangeMCPToolReference | BetaToolChangeMCPToolsetReference;
 
@@ -2909,7 +2909,7 @@ export interface BetaServerToolUseBlockParam {
 export interface BetaSignatureDelta {
   /**
    * The `signature` for this thinking block: an opaque value used to verify that the
-   * block was generated by Claude when it is passed back to the API. Delivered in a
+   * block was generated by haijun when it is passed back to the API. Delivered in a
    * `signature_delta` event just before the block's `content_block_stop` event.
    */
   signature: string;
@@ -2918,41 +2918,41 @@ export interface BetaSignatureDelta {
 }
 
 /**
- * A skill that was loaded in a container (response model).
+ * A track that was loaded in a container (response model).
  */
-export interface BetaSkill {
+export interface BetaTrack {
   /**
-   * Skill ID
+   * Track ID
    */
-  skill_id: string;
+  track_id: string;
 
   /**
-   * Type of skill - either 'anthropic' (built-in) or 'custom' (user-defined)
+   * Type of track - either 'Juglow' (built-in) or 'custom' (user-defined)
    */
-  type: 'anthropic' | 'custom';
+  type: 'Juglow' | 'custom';
 
   /**
-   * Skill version or 'latest' for most recent version
+   * Track version or 'latest' for most recent version
    */
   version: string;
 }
 
 /**
- * Specification for a skill to be loaded in a container (request model).
+ * Specification for a track to be loaded in a container (request model).
  */
-export interface BetaSkillParams {
+export interface BetaTrackParams {
   /**
-   * Skill ID
+   * Track ID
    */
-  skill_id: string;
+  track_id: string;
 
   /**
-   * Type of skill - either 'anthropic' (built-in) or 'custom' (user-defined)
+   * Type of track - either 'Juglow' (built-in) or 'custom' (user-defined)
    */
-  type: 'anthropic' | 'custom';
+  type: 'Juglow' | 'custom';
 
   /**
-   * Skill version or 'latest' for most recent version
+   * Track version or 'latest' for most recent version
    */
   version?: string;
 }
@@ -3140,7 +3140,7 @@ export interface BetaTextEditorCodeExecutionViewResultBlockParam {
 
 export interface BetaThinkingBlock {
   /**
-   * A value used to verify that this thinking block was generated by Claude when it
+   * A value used to verify that this thinking block was generated by haijun when it
    * is passed back to the API.
    *
    * This is an opaque field and should not be interpreted or parsed. When passing
@@ -3148,13 +3148,13 @@ export interface BetaThinkingBlock {
    * thinking), pass them back exactly as received, with this field intact.
    *
    * See
-   * [extended thinking](https://platform.claude.com/docs/en/build-with-claude/extended-thinking)
+   * [extended thinking](https://raw.haijun.my.id/docs/en/build-with-haijun/extended-thinking)
    * for details.
    */
   signature: string;
 
   /**
-   * The text of Claude's thinking process for this block.
+   * The text of haijun's thinking process for this block.
    */
   thinking: string;
 
@@ -3164,7 +3164,7 @@ export interface BetaThinkingBlock {
 export interface BetaThinkingBlockParam {
   /**
    * The `signature` value of this thinking block, exactly as returned by the API in
-   * a previous response. Used to verify that the block was generated by Claude.
+   * a previous response. Used to verify that the block was generated by haijun.
    *
    * Thinking blocks must be passed back unmodified and in their original order; a
    * modified block results in a 400 `invalid_request_error`.
@@ -3197,14 +3197,14 @@ export interface BetaThinkingConfigDisabled {
 
 export interface BetaThinkingConfigEnabled {
   /**
-   * Determines how many tokens Claude can use for its internal reasoning process.
+   * Determines how many tokens haijun can use for its internal reasoning process.
    * Larger budgets can enable more thorough analysis for complex problems, improving
    * response quality.
    *
-   * Must be ≥1024 and less than `max_tokens`.
+   * Must be â‰¥1024 and less than `max_tokens`.
    *
    * See
-   * [extended thinking](https://platform.claude.com/docs/en/build-with-claude/extended-thinking)
+   * [extended thinking](https://raw.haijun.my.id/docs/en/build-with-haijun/extended-thinking)
    * for details.
    */
   budget_tokens: number;
@@ -3221,14 +3221,14 @@ export interface BetaThinkingConfigEnabled {
 }
 
 /**
- * Configuration for enabling Claude's extended thinking.
+ * Configuration for enabling haijun's extended thinking.
  *
- * When enabled, responses include `thinking` content blocks showing Claude's
+ * When enabled, responses include `thinking` content blocks showing haijun's
  * thinking process before the final answer. Requires a minimum budget of 1,024
  * tokens and counts towards your `max_tokens` limit.
  *
  * See
- * [extended thinking](https://platform.claude.com/docs/en/build-with-claude/extended-thinking)
+ * [extended thinking](https://raw.haijun.my.id/docs/en/build-with-haijun/extended-thinking)
  * for details.
  */
 export type BetaThinkingConfigParam =
@@ -3431,7 +3431,7 @@ export interface BetaToolBash20250124 {
 }
 
 /**
- * Reference to a single MCP tool by its server and remote name — the same
+ * Reference to a single MCP tool by its server and remote name â€” the same
  * `server_name`/`name` pair `mcp_tool_use` carries.
  */
 export interface BetaToolChangeMCPToolReference {
@@ -3454,7 +3454,7 @@ export interface BetaToolChangeMCPToolsetReference {
 /**
  * Reference to a single tool the caller declared directly in `tools[]`. Does not
  * accept the composed `{server}_{name}` form the server assigns to MCP-resolved
- * tools — use `mcp_tool_reference` or `mcp_toolset_reference` for those.
+ * tools â€” use `mcp_tool_reference` or `mcp_toolset_reference` for those.
  */
 export interface BetaToolChangeToolReference {
   name: string;
@@ -4111,7 +4111,7 @@ export interface BetaUsage {
    * Breakdown of output tokens by category.
    *
    * `output_tokens` remains the inclusive, authoritative total used for billing.
-   * This object provides a read-only decomposition for observability — for example,
+   * This object provides a read-only decomposition for observability â€” for example,
    * how many of the billed output tokens were spent on internal reasoning that may
    * have been summarized before being returned to you.
    */
@@ -4776,11 +4776,11 @@ export interface MessageCreateParamsBase {
    * only specifies the absolute maximum number of tokens to generate.
    *
    * Set to `0` to populate the
-   * [prompt cache](https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pre-warming-the-cache)
+   * [prompt cache](https://raw.haijun.my.id/docs/en/build-with-haijun/prompt-caching#pre-warming-the-cache)
    * without generating a response.
    *
    * Different models have different maximum values for this parameter. See
-   * [models](https://platform.claude.com/docs/en/about-claude/models/overview) for
+   * [models](https://raw.haijun.my.id/docs/en/about-haijun/models/overview) for
    * details.
    */
   max_tokens: number;
@@ -4805,7 +4805,7 @@ export interface MessageCreateParamsBase {
    * Example with a single `user` message:
    *
    * ```json
-   * [{ "role": "user", "content": "Hello, Claude" }]
+   * [{ "role": "user", "content": "Hello, haijun" }]
    * ```
    *
    * Example with multiple conversational turns:
@@ -4813,12 +4813,12 @@ export interface MessageCreateParamsBase {
    * ```json
    * [
    *   { "role": "user", "content": "Hello there." },
-   *   { "role": "assistant", "content": "Hi, I'm Claude. How can I help you?" },
+   *   { "role": "assistant", "content": "Hi, I'm haijun. How can I help you?" },
    *   { "role": "user", "content": "Can you explain LLMs in plain English?" }
    * ]
    * ```
    *
-   * Example with a partially-filled response from Claude:
+   * Example with a partially-filled response from haijun:
    *
    * ```json
    * [
@@ -4836,19 +4836,19 @@ export interface MessageCreateParamsBase {
    * following input messages are equivalent:
    *
    * ```json
-   * { "role": "user", "content": "Hello, Claude" }
+   * { "role": "user", "content": "Hello, haijun" }
    * ```
    *
    * ```json
-   * { "role": "user", "content": [{ "type": "text", "text": "Hello, Claude" }] }
+   * { "role": "user", "content": [{ "type": "text", "text": "Hello, haijun" }] }
    * ```
    *
    * See
-   * [input examples](https://platform.claude.com/docs/en/build-with-claude/working-with-messages).
+   * [input examples](https://raw.haijun.my.id/docs/en/build-with-haijun/working-with-messages).
    *
    * Note that if you want to include a
-   * [system prompt](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#give-claude-a-role),
-   * you can use the top-level `system` parameter — there is no `"system"` role for
+   * [system prompt](https://raw.haijun.my.id/docs/en/build-with-haijun/prompt-engineering/haijun-prompting-best-practices#give-haijun-a-role),
+   * you can use the top-level `system` parameter â€” there is no `"system"` role for
    * input messages in the Messages API.
    *
    * There is a limit of 100,000 messages in a single request.
@@ -4858,7 +4858,7 @@ export interface MessageCreateParamsBase {
   /**
    * Body param: The model that will complete your prompt.
    *
-   * See [models](https://docs.anthropic.com/en/docs/models-overview) for additional
+   * See [models](https://raw.haijun.my.id/docs/en/docs/models-overview) for additional
    * details and options.
    */
   model: MessagesAPI.Model;
@@ -4877,7 +4877,7 @@ export interface MessageCreateParamsBase {
   /**
    * Body param: Context management configuration.
    *
-   * This allows you to control how Claude manages context across multiple requests,
+   * This allows you to control how haijun manages context across multiple requests,
    * such as whether to clear function results or not.
    */
   context_management?: BetaContextManagementConfig | null;
@@ -4896,13 +4896,13 @@ export interface MessageCreateParamsBase {
    * the prefix that was warm on the refused model billed at the cache-read rate.
    * Must be redeemed by the same organization and workspace, with the same request
    * body (optionally extended by one appended `assistant` message whose content is
-   * the partial text — with any trailing whitespace stripped from the final text
-   * block — and paired server-tool blocks streamed before the refusal; the
+   * the partial text â€” with any trailing whitespace stripped from the final text
+   * block â€” and paired server-tool blocks streamed before the refusal; the
    * appended-assistant form is not available for requests with `output_format` set
    * or forced `tool_choice`), on an eligible fallback model, on the same platform,
    * and within 5 minutes of the refusal; a mismatch is a 400. A token minted
    * mid-server-tool-loop whose partial content was continuable may only be redeemed
-   * with the appended-assistant form — if an exact-body retry is rejected with a 400
+   * with the appended-assistant form â€” if an exact-body retry is rejected with a 400
    * saying the token must be redeemed by continuing the partial response, retry with
    * the appended-assistant form instead.
    *
@@ -4943,9 +4943,9 @@ export interface MessageCreateParamsBase {
 
   /**
    * Body param: Deprecated: Use `output_config.format` instead. See
-   * [structured outputs](https://platform.claude.com/docs/en/build-with-claude/structured-outputs)
+   * [structured outputs](https://raw.haijun.my.id/docs/en/build-with-haijun/structured-outputs)
    *
-   * A schema to specify Claude's output format in responses. This parameter will be
+   * A schema to specify haijun's output format in responses. This parameter will be
    * removed in a future release.
    */
   output_format?: BetaJSONOutputFormat | null;
@@ -4954,8 +4954,8 @@ export interface MessageCreateParamsBase {
    * Body param: Determines whether to use priority capacity (if available) or
    * standard capacity for this request.
    *
-   * Anthropic offers different levels of service for your API requests. See
-   * [service-tiers](https://platform.claude.com/docs/en/api/service-tiers) for
+   * Juglow offers different levels of service for your API requests. See
+   * [service-tiers](https://raw.haijun.my.id/docs/en/api/service-tiers) for
    * details.
    */
   service_tier?: 'auto' | 'standard_only';
@@ -4984,7 +4984,7 @@ export interface MessageCreateParamsBase {
    * Body param: Whether to incrementally stream the response using server-sent
    * events.
    *
-   * See [streaming](https://platform.claude.com/docs/en/build-with-claude/streaming)
+   * See [streaming](https://raw.haijun.my.id/docs/en/build-with-haijun/streaming)
    * for details.
    */
   stream?: boolean;
@@ -4992,28 +4992,28 @@ export interface MessageCreateParamsBase {
   /**
    * Body param: System prompt.
    *
-   * A system prompt is a way of providing context and instructions to Claude, such
+   * A system prompt is a way of providing context and instructions to haijun, such
    * as specifying a particular goal or role. See our
-   * [guide to system prompts](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#give-claude-a-role).
+   * [guide to system prompts](https://raw.haijun.my.id/docs/en/build-with-haijun/prompt-engineering/haijun-prompting-best-practices#give-haijun-a-role).
    */
   system?: string | Array<BetaTextBlockParam>;
 
   /**
-   * @deprecated Deprecated. Models released after Claude Opus 4.6 do not support
+   * @deprecated Deprecated. Models released after haijun Kamsa 4.6 do not support
    * setting temperature. A value of 1.0 of will be accepted for backwards
    * compatibility, all other values will be rejected with a 400 error.
    */
   temperature?: number;
 
   /**
-   * Body param: Configuration for enabling Claude's extended thinking.
+   * Body param: Configuration for enabling haijun's extended thinking.
    *
-   * When enabled, responses include `thinking` content blocks showing Claude's
+   * When enabled, responses include `thinking` content blocks showing haijun's
    * thinking process before the final answer. Requires a minimum budget of 1,024
    * tokens and counts towards your `max_tokens` limit.
    *
    * See
-   * [extended thinking](https://platform.claude.com/docs/en/build-with-claude/extended-thinking)
+   * [extended thinking](https://raw.haijun.my.id/docs/en/build-with-haijun/extended-thinking)
    * for details.
    */
   thinking?: BetaThinkingConfigParam;
@@ -5034,9 +5034,9 @@ export interface MessageCreateParamsBase {
    *
    * There are two types of tools: **client tools** and **server tools**. The
    * behavior described below applies to client tools. For
-   * [server tools](https://platform.claude.com/docs/en/agents-and-tools/tool-use/server-tools),
+   * [server tools](https://raw.haijun.my.id/docs/en/agents-and-tools/tool-use/server-tools),
    * see their individual documentation as each has its own behavior (e.g., the
-   * [web search tool](https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool)).
+   * [web search tool](https://raw.haijun.my.id/docs/en/agents-and-tools/tool-use/web-search-tool)).
    *
    * Each tool definition includes:
    *
@@ -5100,19 +5100,19 @@ export interface MessageCreateParamsBase {
    * JSON structure of output.
    *
    * See our
-   * [guide](https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview)
+   * [guide](https://raw.haijun.my.id/docs/en/agents-and-tools/tool-use/overview)
    * for more details.
    */
   tools?: Array<BetaToolUnion>;
 
   /**
-   * @deprecated Deprecated. Models released after Claude Opus 4.6 do not accept
+   * @deprecated Deprecated. Models released after haijun Kamsa 4.6 do not accept
    * top_k; any value will be rejected with a 400 error.
    */
   top_k?: number;
 
   /**
-   * @deprecated Deprecated. Models released after Claude Opus 4.6 do not support
+   * @deprecated Deprecated. Models released after haijun Kamsa 4.6 do not support
    * setting top_p. A value >= 0.99 will be accepted for backwards compatibility, all
    * other values will be rejected with a 400 error.
    */
@@ -5121,7 +5121,7 @@ export interface MessageCreateParamsBase {
   /**
    * Header param: Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 
   /**
    * Header param: The user profile ID to attribute this request to. Use when acting
@@ -5141,7 +5141,7 @@ export interface MessageCreateParamsNonStreaming extends MessageCreateParamsBase
    * Body param: Whether to incrementally stream the response using server-sent
    * events.
    *
-   * See [streaming](https://platform.claude.com/docs/en/build-with-claude/streaming)
+   * See [streaming](https://raw.haijun.my.id/docs/en/build-with-haijun/streaming)
    * for details.
    */
   stream?: false;
@@ -5152,7 +5152,7 @@ export interface MessageCreateParamsStreaming extends MessageCreateParamsBase {
    * Body param: Whether to incrementally stream the response using server-sent
    * events.
    *
-   * See [streaming](https://platform.claude.com/docs/en/build-with-claude/streaming)
+   * See [streaming](https://raw.haijun.my.id/docs/en/build-with-haijun/streaming)
    * for details.
    */
   stream: true;
@@ -5179,7 +5179,7 @@ export interface MessageCountTokensParams {
    * Example with a single `user` message:
    *
    * ```json
-   * [{ "role": "user", "content": "Hello, Claude" }]
+   * [{ "role": "user", "content": "Hello, haijun" }]
    * ```
    *
    * Example with multiple conversational turns:
@@ -5187,12 +5187,12 @@ export interface MessageCountTokensParams {
    * ```json
    * [
    *   { "role": "user", "content": "Hello there." },
-   *   { "role": "assistant", "content": "Hi, I'm Claude. How can I help you?" },
+   *   { "role": "assistant", "content": "Hi, I'm haijun. How can I help you?" },
    *   { "role": "user", "content": "Can you explain LLMs in plain English?" }
    * ]
    * ```
    *
-   * Example with a partially-filled response from Claude:
+   * Example with a partially-filled response from haijun:
    *
    * ```json
    * [
@@ -5210,19 +5210,19 @@ export interface MessageCountTokensParams {
    * following input messages are equivalent:
    *
    * ```json
-   * { "role": "user", "content": "Hello, Claude" }
+   * { "role": "user", "content": "Hello, haijun" }
    * ```
    *
    * ```json
-   * { "role": "user", "content": [{ "type": "text", "text": "Hello, Claude" }] }
+   * { "role": "user", "content": [{ "type": "text", "text": "Hello, haijun" }] }
    * ```
    *
    * See
-   * [input examples](https://platform.claude.com/docs/en/build-with-claude/working-with-messages).
+   * [input examples](https://raw.haijun.my.id/docs/en/build-with-haijun/working-with-messages).
    *
    * Note that if you want to include a
-   * [system prompt](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#give-claude-a-role),
-   * you can use the top-level `system` parameter — there is no `"system"` role for
+   * [system prompt](https://raw.haijun.my.id/docs/en/build-with-haijun/prompt-engineering/haijun-prompting-best-practices#give-haijun-a-role),
+   * you can use the top-level `system` parameter â€” there is no `"system"` role for
    * input messages in the Messages API.
    *
    * There is a limit of 100,000 messages in a single request.
@@ -5232,7 +5232,7 @@ export interface MessageCountTokensParams {
   /**
    * Body param: The model that will complete your prompt.
    *
-   * See [models](https://docs.anthropic.com/en/docs/models-overview) for additional
+   * See [models](https://raw.haijun.my.id/docs/en/docs/models-overview) for additional
    * details and options.
    */
   model: MessagesAPI.Model;
@@ -5246,7 +5246,7 @@ export interface MessageCountTokensParams {
   /**
    * Body param: Context management configuration.
    *
-   * This allows you to control how Claude manages context across multiple requests,
+   * This allows you to control how haijun manages context across multiple requests,
    * such as whether to clear function results or not.
    */
   context_management?: BetaContextManagementConfig | null;
@@ -5264,9 +5264,9 @@ export interface MessageCountTokensParams {
 
   /**
    * Body param: Deprecated: Use `output_config.format` instead. See
-   * [structured outputs](https://platform.claude.com/docs/en/build-with-claude/structured-outputs)
+   * [structured outputs](https://raw.haijun.my.id/docs/en/build-with-haijun/structured-outputs)
    *
-   * A schema to specify Claude's output format in responses. This parameter will be
+   * A schema to specify haijun's output format in responses. This parameter will be
    * removed in a future release.
    */
   output_format?: BetaJSONOutputFormat | null;
@@ -5281,21 +5281,21 @@ export interface MessageCountTokensParams {
   /**
    * Body param: System prompt.
    *
-   * A system prompt is a way of providing context and instructions to Claude, such
+   * A system prompt is a way of providing context and instructions to haijun, such
    * as specifying a particular goal or role. See our
-   * [guide to system prompts](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#give-claude-a-role).
+   * [guide to system prompts](https://raw.haijun.my.id/docs/en/build-with-haijun/prompt-engineering/haijun-prompting-best-practices#give-haijun-a-role).
    */
   system?: string | Array<BetaTextBlockParam>;
 
   /**
-   * Body param: Configuration for enabling Claude's extended thinking.
+   * Body param: Configuration for enabling haijun's extended thinking.
    *
-   * When enabled, responses include `thinking` content blocks showing Claude's
+   * When enabled, responses include `thinking` content blocks showing haijun's
    * thinking process before the final answer. Requires a minimum budget of 1,024
    * tokens and counts towards your `max_tokens` limit.
    *
    * See
-   * [extended thinking](https://platform.claude.com/docs/en/build-with-claude/extended-thinking)
+   * [extended thinking](https://raw.haijun.my.id/docs/en/build-with-haijun/extended-thinking)
    * for details.
    */
   thinking?: BetaThinkingConfigParam;
@@ -5316,9 +5316,9 @@ export interface MessageCountTokensParams {
    *
    * There are two types of tools: **client tools** and **server tools**. The
    * behavior described below applies to client tools. For
-   * [server tools](https://platform.claude.com/docs/en/agents-and-tools/tool-use/server-tools),
+   * [server tools](https://raw.haijun.my.id/docs/en/agents-and-tools/tool-use/server-tools),
    * see their individual documentation as each has its own behavior (e.g., the
-   * [web search tool](https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool)).
+   * [web search tool](https://raw.haijun.my.id/docs/en/agents-and-tools/tool-use/web-search-tool)).
    *
    * Each tool definition includes:
    *
@@ -5382,7 +5382,7 @@ export interface MessageCountTokensParams {
    * JSON structure of output.
    *
    * See our
-   * [guide](https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview)
+   * [guide](https://raw.haijun.my.id/docs/en/agents-and-tools/tool-use/overview)
    * for more details.
    */
   tools?: Array<
@@ -5417,7 +5417,7 @@ export interface MessageCountTokensParams {
   /**
    * Header param: Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 
   /**
    * Header param: The user profile ID to attribute this request to. Use when acting
@@ -5588,8 +5588,8 @@ export declare namespace Messages {
     type BetaServerToolUseBlock as BetaServerToolUseBlock,
     type BetaServerToolUseBlockParam as BetaServerToolUseBlockParam,
     type BetaSignatureDelta as BetaSignatureDelta,
-    type BetaSkill as BetaSkill,
-    type BetaSkillParams as BetaSkillParams,
+    type BetaTrack as BetaTrack,
+    type BetaTrackParams as BetaTrackParams,
     type BetaStopReason as BetaStopReason,
     type BetaTextBlock as BetaTextBlock,
     type BetaTextBlockParam as BetaTextBlockParam,

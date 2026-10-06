@@ -1,4 +1,4 @@
-// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+﻿// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../core/resource';
 import * as BetaAPI from '../beta';
@@ -32,7 +32,7 @@ export class Memories extends APIResource {
       body,
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'agent-memory-2026-07-22'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'agent-memory-2026-07-22'].toString() },
         options?.headers,
       ]),
     });
@@ -60,7 +60,7 @@ export class Memories extends APIResource {
       query,
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'agent-memory-2026-07-22'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'agent-memory-2026-07-22'].toString() },
         options?.headers,
       ]),
     });
@@ -89,7 +89,7 @@ export class Memories extends APIResource {
       body,
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'agent-memory-2026-07-22'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'agent-memory-2026-07-22'].toString() },
         options?.headers,
       ]),
     });
@@ -121,7 +121,7 @@ export class Memories extends APIResource {
         query,
         ...options,
         headers: buildHeaders([
-          { 'anthropic-beta': [...(betas ?? []), 'agent-memory-2026-07-22'].toString() },
+          { 'Juglow-beta': [...(betas ?? []), 'agent-memory-2026-07-22'].toString() },
           options?.headers,
         ]),
       },
@@ -150,7 +150,7 @@ export class Memories extends APIResource {
       query: { expected_content_sha256 },
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'agent-memory-2026-07-22'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'agent-memory-2026-07-22'].toString() },
         options?.headers,
       ]),
     });
@@ -378,7 +378,7 @@ export interface MemoryCreateParams {
   /**
    * Header param: Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface MemoryRetrieveParams {
@@ -395,7 +395,7 @@ export interface MemoryRetrieveParams {
   /**
    * Header param: Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface MemoryUpdateParams {
@@ -437,7 +437,7 @@ export interface MemoryUpdateParams {
   /**
    * Header param: Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface MemoryListParams extends PageCursorParams {
@@ -466,7 +466,7 @@ export interface MemoryListParams extends PageCursorParams {
   /**
    * Header param: Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface MemoryDeleteParams {
@@ -483,7 +483,7 @@ export interface MemoryDeleteParams {
   /**
    * Header param: Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export declare namespace Memories {

@@ -1,18 +1,18 @@
-import fs from 'node:fs';
+﻿import fs from 'node:fs';
 import path from 'node:path';
 import { tmpdir } from 'node:os';
-import Anthropic from '@anthropic-ai/sdk';
+import JuGloW from '@takebox-ai/sdk';
 import {
-  AnthropicError,
+  JuGloWError,
   APIConnectionError,
   APIConnectionTimeoutError,
   RetryableError,
-} from '@anthropic-ai/sdk';
-import type { Middleware } from '@anthropic-ai/sdk';
-import { BetaFallbackState, betaRefusalFallbackMiddleware } from '@anthropic-ai/sdk/lib/middleware';
-import { wrapFetchWithMiddleware } from '@anthropic-ai/sdk/core/middleware';
-import { Stream as SSEStream } from '@anthropic-ai/sdk/core/streaming';
-import { WorkloadIdentityError } from '@anthropic-ai/sdk/lib/credentials/types';
+} from '@takebox-ai/sdk';
+import type { Middleware } from '@takebox-ai/sdk';
+import { BetaFallbackState, betaRefusalFallbackMiddleware } from '@takebox-ai/sdk/lib/middleware';
+import { wrapFetchWithMiddleware } from '@takebox-ai/sdk/core/middleware';
+import { Stream as SSEStream } from '@takebox-ai/sdk/core/streaming';
+import { WorkloadIdentityError } from '@takebox-ai/sdk/lib/credentials/types';
 
 const jsonResponse = (body: unknown = { a: 1 }, init: ResponseInit = {}) =>
   new Response(JSON.stringify(body), {
@@ -34,8 +34,8 @@ describe('middleware', () => {
       return next(request);
     };
 
-    const client = new Anthropic({
-      apiKey: 'my-anthropic-api-key',
+    const client = new JuGloW({
+      apiKey: 'my-Juglow-api-key',
       fetch: async () => jsonResponse(),
       middleware: [middleware],
     });
@@ -43,10 +43,10 @@ describe('middleware', () => {
     expect(await client.request({ path: '/foo', method: 'post', body: { hello: 'world' } })).toEqual({
       a: 1,
     });
-    expect(seenUrl).toEqual('https://api.anthropic.com/foo');
+    expect(seenUrl).toEqual('https://platform.juglow.my.id/foo');
     expect(seenMethod).toEqual('POST');
     expect(seenHeaders).toBeInstanceOf(Headers);
-    expect(seenHeaders!.get('x-api-key')).toEqual('my-anthropic-api-key');
+    expect(seenHeaders!.get('x-api-key')).toEqual('my-Juglow-api-key');
     expect(seenOptions).toMatchObject({ path: '/foo', method: 'post', body: { hello: 'world' } });
   });
 
@@ -61,8 +61,8 @@ describe('middleware', () => {
       };
     };
 
-    const client = new Anthropic({
-      apiKey: 'my-anthropic-api-key',
+    const client = new JuGloW({
+      apiKey: 'my-Juglow-api-key',
       fetch: async () => jsonResponse(),
       middleware: [make('a'), make('b'), make('c')],
     });
@@ -78,8 +78,8 @@ describe('middleware', () => {
       return next(request);
     };
 
-    const client = new Anthropic({
-      apiKey: 'my-anthropic-api-key',
+    const client = new JuGloW({
+      apiKey: 'my-Juglow-api-key',
       fetch: async (_url: string | URL | Request, init?: RequestInit) => {
         captured = init;
         return jsonResponse();
@@ -94,10 +94,10 @@ describe('middleware', () => {
   test('can rewrite the request URL', async () => {
     let captured: string | undefined;
     const middleware: Middleware = (request, next) =>
-      next({ ...request, url: request.url.replace('https://api.anthropic.com', 'http://localhost:1234') });
+      next({ ...request, url: request.url.replace('https://platform.juglow.my.id', 'http://localhost:1234') });
 
-    const client = new Anthropic({
-      apiKey: 'my-anthropic-api-key',
+    const client = new JuGloW({
+      apiKey: 'my-Juglow-api-key',
       fetch: async (url: string | URL | Request) => {
         captured = url.toString();
         return jsonResponse();
@@ -113,8 +113,8 @@ describe('middleware', () => {
     let fetchCalls = 0;
     const middleware: Middleware = async () => jsonResponse({ cached: true });
 
-    const client = new Anthropic({
-      apiKey: 'my-anthropic-api-key',
+    const client = new JuGloW({
+      apiKey: 'my-Juglow-api-key',
       fetch: async () => {
         fetchCalls++;
         return jsonResponse();
@@ -134,8 +134,8 @@ describe('middleware', () => {
       });
     };
 
-    const client = new Anthropic({
-      apiKey: 'my-anthropic-api-key',
+    const client = new JuGloW({
+      apiKey: 'my-Juglow-api-key',
       fetch: async () => jsonResponse({ a: 1 }),
       middleware: [middleware],
     });
@@ -151,8 +151,8 @@ describe('middleware', () => {
       return response;
     };
 
-    const client = new Anthropic({
-      apiKey: 'my-anthropic-api-key',
+    const client = new JuGloW({
+      apiKey: 'my-Juglow-api-key',
       maxRetries: 1,
       fetch: async () => {
         fetchCalls++;
@@ -165,7 +165,7 @@ describe('middleware', () => {
       () => null,
       (e) => e,
     );
-    expect(err).toBeInstanceOf(AnthropicError);
+    expect(err).toBeInstanceOf(JuGloWError);
     expect(err.message).toMatch(/middleware consumed the response body/);
     expect(err.message).toMatch(/response\.clone\(\)/);
     // a consumed body is a deterministic programming error; it is not retried
@@ -180,8 +180,8 @@ describe('middleware', () => {
       return response;
     };
 
-    const client = new Anthropic({
-      apiKey: 'my-anthropic-api-key',
+    const client = new JuGloW({
+      apiKey: 'my-Juglow-api-key',
       maxRetries: 1,
       fetch: async () => {
         fetchCalls++;
@@ -194,7 +194,7 @@ describe('middleware', () => {
       () => null,
       (e) => e,
     );
-    expect(err).toBeInstanceOf(AnthropicError);
+    expect(err).toBeInstanceOf(JuGloWError);
     expect(err.message).toMatch(/middleware consumed the response body/);
     expect(fetchCalls).toEqual(1);
   });
@@ -207,8 +207,8 @@ describe('middleware', () => {
       return response;
     };
 
-    const client = new Anthropic({
-      apiKey: 'my-anthropic-api-key',
+    const client = new JuGloW({
+      apiKey: 'my-Juglow-api-key',
       fetch: async () => jsonResponse(),
       middleware: [middleware],
     });
@@ -226,8 +226,8 @@ describe('middleware', () => {
       };
     };
 
-    const client = new Anthropic({
-      apiKey: 'my-anthropic-api-key',
+    const client = new JuGloW({
+      apiKey: 'my-Juglow-api-key',
       fetch: async () => jsonResponse(),
       middleware: [make('client')],
     });
@@ -249,8 +249,8 @@ describe('middleware', () => {
       return next(request);
     };
 
-    const client = new Anthropic({
-      apiKey: 'my-anthropic-api-key',
+    const client = new JuGloW({
+      apiKey: 'my-Juglow-api-key',
       maxRetries: 2,
       fetch: async () => {
         fetchCalls++;
@@ -277,8 +277,8 @@ describe('middleware', () => {
       throw expectedError;
     };
 
-    const client = new Anthropic({
-      apiKey: 'my-anthropic-api-key',
+    const client = new JuGloW({
+      apiKey: 'my-Juglow-api-key',
       maxRetries: 1,
       fetch: async () => {
         fetchCalls++;
@@ -307,8 +307,8 @@ describe('middleware', () => {
       return Promise.reject('middleware oops');
     };
 
-    const client = new Anthropic({
-      apiKey: 'my-anthropic-api-key',
+    const client = new JuGloW({
+      apiKey: 'my-Juglow-api-key',
       maxRetries: 1,
       fetch: async () => {
         fetchCalls++;
@@ -335,8 +335,8 @@ describe('middleware', () => {
       throw new APIConnectionError({ cause: new Error('flaky network') });
     };
 
-    const client = new Anthropic({
-      apiKey: 'my-anthropic-api-key',
+    const client = new JuGloW({
+      apiKey: 'my-Juglow-api-key',
       maxRetries: 1,
       fetch: async () => jsonResponse(),
       middleware: [middleware],
@@ -358,8 +358,8 @@ describe('middleware', () => {
       throw expectedError;
     };
 
-    const client = new Anthropic({
-      apiKey: 'my-anthropic-api-key',
+    const client = new JuGloW({
+      apiKey: 'my-Juglow-api-key',
       maxRetries: 1,
       fetch: async () => jsonResponse(),
       middleware: [middleware],
@@ -385,8 +385,8 @@ describe('middleware', () => {
       throw outer;
     };
 
-    const client = new Anthropic({
-      apiKey: 'my-anthropic-api-key',
+    const client = new JuGloW({
+      apiKey: 'my-Juglow-api-key',
       maxRetries: 1,
       fetch: async () => jsonResponse(),
       middleware: [middleware],
@@ -404,8 +404,8 @@ describe('middleware', () => {
     let fetchCalls = 0;
     const passthrough: Middleware = (request, next) => next(request);
 
-    const client = new Anthropic({
-      apiKey: 'my-anthropic-api-key',
+    const client = new JuGloW({
+      apiKey: 'my-Juglow-api-key',
       maxRetries: 1,
       fetch: async () => {
         fetchCalls++;
@@ -427,8 +427,8 @@ describe('middleware', () => {
     let fetchCalls = 0;
     const passthrough: Middleware = (request, next) => next(request);
 
-    const client = new Anthropic({
-      apiKey: 'my-anthropic-api-key',
+    const client = new JuGloW({
+      apiKey: 'my-Juglow-api-key',
       maxRetries: 1,
       fetch: async () => {
         fetchCalls++;
@@ -459,8 +459,8 @@ describe('middleware', () => {
       }
     };
 
-    const client = new Anthropic({
-      apiKey: 'my-anthropic-api-key',
+    const client = new JuGloW({
+      apiKey: 'my-Juglow-api-key',
       maxRetries: 1,
       fetch: async () => {
         fetchCalls++;
@@ -490,8 +490,8 @@ describe('middleware', () => {
       }
     };
 
-    const client = new Anthropic({
-      apiKey: 'my-anthropic-api-key',
+    const client = new JuGloW({
+      apiKey: 'my-Juglow-api-key',
       maxRetries: 1,
       fetch: async () => {
         fetchCalls++;
@@ -520,8 +520,8 @@ describe('middleware', () => {
       }
     };
 
-    const client = new Anthropic({
-      apiKey: 'my-anthropic-api-key',
+    const client = new JuGloW({
+      apiKey: 'my-Juglow-api-key',
       maxRetries: 1,
       fetch: async () => {
         fetchCalls++;
@@ -553,8 +553,8 @@ describe('middleware', () => {
       return next(request);
     };
 
-    const fastClient = new Anthropic({
-      apiKey: 'my-anthropic-api-key',
+    const fastClient = new JuGloW({
+      apiKey: 'my-Juglow-api-key',
       timeout: 5,
       maxRetries: 0,
       fetch: async (_url, { signal } = {}) => {
@@ -566,8 +566,8 @@ describe('middleware', () => {
     expect(await fastClient.request({ path: '/foo', method: 'get' })).toEqual({ a: 1 });
 
     // slow fetch through middleware: still aborts and surfaces as a timeout
-    const slowClient = new Anthropic({
-      apiKey: 'my-anthropic-api-key',
+    const slowClient = new JuGloW({
+      apiKey: 'my-Juglow-api-key',
       timeout: 5,
       maxRetries: 0,
       fetch: (_url, { signal } = {}) =>
@@ -591,8 +591,8 @@ describe('middleware', () => {
       return response;
     };
 
-    const client = new Anthropic({
-      apiKey: 'my-anthropic-api-key',
+    const client = new JuGloW({
+      apiKey: 'my-Juglow-api-key',
       maxRetries: 0,
       fetch: async () => {
         fetchCalls++;
@@ -614,8 +614,8 @@ describe('middleware', () => {
       };
     };
 
-    const client = new Anthropic({
-      apiKey: 'my-anthropic-api-key',
+    const client = new JuGloW({
+      apiKey: 'my-Juglow-api-key',
       fetch: async () => jsonResponse(),
       middleware: [make('parent')],
     });
@@ -644,7 +644,7 @@ describe('middleware', () => {
     };
 
     const sse = [
-      `event: message_start\ndata: {"type":"message_start","message":{"id":"msg_123","type":"message","role":"assistant","content":[],"model":"claude-opus-4-8","stop_reason":null,"stop_sequence":null,"usage":{"input_tokens":11,"output_tokens":1}}}\n\n`,
+      `event: message_start\ndata: {"type":"message_start","message":{"id":"msg_123","type":"message","role":"assistant","content":[],"model":"haijun-opus-8","stop_reason":null,"stop_sequence":null,"usage":{"input_tokens":11,"output_tokens":1}}}\n\n`,
       `event: content_block_start\ndata: {"type":"content_block_start","index":0,"content_block":{"type":"text","text":""}}\n\n`,
       `event: content_block_delta\ndata: {"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"Hello there!"}}\n\n`,
       `event: content_block_stop\ndata: {"type":"content_block_stop","index":0}\n\n`,
@@ -652,8 +652,8 @@ describe('middleware', () => {
       `event: message_stop\ndata: {"type":"message_stop"}\n\n`,
     ].join('');
 
-    const client = new Anthropic({
-      apiKey: 'my-anthropic-api-key',
+    const client = new JuGloW({
+      apiKey: 'my-Juglow-api-key',
       fetch: async () => {
         return new Response(
           new ReadableStream({
@@ -669,7 +669,7 @@ describe('middleware', () => {
     });
 
     const stream = client.messages.stream({
-      model: 'claude-opus-4-8',
+      model: 'haijun-opus-8',
       max_tokens: 1024,
       messages: [{ role: 'user', content: 'Say hello there!' }],
     });
@@ -690,15 +690,15 @@ describe('middleware', () => {
       'message_stop',
     ]);
     expect(message).toMatchObject({
-      model: 'claude-opus-4-8',
+      model: 'haijun-opus-8',
       stop_reason: 'end_turn',
       content: [{ type: 'text', text: 'Hello there!' }],
     });
   });
 
   test('no middleware configured calls fetch directly', async () => {
-    const client = new Anthropic({
-      apiKey: 'my-anthropic-api-key',
+    const client = new JuGloW({
+      apiKey: 'my-Juglow-api-key',
       fetch: async () => jsonResponse(),
     });
     expect(client.middleware).toEqual([]);
@@ -724,8 +724,8 @@ describe('middleware', () => {
         return next(request);
       };
 
-      const client = new Anthropic({
-        apiKey: 'my-anthropic-api-key',
+      const client = new JuGloW({
+        apiKey: 'my-Juglow-api-key',
         fetch: async () => jsonResponse(),
         middleware: [middleware],
         logger,
@@ -743,8 +743,8 @@ describe('middleware', () => {
         return next(request);
       };
 
-      const client = new Anthropic({
-        apiKey: 'my-anthropic-api-key',
+      const client = new JuGloW({
+        apiKey: 'my-Juglow-api-key',
         fetch: async () => jsonResponse(),
         middleware: [middleware],
         logger,
@@ -767,8 +767,8 @@ describe('middleware', () => {
         return next(request);
       };
 
-      const client = new Anthropic({
-        apiKey: 'my-anthropic-api-key',
+      const client = new JuGloW({
+        apiKey: 'my-Juglow-api-key',
         fetch: async () => jsonResponse(),
         middleware: [middleware],
         logger,
@@ -789,8 +789,8 @@ describe('middleware', () => {
         return response;
       };
 
-      const client = new Anthropic({
-        apiKey: 'my-anthropic-api-key',
+      const client = new JuGloW({
+        apiKey: 'my-Juglow-api-key',
         fetch: async () => jsonResponse(),
         middleware: [middleware],
       });
@@ -807,8 +807,8 @@ describe('middleware', () => {
         return response;
       };
 
-      const client = new Anthropic({
-        apiKey: 'my-anthropic-api-key',
+      const client = new JuGloW({
+        apiKey: 'my-Juglow-api-key',
         fetch: async () =>
           jsonResponse(
             { a: 1 },
@@ -832,8 +832,8 @@ describe('middleware', () => {
         return response;
       };
 
-      const client = new Anthropic({
-        apiKey: 'my-anthropic-api-key',
+      const client = new JuGloW({
+        apiKey: 'my-Juglow-api-key',
         fetch: async () => jsonResponse(),
         middleware: [make(), make()],
       });
@@ -855,8 +855,8 @@ describe('middleware', () => {
         return second;
       };
 
-      const client = new Anthropic({
-        apiKey: 'my-anthropic-api-key',
+      const client = new JuGloW({
+        apiKey: 'my-Juglow-api-key',
         fetch: async () => jsonResponse({ call: ++fetchCalls }),
         middleware: [middleware],
       });
@@ -873,8 +873,8 @@ describe('middleware', () => {
         return response;
       };
 
-      const client = new Anthropic({
-        apiKey: 'my-anthropic-api-key',
+      const client = new JuGloW({
+        apiKey: 'my-Juglow-api-key',
         fetch: async () => new Response('plain text', { headers: { 'Content-Type': 'text/plain' } }),
         middleware: [middleware],
       });
@@ -891,8 +891,8 @@ describe('middleware', () => {
         return response;
       };
 
-      const client = new Anthropic({
-        apiKey: 'my-anthropic-api-key',
+      const client = new JuGloW({
+        apiKey: 'my-Juglow-api-key',
         maxRetries: 0,
         fetch: async () =>
           jsonResponse(
@@ -920,8 +920,8 @@ describe('middleware', () => {
         return response;
       };
 
-      const client = new Anthropic({
-        apiKey: 'my-anthropic-api-key',
+      const client = new JuGloW({
+        apiKey: 'my-Juglow-api-key',
         fetch: async () => new Response(undefined, { status: 204 }),
         middleware: [middleware],
       });
@@ -938,8 +938,8 @@ describe('middleware', () => {
         return new Response(body, response);
       };
 
-      const client = new Anthropic({
-        apiKey: 'my-anthropic-api-key',
+      const client = new JuGloW({
+        apiKey: 'my-Juglow-api-key',
         maxRetries: 0,
         fetch: async () => jsonResponse(),
         middleware: [middleware],
@@ -949,7 +949,7 @@ describe('middleware', () => {
         () => null,
         (e) => e,
       );
-      expect(err).toBeInstanceOf(AnthropicError);
+      expect(err).toBeInstanceOf(JuGloWError);
       expect(err.message).toMatch(/cannot ctx\.parse\(\) a response whose body was already consumed/);
     });
 
@@ -962,8 +962,8 @@ describe('middleware', () => {
       };
       const inner: Middleware = async () => jsonResponse({ cached: true });
 
-      const client = new Anthropic({
-        apiKey: 'my-anthropic-api-key',
+      const client = new JuGloW({
+        apiKey: 'my-Juglow-api-key',
         fetch: async () => jsonResponse(),
         middleware: [outer, inner],
       });
@@ -974,7 +974,7 @@ describe('middleware', () => {
 
     test('parses a streaming response into a Stream without consuming the client events', async () => {
       const sse = [
-        `event: message_start\ndata: {"type":"message_start","message":{"id":"msg_123","type":"message","role":"assistant","content":[],"model":"claude-opus-4-8","stop_reason":null,"stop_sequence":null,"usage":{"input_tokens":11,"output_tokens":1}}}\n\n`,
+        `event: message_start\ndata: {"type":"message_start","message":{"id":"msg_123","type":"message","role":"assistant","content":[],"model":"haijun-opus-8","stop_reason":null,"stop_sequence":null,"usage":{"input_tokens":11,"output_tokens":1}}}\n\n`,
         `event: content_block_start\ndata: {"type":"content_block_start","index":0,"content_block":{"type":"text","text":""}}\n\n`,
         `event: content_block_delta\ndata: {"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"Hello there!"}}\n\n`,
         `event: content_block_stop\ndata: {"type":"content_block_stop","index":0}\n\n`,
@@ -986,7 +986,7 @@ describe('middleware', () => {
       const middleware: Middleware = async (request, next, ctx) => {
         const response = await next(request);
         expect(ctx.options?.stream).toBe(true);
-        const parsed = await ctx.parse<SSEStream<Anthropic.MessageStreamEvent>>(response);
+        const parsed = await ctx.parse<SSEStream<JuGloW.MessageStreamEvent>>(response);
         expect(parsed).toBeInstanceOf(SSEStream);
         for await (const event of parsed) {
           middlewareEvents.push(event.type);
@@ -994,8 +994,8 @@ describe('middleware', () => {
         return response;
       };
 
-      const client = new Anthropic({
-        apiKey: 'my-anthropic-api-key',
+      const client = new JuGloW({
+        apiKey: 'my-Juglow-api-key',
         fetch: async () => {
           return new Response(
             new ReadableStream({
@@ -1011,7 +1011,7 @@ describe('middleware', () => {
       });
 
       const stream = client.messages.stream({
-        model: 'claude-opus-4-8',
+        model: 'haijun-opus-8',
         max_tokens: 1024,
         messages: [{ role: 'user', content: 'Say hello there!' }],
       });
@@ -1051,8 +1051,8 @@ describe('middleware', () => {
         return response;
       };
 
-      const client = new Anthropic({
-        apiKey: 'my-anthropic-api-key',
+      const client = new JuGloW({
+        apiKey: 'my-Juglow-api-key',
         fetch: async () =>
           new Response(new ReadableStream({ start: (c) => (push = c) }), {
             headers: { 'Content-Type': 'text/event-stream' },
@@ -1063,7 +1063,7 @@ describe('middleware', () => {
       // resolving at all proves parsing is lazy: no body chunks exist yet, so
       // a parse that buffered the whole body would deadlock here
       const stream = await client.messages.create({
-        model: 'claude-opus-4-8',
+        model: 'haijun-opus-8',
         max_tokens: 1024,
         messages: [{ role: 'user', content: 'hi' }],
         stream: true,
@@ -1091,8 +1091,8 @@ describe('middleware', () => {
         return response;
       };
 
-      const client = new Anthropic({
-        apiKey: 'my-anthropic-api-key',
+      const client = new JuGloW({
+        apiKey: 'my-Juglow-api-key',
         maxRetries: 0,
         fetch: async () =>
           jsonResponse(
@@ -1104,7 +1104,7 @@ describe('middleware', () => {
 
       const err = await client.messages
         .create({
-          model: 'claude-opus-4-8',
+          model: 'haijun-opus-8',
           max_tokens: 1024,
           messages: [{ role: 'user', content: 'hi' }],
           stream: true,
@@ -1127,8 +1127,8 @@ describe('middleware', () => {
         return response;
       };
 
-      const client = new Anthropic({
-        apiKey: 'my-anthropic-api-key',
+      const client = new JuGloW({
+        apiKey: 'my-Juglow-api-key',
         fetch: async () =>
           new Response('binary bytes', { headers: { 'Content-Type': 'application/octet-stream' } }),
         middleware: [middleware],
@@ -1146,12 +1146,12 @@ describe('middleware', () => {
 
   describe('credential token-exchange requests', () => {
     const envVars = [
-      'ANTHROPIC_API_KEY',
-      'ANTHROPIC_AUTH_TOKEN',
-      'ANTHROPIC_BASE_URL',
-      'ANTHROPIC_IDENTITY_TOKEN',
-      'ANTHROPIC_IDENTITY_TOKEN_FILE',
-      'ANTHROPIC_WORKSPACE_ID',
+      'HAIJUN_API_KEY',
+      'HAIJUN_AUTH_TOKEN',
+      'HAIJUN_BASE_URL',
+      'HAIJUN_IDENTITY_TOKEN',
+      'HAIJUN_IDENTITY_TOKEN_FILE',
+      'HAIJUN_WORKSPACE_ID',
     ];
     const originalEnv: Record<string, string | undefined> = {};
 
@@ -1160,7 +1160,7 @@ describe('middleware', () => {
         originalEnv[name] = process.env[name];
         delete process.env[name];
       }
-      process.env['ANTHROPIC_IDENTITY_TOKEN'] = 'my-jwt';
+      process.env['HAIJUN_IDENTITY_TOKEN'] = 'my-jwt';
     });
 
     afterEach(() => {
@@ -1197,7 +1197,7 @@ describe('middleware', () => {
         return next(request);
       };
 
-      const client = new Anthropic({
+      const client = new JuGloW({
         apiKey: null,
         authToken: null,
         config: oidcConfig,
@@ -1207,8 +1207,8 @@ describe('middleware', () => {
 
       expect(await client.request({ path: '/foo', method: 'get' })).toEqual({ a: 1 });
       expect(seen).toEqual([
-        'POST https://api.anthropic.com/v1/oauth/token',
-        'GET https://api.anthropic.com/foo',
+        'POST https://platform.juglow.my.id/v1/oauth/token',
+        'GET https://platform.juglow.my.id/foo',
       ]);
     });
 
@@ -1221,7 +1221,7 @@ describe('middleware', () => {
         return next(request);
       };
 
-      const client = new Anthropic({
+      const client = new JuGloW({
         apiKey: null,
         authToken: null,
         config: oidcConfig,
@@ -1247,7 +1247,7 @@ describe('middleware', () => {
         return next(request);
       };
 
-      const client = new Anthropic({
+      const client = new JuGloW({
         apiKey: null,
         authToken: null,
         config: oidcConfig,
@@ -1277,7 +1277,7 @@ describe('middleware', () => {
         return next(request);
       };
 
-      const client = new Anthropic({
+      const client = new JuGloW({
         apiKey: null,
         authToken: null,
         config: oidcConfig,
@@ -1287,10 +1287,10 @@ describe('middleware', () => {
 
       await client.request({ path: '/foo', method: 'get', middleware: [requestMw] });
       expect(clientSeen).toEqual([
-        'https://api.anthropic.com/v1/oauth/token',
-        'https://api.anthropic.com/foo',
+        'https://platform.juglow.my.id/v1/oauth/token',
+        'https://platform.juglow.my.id/foo',
       ]);
-      expect(requestSeen).toEqual(['https://api.anthropic.com/foo']);
+      expect(requestSeen).toEqual(['https://platform.juglow.my.id/foo']);
     });
 
     test('user OAuth refresh goes through client middleware', async () => {
@@ -1314,7 +1314,7 @@ describe('middleware', () => {
         };
 
         let refreshBody: Record<string, string> | undefined;
-        const client = new Anthropic({
+        const client = new JuGloW({
           apiKey: null,
           authToken: null,
           config: {
@@ -1336,8 +1336,8 @@ describe('middleware', () => {
           refresh_token: 'my-refresh-token',
         });
         expect(seen).toEqual([
-          'POST https://api.anthropic.com/v1/oauth/token',
-          'GET https://api.anthropic.com/foo',
+          'POST https://platform.juglow.my.id/v1/oauth/token',
+          'GET https://platform.juglow.my.id/foo',
         ]);
       } finally {
         fs.rmSync(dir, { recursive: true });
@@ -1349,7 +1349,7 @@ describe('middleware', () => {
         throw new Error('boom from middleware');
       };
 
-      const client = new Anthropic({
+      const client = new JuGloW({
         apiKey: null,
         authToken: null,
         config: oidcConfig,
@@ -1377,7 +1377,7 @@ describe('middleware', () => {
         return next(request);
       };
 
-      const client = new Anthropic({
+      const client = new JuGloW({
         apiKey: null,
         authToken: null,
         config: oidcConfig,
@@ -1402,7 +1402,7 @@ describe('middleware', () => {
      * on Bedrock): the "signature" commits to the exact url and body, so a
      * stale signature is detectable when the request is later modified.
      */
-    class SigningClient extends Anthropic {
+    class SigningClient extends JuGloW {
       prepared: Array<{ url: string; body: unknown }> = [];
       protected override async prepareRequest(
         request: RequestInit,
@@ -1417,7 +1417,7 @@ describe('middleware', () => {
     test('prepares the request middleware modified, signing the final url and body', async () => {
       const sentSignatures: Array<string | null> = [];
       const client = new SigningClient({
-        apiKey: 'my-anthropic-api-key',
+        apiKey: 'my-Juglow-api-key',
         fetch: async (url, init) => {
           sentSignatures.push(new Headers(init?.headers).get('x-test-signature'));
           return jsonResponse();
@@ -1428,7 +1428,7 @@ describe('middleware', () => {
             expect(request.headers.get('x-test-signature')).toBeNull();
             return next({
               ...request,
-              url: 'https://api.anthropic.com/rewritten',
+              url: 'https://platform.juglow.my.id/rewritten',
               body: JSON.stringify({ rewritten: true }),
             });
           },
@@ -1437,17 +1437,17 @@ describe('middleware', () => {
 
       await client.request({ path: '/foo', method: 'post', body: { hello: 'world' } });
       expect(client.prepared).toEqual([
-        { url: 'https://api.anthropic.com/rewritten', body: JSON.stringify({ rewritten: true }) },
+        { url: 'https://platform.juglow.my.id/rewritten', body: JSON.stringify({ rewritten: true }) },
       ]);
       expect(sentSignatures).toEqual([
-        `sig:https://api.anthropic.com/rewritten:${JSON.stringify({ rewritten: true })}`,
+        `sig:https://platform.juglow.my.id/rewritten:${JSON.stringify({ rewritten: true })}`,
       ]);
     });
 
     test('prepares per next() call, so replayed and rewritten requests are re-signed', async () => {
       const sentSignatures: Array<string | null> = [];
       const client = new SigningClient({
-        apiKey: 'my-anthropic-api-key',
+        apiKey: 'my-Juglow-api-key',
         fetch: async (url, init) => {
           sentSignatures.push(new Headers(init?.headers).get('x-test-signature'));
           return jsonResponse();
@@ -1455,35 +1455,35 @@ describe('middleware', () => {
         middleware: [
           async (request, next) => {
             await next(request);
-            // Retry against a different url — must be signed for the new url
+            // Retry against a different url â€” must be signed for the new url
             // even though the request already carries the first signature.
-            return next({ ...request, url: 'https://api.anthropic.com/fallback' });
+            return next({ ...request, url: 'https://platform.juglow.my.id/fallback' });
           },
         ],
       });
 
       await client.request({ path: '/foo', method: 'get' });
       expect(client.prepared.map((p) => p.url)).toEqual([
-        'https://api.anthropic.com/foo',
-        'https://api.anthropic.com/fallback',
+        'https://platform.juglow.my.id/foo',
+        'https://platform.juglow.my.id/fallback',
       ]);
       expect(sentSignatures).toEqual([
-        'sig:https://api.anthropic.com/foo:undefined',
-        'sig:https://api.anthropic.com/fallback:undefined',
+        'sig:https://platform.juglow.my.id/foo:undefined',
+        'sig:https://platform.juglow.my.id/fallback:undefined',
       ]);
     });
 
     test("debug-logs 'sending request' once per inner fetch, with the prepared headers", async () => {
       const debugMock = jest.fn();
       const client = new SigningClient({
-        apiKey: 'my-anthropic-api-key',
+        apiKey: 'my-Juglow-api-key',
         logLevel: 'debug',
         logger: { debug: debugMock, info: jest.fn(), warn: jest.fn(), error: jest.fn() },
         fetch: async () => jsonResponse(),
         middleware: [
           async (request, next) => {
             await next(request);
-            return next({ ...request, url: 'https://api.anthropic.com/fallback' });
+            return next({ ...request, url: 'https://platform.juglow.my.id/fallback' });
           },
         ],
       });
@@ -1494,8 +1494,8 @@ describe('middleware', () => {
       // signed headers, one entry per next() call.
       const sends = debugMock.mock.calls.filter(([msg]) => String(msg).includes('sending request'));
       expect(sends.map(([, details]) => [details.url, details.headers['x-test-signature']])).toEqual([
-        ['https://api.anthropic.com/foo', 'sig:https://api.anthropic.com/foo:undefined'],
-        ['https://api.anthropic.com/fallback', 'sig:https://api.anthropic.com/fallback:undefined'],
+        ['https://platform.juglow.my.id/foo', 'sig:https://platform.juglow.my.id/foo:undefined'],
+        ['https://platform.juglow.my.id/fallback', 'sig:https://platform.juglow.my.id/fallback:undefined'],
       ]);
     });
 
@@ -1527,7 +1527,7 @@ describe('middleware', () => {
         });
 
         await client.request({ path: '/foo', method: 'get' });
-        // Only the API request itself is prepared — never the token exchange.
+        // Only the API request itself is prepared â€” never the token exchange.
         expect(client.prepared.map((p) => new URL(p.url).pathname)).toEqual(['/foo']);
       } finally {
         fs.rmSync(dir, { recursive: true });
@@ -1555,7 +1555,7 @@ describe('wrapFetchWithMiddleware', () => {
   test('without a client, ctx.logger falls back to console at the default level', async () => {
     const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
     const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
-    const originalEnv = process.env['ANTHROPIC_LOG'];
+    const originalEnv = process.env['HAIJUN_LOG'];
     try {
       const middleware: Middleware = async (request, next, ctx) => {
         ctx.logger.error('an error');
@@ -1565,19 +1565,19 @@ describe('wrapFetchWithMiddleware', () => {
       };
       const wrapped = wrapFetchWithMiddleware(async () => jsonResponse(), [middleware]);
 
-      process.env['ANTHROPIC_LOG'] = 'error';
+      process.env['HAIJUN_LOG'] = 'error';
       await wrapped('https://example.com/path');
       expect(errorSpy).toHaveBeenCalledWith('an error');
       expect(warnSpy).not.toHaveBeenCalled();
 
-      delete process.env['ANTHROPIC_LOG'];
+      delete process.env['HAIJUN_LOG'];
       await wrapped('https://example.com/path');
       expect(warnSpy).toHaveBeenCalledWith('a warning');
     } finally {
       if (originalEnv !== undefined) {
-        process.env['ANTHROPIC_LOG'] = originalEnv;
+        process.env['HAIJUN_LOG'] = originalEnv;
       } else {
-        delete process.env['ANTHROPIC_LOG'];
+        delete process.env['HAIJUN_LOG'];
       }
       errorSpy.mockRestore();
       warnSpy.mockRestore();
@@ -1604,9 +1604,9 @@ describe('wrapFetchWithMiddleware', () => {
 describe('backend middleware', () => {
   const clientWithBackend = (
     backend: ReadonlyArray<Middleware>,
-    options: ConstructorParameters<typeof Anthropic>[0],
+    options: ConstructorParameters<typeof JuGloW>[0],
   ) => {
-    class BackendTestClient extends Anthropic {
+    class BackendTestClient extends JuGloW {
       protected override backendMiddleware(): ReadonlyArray<Middleware> {
         return backend;
       }
@@ -1626,7 +1626,7 @@ describe('backend middleware', () => {
     };
 
     const client = clientWithBackend([make('backend')], {
-      apiKey: 'my-anthropic-api-key',
+      apiKey: 'my-Juglow-api-key',
       fetch: async () => jsonResponse(),
       middleware: [make('client')],
     });
@@ -1660,7 +1660,7 @@ describe('backend middleware', () => {
     };
 
     const client = clientWithBackend([adapt], {
-      apiKey: 'my-anthropic-api-key',
+      apiKey: 'my-Juglow-api-key',
       fetch: async (url: string | URL | Request, init?: RequestInit) => {
         wireUrl = url.toString();
         wireSignature = (init!.headers as Headers).get('x-signature');
@@ -1670,9 +1670,9 @@ describe('backend middleware', () => {
     });
 
     await client.request({ path: '/foo', method: 'get' });
-    expect(userSawUrl).toEqual('https://api.anthropic.com/foo');
+    expect(userSawUrl).toEqual('https://platform.juglow.my.id/foo');
     expect(userSawSignature).toBeNull();
-    expect(wireUrl).toEqual('https://api.anthropic.com/backend/foo');
+    expect(wireUrl).toEqual('https://platform.juglow.my.id/backend/foo');
     expect(wireSignature).toEqual('signed');
   });
 
@@ -1690,7 +1690,7 @@ describe('backend middleware', () => {
 
     let fetchCalls = 0;
     const client = clientWithBackend([adapt], {
-      apiKey: 'my-anthropic-api-key',
+      apiKey: 'my-Juglow-api-key',
       maxRetries: 0,
       fetch: async () => {
         fetchCalls++;
@@ -1717,7 +1717,7 @@ describe('backend middleware', () => {
     };
 
     const client = clientWithBackend([normalize], {
-      apiKey: 'my-anthropic-api-key',
+      apiKey: 'my-Juglow-api-key',
       fetch: async () => jsonResponse({ normalized: false }),
       middleware: [userMiddleware],
     });
@@ -1737,7 +1737,7 @@ describe('backend middleware', () => {
     };
 
     const client = clientWithBackend([failingBackend], {
-      apiKey: 'my-anthropic-api-key',
+      apiKey: 'my-Juglow-api-key',
       maxRetries: 1,
       fetch: async () => {
         fetchCalls++;
@@ -1763,7 +1763,7 @@ describe('backend middleware', () => {
     };
 
     const client = clientWithBackend([flakyBackend], {
-      apiKey: 'my-anthropic-api-key',
+      apiKey: 'my-Juglow-api-key',
       maxRetries: 1,
       fetch: async () => jsonResponse(),
     });
@@ -1777,7 +1777,7 @@ describe('backend middleware', () => {
     const passthrough: Middleware = (request, next) => next(request);
 
     const client = clientWithBackend([passthrough], {
-      apiKey: 'my-anthropic-api-key',
+      apiKey: 'my-Juglow-api-key',
       maxRetries: 1,
       fetch: async () => {
         fetchCalls++;
@@ -1809,7 +1809,7 @@ describe('backend middleware', () => {
     };
 
     const client = clientWithBackend([slowBackend], {
-      apiKey: 'my-anthropic-api-key',
+      apiKey: 'my-Juglow-api-key',
       timeout: 5,
       maxRetries: 0,
       fetch: async (_url, { signal } = {}) => {
@@ -1855,8 +1855,8 @@ describe('betaRefusalFallbackMiddleware', () => {
   const makeClient = (responses: Response[], middleware: Middleware) => {
     const bodies: Record<string, unknown>[] = [];
     const helpers: (string | null)[] = [];
-    const client = new Anthropic({
-      apiKey: 'my-anthropic-api-key',
+    const client = new JuGloW({
+      apiKey: 'my-Juglow-api-key',
       fetch: async (_url, init) => {
         bodies.push(JSON.parse(init!.body as string));
         helpers.push((init!.headers as Headers).get('x-stainless-helper'));
@@ -1951,8 +1951,8 @@ describe('betaRefusalFallbackMiddleware', () => {
       refusal('primary-model'),
       message('fallback-model'),
     ];
-    const client = new Anthropic({
-      apiKey: 'my-anthropic-api-key',
+    const client = new JuGloW({
+      apiKey: 'my-Juglow-api-key',
       fetch: async () => responses.shift()!,
       logger,
       middleware: [betaRefusalFallbackMiddleware([{ model: 'fallback-model' }])],
@@ -1967,8 +1967,8 @@ describe('betaRefusalFallbackMiddleware', () => {
   test('the missing-fallbackState warning respects the client logLevel', async () => {
     const logger = { error: jest.fn(), warn: jest.fn(), info: jest.fn(), debug: jest.fn() };
     const responses = [refusal('primary-model'), message('fallback-model')];
-    const client = new Anthropic({
-      apiKey: 'my-anthropic-api-key',
+    const client = new JuGloW({
+      apiKey: 'my-Juglow-api-key',
       fetch: async () => responses.shift()!,
       logger,
       logLevel: 'off',
@@ -2048,7 +2048,7 @@ describe('betaRefusalFallbackMiddleware', () => {
     expect(fallbackState.index).toEqual(1);
     expect(bodies.map((b) => b['model'])).toEqual(['primary-model', 'mid-model', 'last-model']);
     // Seam blocks accumulate in hop order and are prepended ahead of the
-    // serving hop's own content — pins ordering and hop-2 from/to threading.
+    // serving hop's own content â€” pins ordering and hop-2 from/to threading.
     expect(result.content).toEqual([
       {
         type: 'fallback',
@@ -2219,10 +2219,10 @@ describe('betaRefusalFallbackMiddleware', () => {
   describe('beta header', () => {
     const makeHeaderClient = (responses: Response[], middleware: Middleware) => {
       const betaHeaders: (string | null)[] = [];
-      const client = new Anthropic({
-        apiKey: 'my-anthropic-api-key',
+      const client = new JuGloW({
+        apiKey: 'my-Juglow-api-key',
         fetch: async (_url, init) => {
-          betaHeaders.push(new Headers(init!.headers).get('anthropic-beta'));
+          betaHeaders.push(new Headers(init!.headers).get('Juglow-beta'));
           return responses.shift()!;
         },
         middleware: [middleware],

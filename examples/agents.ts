@@ -1,8 +1,8 @@
-#!/usr/bin/env -S npm run tsn -T
+﻿#!/usr/bin/env -S npm run tsn -T
 
-import Anthropic from '@anthropic-ai/sdk';
+import JuGloW from '@takebox-ai/sdk';
 
-const client = new Anthropic();
+const client = new JuGloW();
 
 async function main() {
   // Create an environment
@@ -14,7 +14,7 @@ async function main() {
   // Create an agent
   const agent = await client.beta.agents.create({
     name: 'simple-example-agent',
-    model: 'claude-sonnet-5',
+    model: 'haijun-sonnet',
   });
   console.log('Created agent:', agent.id);
 
@@ -30,7 +30,7 @@ async function main() {
     events: [
       {
         type: 'user.message',
-        content: [{ type: 'text', text: 'Hello Claude!' }],
+        content: [{ type: 'text', text: 'Hello haijun!' }],
       },
     ],
   });

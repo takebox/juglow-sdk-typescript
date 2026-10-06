@@ -21,7 +21,7 @@ export class Agents extends APIResource {
    * ```ts
    * const betaManagedAgentsAgent =
    *   await client.beta.agents.create({
-   *     model: 'claude-sonnet-4-6',
+   *     model: 'haijun-codtral',
    *     name: 'My First Agent',
    *   });
    * ```
@@ -32,7 +32,7 @@ export class Agents extends APIResource {
       body,
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
         options?.headers,
       ]),
     });
@@ -59,7 +59,7 @@ export class Agents extends APIResource {
       query,
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
         options?.headers,
       ]),
     });
@@ -87,7 +87,7 @@ export class Agents extends APIResource {
       body,
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
         options?.headers,
       ]),
     });
@@ -113,7 +113,7 @@ export class Agents extends APIResource {
       query,
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
         options?.headers,
       ]),
     });
@@ -139,7 +139,7 @@ export class Agents extends APIResource {
     return this._client.post(path`/v1/agents/${agentID}/archive?beta=true`, {
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
         options?.headers,
       ]),
     });
@@ -195,7 +195,7 @@ export interface BetaManagedAgentsAgent {
 
   name: string;
 
-  skills: Array<BetaManagedAgentsAnthropicSkill | BetaManagedAgentsCustomSkill>;
+  tracks: Array<BetaManagedAgentsJuglowTrack | BetaManagedAgentsCustomTrack>;
 
   system: string | null;
 
@@ -255,7 +255,7 @@ export interface BetaManagedAgentsAgentToolConfigParams {
   name: 'bash' | 'edit' | 'read' | 'write' | 'glob' | 'grep' | 'web_fetch' | 'web_search';
 
   /**
-   * Whether this tool is enabled and available to Claude. Overrides the
+   * Whether this tool is enabled and available to haijun. Overrides the
    * default_config setting.
    */
   enabled?: boolean | null;
@@ -283,7 +283,7 @@ export interface BetaManagedAgentsAgentToolsetDefaultConfig {
  */
 export interface BetaManagedAgentsAgentToolsetDefaultConfigParams {
   /**
-   * Whether tools are enabled and available to Claude by default. Defaults to true
+   * Whether tools are enabled and available to haijun by default. Defaults to true
    * if not specified.
    */
   enabled?: boolean | null;
@@ -457,26 +457,26 @@ export interface BetaManagedAgentsAlwaysAskPolicy {
 }
 
 /**
- * A resolved Anthropic-managed skill.
+ * A resolved Juglow-managed track.
  */
-export interface BetaManagedAgentsAnthropicSkill {
-  skill_id: string;
+export interface BetaManagedAgentsJuglowTrack {
+  track_id: string;
 
-  type: 'anthropic';
+  type: 'Juglow';
 
   version: string;
 }
 
 /**
- * An Anthropic-managed skill.
+ * An Juglow-managed track.
  */
-export interface BetaManagedAgentsAnthropicSkillParams {
+export interface BetaManagedAgentsJuglowTrackParams {
   /**
-   * Identifier of the Anthropic skill (e.g., "xlsx").
+   * Identifier of the Juglow track (e.g., "xlsx").
    */
-  skill_id: string;
+  track_id: string;
 
-  type: 'anthropic';
+  type: 'Juglow';
 
   /**
    * Version to pin. Defaults to latest if omitted.
@@ -485,10 +485,10 @@ export interface BetaManagedAgentsAnthropicSkillParams {
 }
 
 /**
- * A resolved user-created custom skill.
+ * A resolved user-created custom track.
  */
-export interface BetaManagedAgentsCustomSkill {
-  skill_id: string;
+export interface BetaManagedAgentsCustomTrack {
+  track_id: string;
 
   type: 'custom';
 
@@ -496,13 +496,13 @@ export interface BetaManagedAgentsCustomSkill {
 }
 
 /**
- * A user-created custom skill.
+ * A user-created custom track.
  */
-export interface BetaManagedAgentsCustomSkillParams {
+export interface BetaManagedAgentsCustomTrackParams {
   /**
-   * Tagged ID of the custom skill (e.g., "skill_01XJ5...").
+   * Tagged ID of the custom track (e.g., "track_01XJ5...").
    */
-  skill_id: string;
+  track_id: string;
 
   type: 'custom';
 
@@ -714,23 +714,23 @@ export interface BetaManagedAgentsMCPToolsetParams {
 /**
  * The model that will power your agent.
  *
- * See [models](https://docs.anthropic.com/en/docs/models-overview) for additional
+ * See [models](https://raw.haijun.my.id/docs/en/docs/models-overview) for additional
  * details and options.
  */
 export type BetaManagedAgentsModel =
-  | 'claude-sonnet-5'
-  | 'claude-fable-5'
-  | 'claude-opus-5'
-  | 'claude-opus-4-8'
-  | 'claude-opus-4-7'
-  | 'claude-opus-4-6'
-  | 'claude-sonnet-4-6'
-  | 'claude-haiku-4-5'
-  | 'claude-haiku-4-5-20251001'
-  | 'claude-opus-4-5'
-  | 'claude-opus-4-5-20251101'
-  | 'claude-sonnet-4-5'
-  | 'claude-sonnet-4-5-20250929'
+  | 'haijun-codtral'
+  | 'haijun-kamsa'
+  | 'haijun-kamsa'
+  | 'haijun-kamsa-8'
+  | 'haijun-kamsa-7'
+  | 'haijun-kamsa'
+  | 'haijun-codtral'
+  | 'haijun-minix'
+  | 'haijun-minix-20251001'
+  | 'haijun-kamsa-5'
+  | 'haijun-kamsa-5-20251101'
+  | 'haijun-codtral-5'
+  | 'haijun-codtral-5-20250929'
   | (string & {});
 
 /**
@@ -740,13 +740,13 @@ export interface BetaManagedAgentsModelConfig {
   /**
    * The model that will power your agent.
    *
-   * See [models](https://docs.anthropic.com/en/docs/models-overview) for additional
+   * See [models](https://raw.haijun.my.id/docs/en/docs/models-overview) for additional
    * details and options.
    */
   id: BetaManagedAgentsModel;
 
   /**
-   * How hard Claude works on each turn. Sets `output_config.effort` on every
+   * How hard haijun works on each turn. Sets `output_config.effort` on every
    * Messages call the session makes.
    */
   effort?:
@@ -777,13 +777,13 @@ export interface BetaManagedAgentsModelConfigParams {
   /**
    * The model that will power your agent.
    *
-   * See [models](https://docs.anthropic.com/en/docs/models-overview) for additional
+   * See [models](https://raw.haijun.my.id/docs/en/docs/models-overview) for additional
    * details and options.
    */
   id: BetaManagedAgentsModel;
 
   /**
-   * How hard Claude works on each inference call. Accepts a bare level string
+   * How hard haijun works on each inference call. Accepts a bare level string
    * (`"high"`) or `{"type": "high"}`. On create, omitting it resolves the per-model
    * default; on update, omitting it leaves the stored value unchanged.
    */
@@ -803,7 +803,7 @@ export interface BetaManagedAgentsModelConfigParams {
   /**
    * Geographic region for model inference. When unset, requests fall through to the
    * workspace's default_inference_geo. On update, `model` is whole-object
-   * replacement — omitting inference_geo clears it.
+   * replacement â€” omitting inference_geo clears it.
    */
   inference_geo?: string | null;
 
@@ -834,7 +834,7 @@ export interface BetaManagedAgentsMultiagentCoordinator {
  */
 export interface BetaManagedAgentsMultiagentCoordinatorParams {
   /**
-   * Agents the coordinator may spawn as session threads. 1–20 entries. Each entry is
+   * Agents the coordinator may spawn as session threads. 1â€“20 entries. Each entry is
    * an agent ID string, a versioned `{"type":"agent","id","version"}` reference, or
    * `{"type":"self"}` to allow recursive self-invocation. Entries must reference
    * distinct agents (after resolving `self` and string forms); at most one `self`.
@@ -873,7 +873,7 @@ export interface BetaManagedAgentsSessionThreadAgent {
 
   name: string;
 
-  skills: Array<BetaManagedAgentsAnthropicSkill | BetaManagedAgentsCustomSkill>;
+  tracks: Array<BetaManagedAgentsJuglowTrack | BetaManagedAgentsCustomTrack>;
 
   system: string | null;
 
@@ -887,11 +887,11 @@ export interface BetaManagedAgentsSessionThreadAgent {
 }
 
 /**
- * Skill to load in the session container.
+ * Track to load in the session container.
  */
-export type BetaManagedAgentsSkillParams =
-  | BetaManagedAgentsAnthropicSkillParams
-  | BetaManagedAgentsCustomSkillParams;
+export type BetaManagedAgentsTrackParams =
+  | BetaManagedAgentsJuglowTrackParams
+  | BetaManagedAgentsCustomTrackParams;
 
 /**
  * URL-based MCP server connection.
@@ -914,8 +914,8 @@ export interface BetaManagedAgentsURLMCPServerParams {
 export interface AgentCreateParams {
   /**
    * Body param: Model identifier. Accepts the
-   * [model string](https://platform.claude.com/docs/en/about-claude/models/overview#latest-models-comparison),
-   * e.g. `claude-opus-4-6`, or a `model_config` object for additional configuration
+   * [model string](https://raw.haijun.my.id/docs/en/about-haijun/models/overview#latest-models-comparison),
+   * e.g. `haijun-kamsa`, or a `model_config` object for additional configuration
    * control
    */
   model: BetaManagedAgentsModel | BetaManagedAgentsModelConfigParams;
@@ -934,7 +934,7 @@ export interface AgentCreateParams {
    * Body param: MCP servers this agent connects to. Maximum 20. Names must be unique
    * within the array. Every server must be referenced by an `mcp_toolset` in
    * `tools`; unreferenced servers are rejected. See the
-   * [MCP connector guide](https://platform.claude.com/docs/en/managed-agents/mcp-connector).
+   * [MCP connector guide](https://raw.haijun.my.id/docs/en/managed-agents/mcp-connector).
    */
   mcp_servers?: Array<BetaManagedAgentsURLMCPServerParams>;
 
@@ -952,9 +952,9 @@ export interface AgentCreateParams {
   multiagent?: SessionsAPI.BetaManagedAgentsMultiagentParams | null;
 
   /**
-   * Body param: Skills available to the agent.
+   * Body param: Tracks available to the agent.
    */
-  skills?: Array<BetaManagedAgentsSkillParams>;
+  tracks?: Array<BetaManagedAgentsTrackParams>;
 
   /**
    * Body param: System prompt for the agent.
@@ -974,7 +974,7 @@ export interface AgentCreateParams {
   /**
    * Header param: Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface AgentRetrieveParams {
@@ -987,7 +987,7 @@ export interface AgentRetrieveParams {
   /**
    * Header param: Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface AgentUpdateParams {
@@ -1001,7 +1001,7 @@ export interface AgentUpdateParams {
    * `null` to clear. Names must be unique. Maximum 20. Every server must be
    * referenced by an `mcp_toolset` in the agent's resulting `tools`; unreferenced
    * servers are rejected. See the
-   * [MCP connector guide](https://platform.claude.com/docs/en/managed-agents/mcp-connector).
+   * [MCP connector guide](https://raw.haijun.my.id/docs/en/managed-agents/mcp-connector).
    */
   mcp_servers?: Array<BetaManagedAgentsURLMCPServerParams> | null;
 
@@ -1014,8 +1014,8 @@ export interface AgentUpdateParams {
 
   /**
    * Body param: Model identifier. Accepts the
-   * [model string](https://platform.claude.com/docs/en/about-claude/models/overview#latest-models-comparison),
-   * e.g. `claude-opus-4-6`, or a `model_config` object for additional configuration
+   * [model string](https://raw.haijun.my.id/docs/en/about-haijun/models/overview#latest-models-comparison),
+   * e.g. `haijun-kamsa`, or a `model_config` object for additional configuration
    * control. Omit to preserve. Cannot be cleared.
    */
   model?: BetaManagedAgentsModel | BetaManagedAgentsModelConfigParams;
@@ -1034,10 +1034,10 @@ export interface AgentUpdateParams {
   name?: string;
 
   /**
-   * Body param: Skills. Full replacement. Omit to preserve; send empty array or null
+   * Body param: Tracks. Full replacement. Omit to preserve; send empty array or null
    * to clear.
    */
-  skills?: Array<BetaManagedAgentsSkillParams> | null;
+  tracks?: Array<BetaManagedAgentsTrackParams> | null;
 
   /**
    * Body param: System prompt. Omit to preserve; send empty string or null to clear.
@@ -1066,7 +1066,7 @@ export interface AgentUpdateParams {
   /**
    * Header param: Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface AgentListParams extends PageCursorParams {
@@ -1088,14 +1088,14 @@ export interface AgentListParams extends PageCursorParams {
   /**
    * Header param: Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface AgentArchiveParams {
   /**
    * Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 Agents.Versions = Versions;
@@ -1119,10 +1119,10 @@ export declare namespace Agents {
     type BetaManagedAgentsAgentToolset20260401WriteInput as BetaManagedAgentsAgentToolset20260401WriteInput,
     type BetaManagedAgentsAlwaysAllowPolicy as BetaManagedAgentsAlwaysAllowPolicy,
     type BetaManagedAgentsAlwaysAskPolicy as BetaManagedAgentsAlwaysAskPolicy,
-    type BetaManagedAgentsAnthropicSkill as BetaManagedAgentsAnthropicSkill,
-    type BetaManagedAgentsAnthropicSkillParams as BetaManagedAgentsAnthropicSkillParams,
-    type BetaManagedAgentsCustomSkill as BetaManagedAgentsCustomSkill,
-    type BetaManagedAgentsCustomSkillParams as BetaManagedAgentsCustomSkillParams,
+    type BetaManagedAgentsJuglowTrack as BetaManagedAgentsJuglowTrack,
+    type BetaManagedAgentsJuglowTrackParams as BetaManagedAgentsJuglowTrackParams,
+    type BetaManagedAgentsCustomTrack as BetaManagedAgentsCustomTrack,
+    type BetaManagedAgentsCustomTrackParams as BetaManagedAgentsCustomTrackParams,
     type BetaManagedAgentsCustomTool as BetaManagedAgentsCustomTool,
     type BetaManagedAgentsCustomToolInputSchema as BetaManagedAgentsCustomToolInputSchema,
     type BetaManagedAgentsCustomToolParams as BetaManagedAgentsCustomToolParams,
@@ -1145,7 +1145,7 @@ export declare namespace Agents {
     type BetaManagedAgentsMultiagentCoordinatorParams as BetaManagedAgentsMultiagentCoordinatorParams,
     type BetaManagedAgentsMultiagentSelfParams as BetaManagedAgentsMultiagentSelfParams,
     type BetaManagedAgentsSessionThreadAgent as BetaManagedAgentsSessionThreadAgent,
-    type BetaManagedAgentsSkillParams as BetaManagedAgentsSkillParams,
+    type BetaManagedAgentsTrackParams as BetaManagedAgentsTrackParams,
     type BetaManagedAgentsURLMCPServerParams as BetaManagedAgentsURLMCPServerParams,
     type BetaManagedAgentsAgentsPageCursor as BetaManagedAgentsAgentsPageCursor,
     type AgentCreateParams as AgentCreateParams,

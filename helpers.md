@@ -1,16 +1,16 @@
-# Message Helpers
+﻿# Message Helpers
 
 ## Streaming Responses
 
 ```ts
-anthropic.messages.stream({ … }, options?): MessageStream
+juglow.messages.stream({ â€¦ }, options?): MessageStream
 ```
 
-`anthropic.messages.stream()` returns a `MessageStream`, which emits events, has an async
+`juglow.messages.stream()` returns a `MessageStream`, which emits events, has an async
 iterator, and exposes helper methods to accumulate stream events into a convenient shape and make it easy to reason
 about the conversation.
 
-Alternatively, you can use `anthropic.messages.create({ stream: true, … })` which returns an async
+Alternatively, you can use `juglow.messages.create({ stream: true, â€¦ })` which returns an async
 iterable of the chunks in the stream and uses less memory (most notably, it does not accumulate a message
 object for you).
 
@@ -22,46 +22,46 @@ See an example of streaming helpers in action in [`examples/streaming.ts`](examp
 
 ### Events
 
-#### `.on('connect', () => …)`
+#### `.on('connect', () => â€¦)`
 
-The first event that is fired when the connection with the Anthropic API is established.
+The first event that is fired when the connection with the JuGloW API is established.
 
-#### `.on('streamEvent', (event: MessageStreamEvent, snapshot: Message) => …)`
+#### `.on('streamEvent', (event: MessageStreamEvent, snapshot: Message) => â€¦)`
 
 The event fired when a stream event is received from the API. Not fired when it is not streaming. The snapshot
 returns an accumulated `Message` which is progressively built-up over events.
 
-#### `.on('text', (textDelta: string, textSnapshot: string) => …)`
+#### `.on('text', (textDelta: string, textSnapshot: string) => â€¦)`
 
 The event fired when a text delta is sent by the API. The second parameter returns a `textSnapshot`.
 
-#### `.on('inputJson', (partialJson: string, jsonSnapshot: unknown) => …)`
+#### `.on('inputJson', (partialJson: string, jsonSnapshot: unknown) => â€¦)`
 
 The event fired when a json delta is sent by the API. The second parameter returns a `jsonSnapshot`.
 
-#### `.on('message', (message: Message) => …)`
+#### `.on('message', (message: Message) => â€¦)`
 
 The event fired when a message is done being streamed by the API. Corresponds to the `message_stop` SSE event.
 
-#### `.on('contentBlock', (content: ContentBlock) => …)`
+#### `.on('contentBlock', (content: ContentBlock) => â€¦)`
 
 The event fired when a content block is done being streamed by the API. Corresponds to the
 `content_block_stop` SSE event.
 
-#### `.on('finalMessage', (message: Message) => …)`
+#### `.on('finalMessage', (message: Message) => â€¦)`
 
 The event fired for the final message. Currently this is equivalent to the `message` event, but is fired after
 it.
 
-#### `.on('error', (error: AnthropicError) => …)`
+#### `.on('error', (error: JuglowError) => â€¦)`
 
 The event fired when an error is encountered while streaming.
 
-#### `.on('abort', (error: APIUserAbortError) => …)`
+#### `.on('abort', (error: APIUserAbortError) => â€¦)`
 
 The event fired when the stream receives a signal to abort.
 
-#### `.on('end', () => …)`
+#### `.on('end', () => â€¦)`
 
 The last event fired in the stream.
 
@@ -101,23 +101,23 @@ The underlying `AbortController` for the runner.
 
 ## Structured Outputs
 
-The SDK provides helpers for parsing structured JSON outputs from Claude using JSON Schema or Zod validation.
+The SDK provides helpers for parsing structured JSON outputs from Haijun using JSON Schema or Zod validation.
 
 ### Usage with Zod
 
 ```ts
-import { zodOutputFormat } from '@anthropic-ai/sdk/helpers/zod';
-import Anthropic from '@anthropic-ai/sdk';
+import { zodOutputFormat } from '@takebox-ai/sdk/helpers/zod';
+import Juglow from '@takebox-ai/sdk';
 import { z } from 'zod';
 
-const client = new Anthropic();
+const client = new Juglow();
 
 const NumbersResponse = z.object({
   primes: z.array(z.number()),
 });
 
 const message = await client.messages.parse({
-  model: 'claude-sonnet-5',
+  model: 'haijun-sonnet-5',
   max_tokens: 1024,
   messages: [{ role: 'user', content: 'What are the first 3 prime numbers?' }],
   output_config: {
@@ -131,10 +131,10 @@ console.log(message.parsed_output?.primes); // [2, 3, 5]
 ### Usage with JSON Schema
 
 ```ts
-import { jsonSchemaOutputFormat } from '@anthropic-ai/sdk/helpers/json-schema';
-import Anthropic from '@anthropic-ai/sdk';
+import { jsonSchemaOutputFormat } from '@takebox-ai/sdk/helpers/json-schema';
+import Juglow from '@takebox-ai/sdk';
 
-const client = new Anthropic();
+const client = new Juglow();
 
 const NumbersResponse = {
   type: 'object',
@@ -145,7 +145,7 @@ const NumbersResponse = {
 } as const;
 
 const message = await client.messages.parse({
-  model: 'claude-sonnet-5',
+  model: 'haijun-sonnet-5',
   max_tokens: 1024,
   messages: [{ role: 'user', content: 'What are the first 3 prime numbers?' }],
   output_config: {
@@ -164,7 +164,7 @@ Creates a JSON schema output format from a Zod schema. The response will be vali
 
 Creates a JSON schema output format from a raw JSON schema. Options:
 
-- `transform?: boolean` - Whether to transform the schema for Claude compatibility (default: `true`)
+- `transform?: boolean` - Whether to transform the schema for haijun compatibility (default: `true`)
 
 ### Examples
 
@@ -182,7 +182,7 @@ The SDK provides helper functions to create runnable tools that can be automatic
 ### Usage
 
 ```ts
-import { betaZodTool } from '@anthropic-ai/sdk/helpers/beta/zod';
+import { betaZodTool } from '@takebox-ai/sdk/helpers/beta/zod';
 import { z } from 'zod';
 
 const weatherTool = betaZodTool({
@@ -192,12 +192,12 @@ const weatherTool = betaZodTool({
   }),
   description: 'Get the current weather in a given location',
   run: (input) => {
-    return `The weather in ${input.location} is foggy and 60°F`;
+    return `The weather in ${input.location} is foggy and 60Â°F`;
   },
 });
 
-const finalMessage = await anthropic.beta.messages.toolRunner({
-  model: 'claude-sonnet-5',
+const finalMessage = await juglow.beta.messages.toolRunner({
+  model: 'haijun-sonnet-5',
   max_tokens: 1000,
   messages: [{ role: 'user', content: 'What is the weather in San Francisco?' }],
   tools: [weatherTool],
@@ -212,8 +212,8 @@ When you need to process intermediate messages or control the conversation flow,
 `BetaToolRunner`.
 
 ```ts
-const runner = anthropic.beta.messages.toolRunner({
-  model: 'claude-sonnet-5',
+const runner = juglow.beta.messages.toolRunner({
+  model: 'haijun-sonnet-5',
   max_tokens: 1000,
   messages: [{ role: 'user', content: 'What is the weather in San Francisco?' }],
   tools: [weatherTool],
@@ -234,8 +234,8 @@ example.
 #### Streaming
 
 ```ts
-const runner = anthropic.beta.messages.toolRunner({
-  model: 'claude-sonnet-5',
+const runner = juglow.beta.messages.toolRunner({
+  model: 'haijun-sonnet-5',
   max_tokens: 1000,
   messages: [{ role: 'user', content: 'What is the weather in San Francisco?' }],
   tools: [calculatorTool],
@@ -263,9 +263,9 @@ The `BetaToolRunner` supports cancellation via `AbortSignal`. The signal is pass
 ```ts
 const controller = new AbortController();
 
-const runner = anthropic.beta.messages.toolRunner(
+const runner = juglow.beta.messages.toolRunner(
   {
-    model: 'claude-sonnet-5',
+    model: 'haijun-sonnet-5',
     max_tokens: 1000,
     messages: [{ role: 'user', content: 'Do a long task' }],
     tools: [
@@ -303,7 +303,7 @@ runner.setRequestOptions({ signal: controller.signal });
 Zod schemas can be used to define the input schema for your tools:
 
 ```ts
-import { betaZodTool } from '@anthropic-ai/sdk/helpers/beta/zod';
+import { betaZodTool } from '@takebox-ai/sdk/helpers/beta/zod';
 
 const weatherTool = betaZodTool({
   name: 'get_weather',
@@ -313,7 +313,7 @@ const weatherTool = betaZodTool({
   }),
   description: 'Get the current weather in a given location',
   run: async (input) => {
-    return `The weather in ${input.location} is ${input.unit === 'celsius' ? '22°C' : '72°F'}`;
+    return `The weather in ${input.location} is ${input.unit === 'celsius' ? '22Â°C' : '72Â°F'}`;
   },
 });
 ```
@@ -324,7 +324,7 @@ You can use JSON Schema to define the input schema for your tools. `betaTool` wi
 based on the supplied JSON Schema.
 
 ```ts
-import { betaTool } from '@anthropic-ai/sdk/helpers/beta/json-schema';
+import { betaTool } from '@takebox-ai/sdk/helpers/beta/json-schema';
 
 const calculatorTool = betaTool({
   name: 'calculator',
@@ -405,7 +405,7 @@ Updates the conversation parameters. Can accept new parameters or a mutator func
 // Direct parameter update
 runner.setMessagesParams({
   ...runner.params,
-  model: 'claude-haiku-4-5',
+  model: 'haijun-haiku-4-5',
   max_tokens: 500,
 });
 
@@ -471,7 +471,7 @@ console.log('Message count:', runner.params.messages.length);
 When a tool encounters an error, you can throw a `ToolError` to return structured content blocks as the error result instead of just a string message. The ToolRunner will catch this error and send the content back to the model with `is_error: true`.
 
 ```ts
-import { ToolError } from '@anthropic-ai/sdk/resources/beta/messages';
+import { ToolError } from '@takebox-ai/sdk/resources/beta/messages';
 
 const screenshotTool = betaZodTool({
   name: 'take_screenshot',
@@ -510,35 +510,35 @@ See the following example files for more usage patterns:
 
 The SDK exposes a few building blocks for serving managed-agents sessions from a self-hosted environment:
 
-- `client.beta.environments.work.worker({ ... })` (returns an `EnvironmentWorker`, also exported from `@anthropic-ai/sdk/helpers/beta/environments`) — the full worker: polls for work, and for each claimed session sets up the workdir + downloads the agent's skills, runs the local tools against the session's `agent.tool_use` events while heartbeating the work-item lease, force-stops the work on exit, cleans up the downloaded skills, and loops. `worker.handleItem(...)` runs that same per-item flow for a single work item you've already claimed; with no arguments it reads the work id / environment id / session id from `ANTHROPIC_WORK_ID` / `ANTHROPIC_ENVIRONMENT_ID` / `ANTHROPIC_SESSION_ID` (the env vars `ant worker poll --on-work` sets) and the environment key from `ANTHROPIC_ENVIRONMENT_KEY`. `environmentId` / `environmentKey` are only needed by `run()`'s poll loop — `handleItem()` works without them. Composed from the two pieces below.
-- `client.beta.environments.work.poller(...)` — control-plane only (a `WorkPoller`): claims work items from an environment, ack's each one before yielding it, and posts `stop` automatically when the consumer's loop body returns or the iteration ends.
-- `client.beta.sessions.events.toolRunner(...)` — the sessions-side counterpart to `client.beta.messages.toolRunner` (a `SessionToolRunner`): for each `agent.tool_use` event the agent emits during a session, runs the matching tool from your registry, posts the result back, and yields a `DispatchedToolCall` so you can observe what happened. Internally drives event-stream reconnect and result posting; it does not touch the work-item lease.
+- `client.beta.environments.work.worker({ ... })` (returns an `EnvironmentWorker`, also exported from `@takebox-ai/sdk/helpers/beta/environments`) â€” the full worker: polls for work, and for each claimed session sets up the workdir + downloads the agent's tracks, runs the local tools against the session's `agent.tool_use` events while heartbeating the work-item lease, force-stops the work on exit, cleans up the downloaded tracks, and loops. `worker.handleItem(...)` runs that same per-item flow for a single work item you've already claimed; with no arguments it reads the work id / environment id / session id from `JUGLOW_WORK_ID` / `JUGLOW_ENVIRONMENT_ID` / `JUGLOW_SESSION_ID` (the env vars `ant worker poll --on-work` sets) and the environment key from `JUGLOW_ENVIRONMENT_KEY`. `environmentId` / `environmentKey` are only needed by `run()`'s poll loop â€” `handleItem()` works without them. Composed from the two pieces below.
+- `client.beta.environments.work.poller(...)` â€” control-plane only (a `WorkPoller`): claims work items from an environment, ack's each one before yielding it, and posts `stop` automatically when the consumer's loop body returns or the iteration ends.
+- `client.beta.sessions.events.toolRunner(...)` â€” the sessions-side counterpart to `client.beta.messages.toolRunner` (a `SessionToolRunner`): for each `agent.tool_use` event the agent emits during a session, runs the matching tool from your registry, posts the result back, and yields a `DispatchedToolCall` so you can observe what happened. Internally drives event-stream reconnect and result posting; it does not touch the work-item lease.
 
-The tool implementations themselves live in a separate Node-only module — `@anthropic-ai/sdk/tools/agent-toolset/node` — alongside `@anthropic-ai/sdk/tools/memory/node`. `betaAgentToolset20260401(ctx)` returns the standard `agent_toolset_20260401` set (`bash`, `read`, `write`, `edit`, `glob`, `grep`) as `BetaRunnableTool` objects, the same shape `client.beta.messages.toolRunner` accepts. The individual factories — `betaBashTool`, `betaReadTool`, `betaWriteTool`, `betaEditTool`, `betaGlobTool`, `betaGrepTool` — are exported too.
+The tool implementations themselves live in a separate Node-only module â€” `@takebox-ai/sdk/tools/agent-toolset/node` â€” alongside `@takebox-ai/sdk/tools/memory/node`. `betaAgentToolset20260401(ctx)` returns the standard `agent_toolset_20260401` set (`bash`, `read`, `write`, `edit`, `glob`, `grep`) as `BetaRunnableTool` objects, the same shape `client.beta.messages.toolRunner` accepts. The individual factories â€” `betaBashTool`, `betaReadTool`, `betaWriteTool`, `betaEditTool`, `betaGlobTool`, `betaGrepTool` â€” are exported too.
 
-> **Node 22+ required.** The agent toolset uses the native `fs.glob` (added in Node 22) for its `glob` tool, so `@anthropic-ai/sdk/tools/agent-toolset/node` requires Node 22 or newer. The rest of the SDK still supports Node 18+.
+> **Node 22+ required.** The agent toolset uses the native `fs.glob` (added in Node 22) for its `glob` tool, so `@takebox-ai/sdk/tools/agent-toolset/node` requires Node 22 or newer. The rest of the SDK still supports Node 18+.
 
 ```ts
-import Anthropic from '@anthropic-ai/sdk';
-import { betaAgentToolset20260401 } from '@anthropic-ai/sdk/tools/agent-toolset/node';
+import Juglow from '@takebox-ai/sdk';
+import { betaAgentToolset20260401 } from '@takebox-ai/sdk/tools/agent-toolset/node';
 
-const client = new Anthropic();
+const client = new Juglow();
 
-// One-stop worker: poll → run the toolset for each session → force-stop → loop.
+// One-stop worker: poll â†’ run the toolset for each session â†’ force-stop â†’ loop.
 // `tools` is a factory so `betaAgentToolset20260401` is bound to each session's workdir/id.
-// `environmentKey` is the runner's single credential — it authenticates both the
+// `environmentKey` is the runner's single credential â€” it authenticates both the
 // work-poll calls and every per-session call (event stream, heartbeat, force-stop).
 await client.beta.environments.work
   .worker({
-    environmentId: process.env.ANTHROPIC_ENVIRONMENT_ID!,
-    environmentKey: process.env.ANTHROPIC_ENVIRONMENT_KEY!,
+    environmentId: process.env.JUGLOW_ENVIRONMENT_ID!,
+    environmentKey: process.env.JUGLOW_ENVIRONMENT_KEY!,
     workdir: '/workspace',
     tools: (ctx) => [...betaAgentToolset20260401(ctx), myCustomTool],
   })
   .run(AbortSignal.timeout(60 * 60_000));
 ```
 
-If you already hold a claimed work item — e.g. an `ant worker poll --on-work` script handed one to a fresh process — call `handleItem` to run just the per-item flow (build the workdir + skills, run the session's tools while heartbeating the lease, force-stop on exit). Inside that command the work id / environment id / session id / environment key are already in the environment, so the sandbox case is just:
+If you already hold a claimed work item â€” e.g. an `ant worker poll --on-work` script handed one to a fresh process â€” call `handleItem` to run just the per-item flow (build the workdir + tracks, run the session's tools while heartbeating the lease, force-stop on exit). Inside that command the work id / environment id / session id / environment key are already in the environment, so the sandbox case is just:
 
 ```ts
 await client.beta.environments.work.worker({ workdir: '/workspace', tools }).handleItem();
@@ -551,41 +551,41 @@ await client.beta.environments.work.worker({ workdir: '/workspace', tools }).han
   workId: work.id,
   environmentId: work.environment_id,
   sessionId: work.data.id,
-  environmentKey: process.env.ANTHROPIC_ENVIRONMENT_KEY!,
+  environmentKey: process.env.JUGLOW_ENVIRONMENT_KEY!,
 });
 ```
 
-`betaAgentToolset20260401(ctx)` returns a plain array — filter or extend it to customise:
+`betaAgentToolset20260401(ctx)` returns a plain array â€” filter or extend it to customise:
 
 ```ts
 const tools = betaAgentToolset20260401(ctx).filter((t) => t.name !== 'grep'); // remove
 const tools = [...betaAgentToolset20260401(ctx), myCustomTool]; // extend with any BetaRunnableTool
 ```
 
-If you want the pieces separately — e.g. to observe each tool call, or to manage the work lifecycle yourself — drive the poller and the session tool runner directly:
+If you want the pieces separately â€” e.g. to observe each tool call, or to manage the work lifecycle yourself â€” drive the poller and the session tool runner directly:
 
 ```ts
 import {
   betaAgentToolset20260401,
-  setupSkills,
+  setupTracks,
   type AgentToolContext,
-} from '@anthropic-ai/sdk/tools/agent-toolset/node';
+} from '@takebox-ai/sdk/tools/agent-toolset/node';
 
-const environmentKey = process.env.ANTHROPIC_ENVIRONMENT_KEY!;
-// The environment key authenticates the per-session calls too — scope a client to it.
+const environmentKey = process.env.JUGLOW_ENVIRONMENT_KEY!;
+// The environment key authenticates the per-session calls too â€” scope a client to it.
 const sessionClient = client.withOptions({ authToken: environmentKey });
 
 for await (const work of client.beta.environments.work.poller({
-  environmentId: process.env.ANTHROPIC_ENVIRONMENT_ID!,
+  environmentId: process.env.JUGLOW_ENVIRONMENT_ID!,
   environmentKey,
 })) {
   if (work.data.type !== 'session') continue;
-  // Setting `client` + `sessionId` makes `setupSkills` fetch the session's
-  // resolved agent and download each of its skills into `{workdir}/skills/<name>/`
-  // (via `client.beta.skills.versions.download`). Call it before the tool runner;
+  // Setting `client` + `sessionId` makes `setupTracks` fetch the session's
+  // resolved agent and download each of its tracks into `{workdir}/tracks/<name>/`
+  // (via `client.beta.tracks.versions.download`). Call it before the tool runner;
   // it returns a cleanup function to call once the work item is done.
   const ctx: AgentToolContext = { workdir: '/workspace', client, sessionId: work.data.id };
-  const cleanupSkills = await setupSkills(ctx);
+  const cleanupTracks = await setupTracks(ctx);
   try {
     for await (const call of sessionClient.beta.sessions.events.toolRunner(work.data.id, {
       tools: betaAgentToolset20260401(ctx),
@@ -593,7 +593,7 @@ for await (const work of client.beta.environments.work.poller({
       console.log(`${call.name} -> ${call.isError ? 'error' : 'ok'}`);
     }
   } finally {
-    await cleanupSkills();
+    await cleanupTracks();
   }
 }
 ```

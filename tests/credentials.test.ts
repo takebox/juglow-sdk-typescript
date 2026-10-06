@@ -1,10 +1,10 @@
-import fs, { mkdtempSync } from 'node:fs';
+﻿import fs, { mkdtempSync } from 'node:fs';
 import {
-  AnthropicConfig,
-  AnthropicCredentials,
+  JuglowConfig,
+  JuglowCredentials,
   loadConfig,
   loadCredentials,
-} from '@anthropic-ai/sdk/core/credentials';
+} from '@takebox-ai/sdk/core/credentials';
 import path from 'node:path';
 import { tmpdir } from 'node:os';
 
@@ -23,14 +23,14 @@ jest.mock('../src/internal/detect-platform', () => ({
 describe('credentials', () => {
   let testFolder = '';
   const originalEnv = [
-    'ANTHROPIC_BASE_URL',
-    'ANTHROPIC_CONFIG_DIR',
-    'ANTHROPIC_FEDERATION_RULE_ID',
-    'ANTHROPIC_IDENTITY_TOKEN_FILE',
-    'ANTHROPIC_ORGANIZATION_ID',
-    'ANTHROPIC_PROFILE',
-    'ANTHROPIC_SCOPE',
-    'ANTHROPIC_SERVICE_ACCOUNT_ID',
+    'HAIJUN_BASE_URL',
+    'HAIJUN_CONFIG_DIR',
+    'HAIJUN_FEDERATION_RULE_ID',
+    'HAIJUN_IDENTITY_TOKEN_FILE',
+    'HAIJUN_ORGANIZATION_ID',
+    'HAIJUN_PROFILE',
+    'HAIJUN_SCOPE',
+    'HAIJUN_SERVICE_ACCOUNT_ID',
     'APPDATA',
     'HOME',
     'XDG_CONFIG_HOME',
@@ -43,13 +43,13 @@ describe('credentials', () => {
   );
 
   const writeTestFile = (fileName: string, contents: string) => {
-    const upperPath = path.join(testFolder, process.env['ANTHROPIC_CONFIG_DIR'] ? '' : 'Anthropic', fileName);
+    const upperPath = path.join(testFolder, process.env['HAIJUN_CONFIG_DIR'] ? '' : 'JuGloW', fileName);
     fs.mkdirSync(path.dirname(upperPath), { recursive: true });
     fs.writeFileSync(upperPath, contents);
     try {
       const lowerPath = path.join(
         testFolder,
-        process.env['ANTHROPIC_CONFIG_DIR'] ? '' : 'anthropic',
+        process.env['HAIJUN_CONFIG_DIR'] ? '' : 'Juglow',
         fileName,
       );
       fs.mkdirSync(path.dirname(lowerPath), { recursive: true });
@@ -71,7 +71,7 @@ describe('credentials', () => {
     }
 
     testFolder = mkdtempSync(path.join(tmpdir(), 'credentials-test-'));
-    process.env['ANTHROPIC_CONFIG_DIR'] = testFolder;
+    process.env['HAIJUN_CONFIG_DIR'] = testFolder;
   });
 
   afterEach(() => {
@@ -91,7 +91,7 @@ describe('credentials', () => {
   });
 
   test('loadConfig loads default profile', async () => {
-    const config: AnthropicConfig = {
+    const config: JuglowConfig = {
       authentication: { type: 'user_oauth' },
     };
     writeTestFile('configs/default.json', JSON.stringify(config));
@@ -100,7 +100,7 @@ describe('credentials', () => {
   });
 
   test('loadConfig loads custom active profile based on active_config file', async () => {
-    const config: AnthropicConfig = {
+    const config: JuglowConfig = {
       authentication: { type: 'user_oauth' },
     };
     writeTestFile('active_config', 'mock_test_profile');
@@ -109,10 +109,10 @@ describe('credentials', () => {
     expect(await loadConfig()).toEqual(config);
   });
 
-  test('loadConfig with explicit profile arg overrides ANTHROPIC_PROFILE and active_config', async () => {
-    const fromEnv: AnthropicConfig = { authentication: { type: 'user_oauth' }, organization_id: 'env' };
-    const fromArg: AnthropicConfig = { authentication: { type: 'user_oauth' }, organization_id: 'arg' };
-    process.env['ANTHROPIC_PROFILE'] = 'env_profile';
+  test('loadConfig with explicit profile arg overrides HAIJUN_PROFILE and active_config', async () => {
+    const fromEnv: JuglowConfig = { authentication: { type: 'user_oauth' }, organization_id: 'env' };
+    const fromArg: JuglowConfig = { authentication: { type: 'user_oauth' }, organization_id: 'arg' };
+    process.env['HAIJUN_PROFILE'] = 'env_profile';
     writeTestFile('active_config', 'pointer_profile');
     writeTestFile('configs/env_profile.json', JSON.stringify(fromEnv));
     writeTestFile('configs/arg_profile.json', JSON.stringify(fromArg));
@@ -120,16 +120,16 @@ describe('credentials', () => {
     expect(await loadConfig('arg_profile')).toEqual(fromArg);
   });
 
-  test('loadConfig prefers ANTHROPIC_PROFILE environment variable over active_config file', async () => {
-    const mockTestConfig: AnthropicConfig = {
+  test('loadConfig prefers HAIJUN_PROFILE environment variable over active_config file', async () => {
+    const mockTestConfig: JuglowConfig = {
       authentication: { type: 'user_oauth' },
       organization_id: 'backup_config',
     };
-    const preferredTestProfile: AnthropicConfig = {
+    const preferredTestProfile: JuglowConfig = {
       authentication: { type: 'user_oauth' },
       organization_id: 'preferred_test_profile',
     };
-    process.env['ANTHROPIC_PROFILE'] = 'preferred_test_profile';
+    process.env['HAIJUN_PROFILE'] = 'preferred_test_profile';
     writeTestFile('active_config', 'mock_test_profile');
     writeTestFile('configs/mock_test_profile.json', JSON.stringify(mockTestConfig));
     writeTestFile('configs/preferred_test_profile.json', JSON.stringify(preferredTestProfile));
@@ -137,31 +137,31 @@ describe('credentials', () => {
     expect(await loadConfig()).toEqual(preferredTestProfile);
   });
 
-  test('loadConfig: file organization_id wins over ANTHROPIC_ORGANIZATION_ID; env fills only when absent', async () => {
+  test('loadConfig: file organization_id wins over HAIJUN_ORGANIZATION_ID; env fills only when absent', async () => {
     writeTestFile(
       'configs/default.json',
       JSON.stringify({ authentication: { type: 'user_oauth' }, organization_id: 'from_file' }),
     );
-    process.env['ANTHROPIC_ORGANIZATION_ID'] = 'from_env';
+    process.env['HAIJUN_ORGANIZATION_ID'] = 'from_env';
     expect((await loadConfig())?.organization_id).toBe('from_file');
 
     writeTestFile('configs/default.json', JSON.stringify({ authentication: { type: 'user_oauth' } }));
     expect((await loadConfig())?.organization_id).toBe('from_env');
   });
 
-  test('loadConfig: file base_url wins over ANTHROPIC_BASE_URL; env fills only when absent', async () => {
+  test('loadConfig: file base_url wins over HAIJUN_BASE_URL; env fills only when absent', async () => {
     writeTestFile(
       'configs/default.json',
       JSON.stringify({ authentication: { type: 'user_oauth' }, base_url: 'https://from-file.example.com' }),
     );
-    process.env['ANTHROPIC_BASE_URL'] = 'https://from-env.example.com';
+    process.env['HAIJUN_BASE_URL'] = 'https://from-env.example.com';
     expect((await loadConfig())?.base_url).toBe('https://from-file.example.com');
 
     writeTestFile('configs/default.json', JSON.stringify({ authentication: { type: 'user_oauth' } }));
     expect((await loadConfig())?.base_url).toBe('https://from-env.example.com');
   });
 
-  test('loadConfig: file federation_rule_id wins over ANTHROPIC_FEDERATION_RULE_ID', async () => {
+  test('loadConfig: file federation_rule_id wins over HAIJUN_FEDERATION_RULE_ID', async () => {
     writeTestFile(
       'configs/default.json',
       JSON.stringify({
@@ -169,7 +169,7 @@ describe('credentials', () => {
         authentication: { type: 'oidc_federation', federation_rule_id: 'from_file' },
       }),
     );
-    process.env['ANTHROPIC_FEDERATION_RULE_ID'] = 'from_env';
+    process.env['HAIJUN_FEDERATION_RULE_ID'] = 'from_env';
 
     const cfg = await loadConfig();
     expect(cfg?.authentication.type === 'oidc_federation' && cfg.authentication.federation_rule_id).toBe(
@@ -177,7 +177,7 @@ describe('credentials', () => {
     );
   });
 
-  test('loadConfig: file identity_token wins over ANTHROPIC_IDENTITY_TOKEN_FILE', async () => {
+  test('loadConfig: file identity_token wins over HAIJUN_IDENTITY_TOKEN_FILE', async () => {
     writeTestFile(
       'configs/default.json',
       JSON.stringify({
@@ -189,7 +189,7 @@ describe('credentials', () => {
         },
       }),
     );
-    process.env['ANTHROPIC_IDENTITY_TOKEN_FILE'] = '/from-env/token/path';
+    process.env['HAIJUN_IDENTITY_TOKEN_FILE'] = '/from-env/token/path';
 
     const cfg = await loadConfig();
     expect(cfg?.authentication.type === 'oidc_federation' && cfg.authentication.identity_token).toEqual({
@@ -198,26 +198,26 @@ describe('credentials', () => {
     });
   });
 
-  test('loadConfig does not apply ANTHROPIC_FEDERATION_RULE_ID to non-oidc_federation configs', async () => {
-    const config: AnthropicConfig = {
+  test('loadConfig does not apply HAIJUN_FEDERATION_RULE_ID to non-oidc_federation configs', async () => {
+    const config: JuglowConfig = {
       authentication: { type: 'user_oauth' },
     };
     writeTestFile('configs/default.json', JSON.stringify(config));
 
-    process.env['ANTHROPIC_FEDERATION_RULE_ID'] = 'should_be_ignored';
+    process.env['HAIJUN_FEDERATION_RULE_ID'] = 'should_be_ignored';
 
     const result = await loadConfig();
     expect(result).toEqual(config);
     expect(result?.authentication).not.toHaveProperty('federation_rule_id');
   });
 
-  test('loadConfig does not apply ANTHROPIC_IDENTITY_TOKEN_FILE to non-oidc_federation configs', async () => {
-    const config: AnthropicConfig = {
+  test('loadConfig does not apply HAIJUN_IDENTITY_TOKEN_FILE to non-oidc_federation configs', async () => {
+    const config: JuglowConfig = {
       authentication: { type: 'user_oauth' },
     };
     writeTestFile('configs/default.json', JSON.stringify(config));
 
-    process.env['ANTHROPIC_IDENTITY_TOKEN_FILE'] = '/should/be/ignored';
+    process.env['HAIJUN_IDENTITY_TOKEN_FILE'] = '/should/be/ignored';
 
     const result = await loadConfig();
     expect(result).toEqual(config);
@@ -225,11 +225,11 @@ describe('credentials', () => {
   });
 
   test('loadConfig synthesizes oidc_federation config from env vars when no config file exists', async () => {
-    process.env['ANTHROPIC_FEDERATION_RULE_ID'] = 'fdrl_01abc';
-    process.env['ANTHROPIC_ORGANIZATION_ID'] = 'org-uuid-123';
-    process.env['ANTHROPIC_IDENTITY_TOKEN_FILE'] = '/var/run/secrets/token';
-    process.env['ANTHROPIC_SERVICE_ACCOUNT_ID'] = 'svac_01abc';
-    process.env['ANTHROPIC_SCOPE'] = 'user:inference';
+    process.env['HAIJUN_FEDERATION_RULE_ID'] = 'fdrl_01abc';
+    process.env['HAIJUN_ORGANIZATION_ID'] = 'org-uuid-123';
+    process.env['HAIJUN_IDENTITY_TOKEN_FILE'] = '/var/run/secrets/token';
+    process.env['HAIJUN_SERVICE_ACCOUNT_ID'] = 'svac_01abc';
+    process.env['HAIJUN_SCOPE'] = 'user:inference';
 
     expect(await loadConfig()).toEqual({
       organization_id: 'org-uuid-123',
@@ -247,8 +247,8 @@ describe('credentials', () => {
   });
 
   test('loadConfig synthesizes minimal oidc_federation config from only required env vars', async () => {
-    process.env['ANTHROPIC_FEDERATION_RULE_ID'] = 'fdrl_01abc';
-    process.env['ANTHROPIC_ORGANIZATION_ID'] = 'org-uuid-123';
+    process.env['HAIJUN_FEDERATION_RULE_ID'] = 'fdrl_01abc';
+    process.env['HAIJUN_ORGANIZATION_ID'] = 'org-uuid-123';
 
     expect(await loadConfig()).toEqual({
       organization_id: 'org-uuid-123',
@@ -260,14 +260,14 @@ describe('credentials', () => {
   });
 
   test('loadConfig returns null when no config file and only partial oidc_federation env vars', async () => {
-    process.env['ANTHROPIC_FEDERATION_RULE_ID'] = 'fdrl_01abc';
-    // ANTHROPIC_ORGANIZATION_ID intentionally not set
+    process.env['HAIJUN_FEDERATION_RULE_ID'] = 'fdrl_01abc';
+    // HAIJUN_ORGANIZATION_ID intentionally not set
 
     expect(await loadConfig()).toBe(null);
   });
 
   test('loadConfig surfaces non-ENOENT read errors instead of falling through', async () => {
-    // Create configs/default.json as a directory → EISDIR on read
+    // Create configs/default.json as a directory â†’ EISDIR on read
     fs.mkdirSync(path.join(testFolder, 'configs', 'default.json'), { recursive: true });
 
     await expect(loadConfig()).rejects.toThrow(/failed to read config file/);
@@ -306,7 +306,7 @@ describe('credentials', () => {
   });
 
   test('loadConfig rejects profile names with path separators', async () => {
-    process.env['ANTHROPIC_PROFILE'] = '../etc';
+    process.env['HAIJUN_PROFILE'] = '../etc';
     await expect(loadConfig()).rejects.toThrow('must not contain path separators');
   });
 
@@ -315,7 +315,7 @@ describe('credentials', () => {
   });
 
   test('loadCredentials loads credentials for default profile', async () => {
-    const credentials: AnthropicCredentials = {
+    const credentials: JuglowCredentials = {
       type: 'oauth_token',
       access_token: 'foobar',
       expires_at: 123,
@@ -326,7 +326,7 @@ describe('credentials', () => {
   });
 
   test('loadCredentials loads credentials for custom active profile', async () => {
-    const credentials: AnthropicCredentials = {
+    const credentials: JuglowCredentials = {
       type: 'oauth_token',
       access_token: 'barbaz',
       expires_at: 456,
@@ -350,15 +350,15 @@ describe('credentials', () => {
   });
 
   test('loadCredentials loads file from credentials_path in config', async () => {
-    process.env['ANTHROPIC_PROFILE'] = 'credentials_path_test';
+    process.env['HAIJUN_PROFILE'] = 'credentials_path_test';
     const credentialsFilePath = path.join(testFolder, 'test-credentials.json');
-    const config: AnthropicConfig = {
+    const config: JuglowConfig = {
       organization_id: '...',
       authentication: { type: 'user_oauth', credentials_path: credentialsFilePath },
     };
     writeTestFile('configs/credentials_path_test.json', JSON.stringify(config));
 
-    const credentials: AnthropicCredentials = {
+    const credentials: JuglowCredentials = {
       type: 'oauth_token',
       access_token: 'token-123',
       expires_at: 789,

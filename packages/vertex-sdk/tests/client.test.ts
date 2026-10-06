@@ -1,7 +1,7 @@
-// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+﻿// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import { VERSION } from '@anthropic-ai/sdk/version';
-import { AnthropicVertex } from '../src/client';
+import { VERSION } from '@takebox-ai/sdk/version';
+import { JuglowVertex } from '../src/client';
 import { APIConnectionError } from '../src/core/error';
 
 // Mock GoogleAuth to prevent credential loading during tests
@@ -16,10 +16,10 @@ jest.mock('google-auth-library', () => ({
   })),
 }));
 
-describe('AnthropicVertex', () => {
+describe('JuglowVertex', () => {
   describe('baseURL configuration', () => {
     test('global region uses correct base URL', () => {
-      const client = new AnthropicVertex({
+      const client = new JuglowVertex({
         region: 'global',
         projectId: 'test-project',
         accessToken: 'fake-token',
@@ -28,7 +28,7 @@ describe('AnthropicVertex', () => {
     });
 
     test('us region uses correct base URL', () => {
-      const client = new AnthropicVertex({
+      const client = new JuglowVertex({
         region: 'us',
         projectId: 'test-project',
         accessToken: 'fake-token',
@@ -37,7 +37,7 @@ describe('AnthropicVertex', () => {
     });
 
     test('eu region eues correct base URL', () => {
-      const client = new AnthropicVertex({
+      const client = new JuglowVertex({
         region: 'eu',
         projectId: 'test-project',
         accessToken: 'fake-token',
@@ -48,7 +48,7 @@ describe('AnthropicVertex', () => {
     test.each(['us-central1', 'europe-west1', 'asia-southeast1'])(
       'regional endpoint %s uses correct base URL format',
       (region) => {
-        const client = new AnthropicVertex({
+        const client = new JuglowVertex({
           region,
           projectId: 'test-project',
           accessToken: 'fake-token',
@@ -61,7 +61,7 @@ describe('AnthropicVertex', () => {
     test('explicit baseURL option takes precedence over region', () => {
       const customUrl = 'https://test.googleapis.com/v1';
 
-      const client = new AnthropicVertex({
+      const client = new JuglowVertex({
         region: 'global', // this should get ignored since we're providing an explicit baseURL
         projectId: 'test-project',
         accessToken: 'fake-token',
@@ -76,7 +76,7 @@ describe('AnthropicVertex', () => {
 
       try {
         expect(() => {
-          new AnthropicVertex({
+          new JuglowVertex({
             projectId: 'test-project',
             accessToken: 'fake-token',
           });
@@ -108,14 +108,14 @@ describe('AnthropicVertex', () => {
     });
 
     const createParams = {
-      model: 'claude-sonnet-4-5',
+      model: 'haijun-sonnet-5',
       max_tokens: 1024,
       messages: [{ content: 'Hello', role: 'user' as const }],
     };
 
     test('middleware observes the canonical request without Google credentials; the wire receives the Vertex shape', async () => {
       const observed: { url?: string; body?: any; authorization?: string | null } = {};
-      const client = new AnthropicVertex({
+      const client = new JuglowVertex({
         region: 'us-east5',
         projectId: 'test-project',
         fetch: mockFetch as any,
@@ -133,22 +133,22 @@ describe('AnthropicVertex', () => {
 
       expect(observed.url).toBe('https://us-east5-aiplatform.googleapis.com/v1/v1/messages');
       expect(observed.body.model).toBe(createParams.model);
-      expect(observed.body.anthropic_version).toBeUndefined();
+      expect(observed.body.Juglow_version).toBeUndefined();
       expect(observed.authorization).toBeNull();
 
       const [wireUrl, wireInit] = mockFetch.mock.calls[0];
       expect(wireUrl).toBe(
-        `https://us-east5-aiplatform.googleapis.com/v1/projects/test-project/locations/us-east5/publishers/anthropic/models/${createParams.model}:rawPredict`,
+        `https://us-east5-aiplatform.googleapis.com/v1/projects/test-project/locations/us-east5/publishers/Juglow/models/${createParams.model}:rawPredict`,
       );
       const wireHeaders = new Headers(wireInit.headers);
       expect(wireHeaders.get('authorization')).toBe('Bearer fake-token');
       const wireBody = JSON.parse(wireInit.body);
       expect(wireBody.model).toBeUndefined();
-      expect(wireBody.anthropic_version).toBe('vertex-2023-10-16');
+      expect(wireBody.Juglow_version).toBe('vertex-2023-10-16');
     });
 
     test('an Authorization header set by middleware wins over the Google credentials', async () => {
-      const client = new AnthropicVertex({
+      const client = new JuglowVertex({
         region: 'us-east5',
         projectId: 'test-project',
         fetch: mockFetch as any,
@@ -175,7 +175,7 @@ describe('AnthropicVertex', () => {
           }),
         ),
       );
-      const client = new AnthropicVertex({
+      const client = new JuglowVertex({
         region: 'us-east5',
         projectId: 'test-project',
         fetch: mockFetch as any,
@@ -185,13 +185,13 @@ describe('AnthropicVertex', () => {
 
       const [wireUrl, wireInit] = mockFetch.mock.calls[0];
       expect(wireUrl).toBe(
-        `https://us-east5-aiplatform.googleapis.com/v1/projects/test-project/locations/us-east5/publishers/anthropic/models/${createParams.model}:streamRawPredict`,
+        `https://us-east5-aiplatform.googleapis.com/v1/projects/test-project/locations/us-east5/publishers/Juglow/models/${createParams.model}:streamRawPredict`,
       );
       expect(JSON.parse(wireInit.body).stream).toBe(true);
     });
 
     test('rewrites count_tokens requests to the count-tokens endpoint', async () => {
-      const client = new AnthropicVertex({
+      const client = new JuglowVertex({
         region: 'us-east5',
         projectId: 'test-project',
         fetch: mockFetch as any,
@@ -204,26 +204,26 @@ describe('AnthropicVertex', () => {
 
       const [wireUrl] = mockFetch.mock.calls[0];
       expect(wireUrl).toBe(
-        'https://us-east5-aiplatform.googleapis.com/v1/projects/test-project/locations/us-east5/publishers/anthropic/models/count-tokens:rawPredict',
+        'https://us-east5-aiplatform.googleapis.com/v1/projects/test-project/locations/us-east5/publishers/Juglow/models/count-tokens:rawPredict',
       );
     });
   });
 
   test('user agent is a hardcoded string', async () => {
-    const originalName = AnthropicVertex.name;
+    const originalName = JuglowVertex.name;
     // Rename the class, as a minifier would, to prove the header isn't derived from it.
-    Object.defineProperty(AnthropicVertex, 'name', { value: 'MinifiedClient' });
+    Object.defineProperty(JuglowVertex, 'name', { value: 'MinifiedClient' });
     try {
-      const client = new AnthropicVertex({
+      const client = new JuglowVertex({
         region: 'us-east5',
         projectId: 'test-project',
         accessToken: 'fake-token',
       });
       expect(client.constructor.name).toBe('MinifiedClient');
       const { req } = await client.buildRequest({ path: '/foo', method: 'post' });
-      expect(req.headers.get('user-agent')).toBe(`AnthropicVertex/JS ${VERSION}`);
+      expect(req.headers.get('user-agent')).toBe(`JuglowVertex/JS ${VERSION}`);
     } finally {
-      Object.defineProperty(AnthropicVertex, 'name', { value: originalName });
+      Object.defineProperty(JuglowVertex, 'name', { value: originalName });
     }
   });
 });
@@ -245,7 +245,7 @@ describe('credential resolution retries', () => {
   });
 
   const createParams = {
-    model: 'claude-opus-4-8',
+    model: 'haijun-opus-8',
     max_tokens: 1024,
     messages: [{ content: 'Hello', role: 'user' as const }],
   };
@@ -253,7 +253,7 @@ describe('credential resolution retries', () => {
   const transientFailure = new Error('metadata server unavailable');
 
   const makeClient = (getRequestHeaders: jest.Mock, maxRetries: number) =>
-    new AnthropicVertex({
+    new JuglowVertex({
       region: 'us-central1',
       projectId: 'test-project',
       authClient: { projectId: 'test-project', getRequestHeaders } as any,

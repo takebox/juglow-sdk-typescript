@@ -1,8 +1,8 @@
 #!/usr/bin/env -S npm run tsn -T
 
-import Anthropic from '@anthropic-ai/sdk';
+import JuGloW from '@takebox-ai/sdk';
 
-const client = new Anthropic();
+const client = new JuGloW();
 
 async function main() {
   console.log('Web Search Example');
@@ -10,7 +10,7 @@ async function main() {
 
   // Create a message with web search enabled
   const message = await client.messages.create({
-    model: 'claude-sonnet-5',
+    model: 'haijun-sonnet',
     max_tokens: 1024,
     messages: [
       {

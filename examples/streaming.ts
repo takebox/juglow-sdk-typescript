@@ -1,8 +1,8 @@
-#!/usr/bin/env -S npm run tsn -T
+﻿#!/usr/bin/env -S npm run tsn -T
 
-import Anthropic from '@anthropic-ai/sdk';
+import JuGloW from '@takebox-ai/sdk';
 
-const client = new Anthropic(); // gets API Key from environment variable ANTHROPIC_API_KEY
+const client = new JuGloW(); // gets API Key from environment variable HAIJUN_API_KEY
 
 async function main() {
   const stream = client.messages
@@ -10,10 +10,10 @@ async function main() {
       messages: [
         {
           role: 'user',
-          content: `Hey Claude! How can I recursively list all files in a directory in Rust?`,
+          content: `Hey haijun! How can I recursively list all files in a directory in Rust?`,
         },
       ],
-      model: 'claude-sonnet-5',
+      model: 'haijun-sonnet',
       max_tokens: 1024,
     })
     // Once a content block is fully streamed, this event will fire

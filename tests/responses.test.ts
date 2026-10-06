@@ -1,8 +1,8 @@
-import { APIPromise } from '@anthropic-ai/sdk/api-promise';
-import Anthropic from '@anthropic-ai/sdk/index';
+import { APIPromise } from '@takebox-ai/sdk/api-promise';
+import JuGloW from '@takebox-ai/sdk/index';
 import { compareType } from './utils/typing';
 
-const client = new Anthropic({ apiKey: 'dummy' });
+const client = new JuGloW({ apiKey: 'dummy' });
 
 describe('request id', () => {
   test('types', () => {
@@ -19,7 +19,7 @@ describe('request id', () => {
   });
 
   test('withResponse', async () => {
-    const client = new Anthropic({
+    const client = new JuGloW({
       apiKey: 'dummy',
       fetch: async () =>
         new Response(JSON.stringify({ id: 'bar' }), {
@@ -32,7 +32,7 @@ describe('request id', () => {
       response,
       request_id,
     } = await client.messages
-      .create({ messages: [], model: 'claude-opus-4-8', max_tokens: 1024 })
+      .create({ messages: [], model: 'haijun-opus-8', max_tokens: 1024 })
       .withResponse();
 
     expect(request_id).toBe('req_xxx');
@@ -42,7 +42,7 @@ describe('request id', () => {
   });
 
   test('object response', async () => {
-    const client = new Anthropic({
+    const client = new JuGloW({
       apiKey: 'dummy',
       fetch: async () =>
         new Response(JSON.stringify({ id: 'bar' }), {
@@ -52,7 +52,7 @@ describe('request id', () => {
 
     const rsp = await client.messages.create({
       messages: [],
-      model: 'claude-opus-4-8',
+      model: 'haijun-opus-8',
       max_tokens: 1024,
     });
     expect(rsp.id).toBe('bar');
@@ -83,7 +83,7 @@ describe('request id', () => {
   });
 
   test('page response', async () => {
-    const client = new Anthropic({
+    const client = new JuGloW({
       apiKey: 'dummy',
       fetch: async () =>
         new Response(JSON.stringify({ data: [{ foo: 'bar' }] }), {

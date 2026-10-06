@@ -1,4 +1,4 @@
-// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+﻿// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../../../core/resource';
 import * as BetaAPI from '../../beta';
@@ -41,7 +41,7 @@ export class Events extends APIResource {
         query,
         ...options,
         headers: buildHeaders([
-          { 'anthropic-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
+          { 'Juglow-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
           options?.headers,
         ]),
       },
@@ -70,7 +70,7 @@ export class Events extends APIResource {
       query,
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
         options?.headers,
       ]),
       stream: true,
@@ -87,7 +87,7 @@ export interface EventListParams extends PageCursorParams {
   /**
    * Header param: Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface EventStreamParams {
@@ -101,10 +101,10 @@ export interface EventStreamParams {
    * (`event_start`, `event_delta`) while an event is being produced, before the
    * event itself arrives. Deltas are best-effort; when the final event is produced
    * it carries the complete content. A model request that ends early (an error or
-   * interrupt) produces no final event — its terminal `span.model_request_end`
+   * interrupt) produces no final event â€” its terminal `span.model_request_end`
    * closes the preview. Accepts one or more event types to preview and may be
    * repeated: `agent.message` streams `content_delta` fragments; `agent.thinking` is
-   * start-only — a signal that the agent has begun extended thinking, concluded by
+   * start-only â€” a signal that the agent has begun extended thinking, concluded by
    * the `agent.thinking` event itself. Only previews of the requested event types
    * are sent.
    */
@@ -113,7 +113,7 @@ export interface EventStreamParams {
   /**
    * Header param: Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export declare namespace Events {

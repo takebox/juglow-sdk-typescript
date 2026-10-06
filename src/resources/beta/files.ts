@@ -1,4 +1,4 @@
-// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+﻿// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
 import * as BetaAPI from './beta';
@@ -32,7 +32,7 @@ export class Files extends APIResource {
       query,
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'files-api-2025-04-14'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'files-api-2025-04-14'].toString() },
         options?.headers,
       ]),
     });
@@ -57,7 +57,7 @@ export class Files extends APIResource {
     return this._client.delete(path`/v1/files/${fileID}?beta=true`, {
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'files-api-2025-04-14'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'files-api-2025-04-14'].toString() },
         options?.headers,
       ]),
     });
@@ -86,7 +86,7 @@ export class Files extends APIResource {
       ...options,
       headers: buildHeaders([
         {
-          'anthropic-beta': [...(betas ?? []), 'files-api-2025-04-14'].toString(),
+          'Juglow-beta': [...(betas ?? []), 'files-api-2025-04-14'].toString(),
           Accept: 'application/binary',
         },
         options?.headers,
@@ -113,7 +113,7 @@ export class Files extends APIResource {
     return this._client.get(path`/v1/files/${fileID}?beta=true`, {
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'files-api-2025-04-14'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'files-api-2025-04-14'].toString() },
         options?.headers,
       ]),
     });
@@ -139,7 +139,7 @@ export class Files extends APIResource {
           body,
           ...options,
           headers: buildHeaders([
-            { 'anthropic-beta': [...(betas ?? []), 'files-api-2025-04-14'].toString() },
+            { 'Juglow-beta': [...(betas ?? []), 'files-api-2025-04-14'].toString() },
             stainlessHelperHeaderFromFile(body.file),
             options?.headers,
           ]),
@@ -235,28 +235,28 @@ export interface FileListParams extends PageParams {
   /**
    * Header param: Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface FileDeleteParams {
   /**
    * Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface FileDownloadParams {
   /**
    * Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface FileRetrieveMetadataParams {
   /**
    * Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface FileUploadParams {
@@ -268,7 +268,7 @@ export interface FileUploadParams {
   /**
    * Header param: Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export declare namespace Files {

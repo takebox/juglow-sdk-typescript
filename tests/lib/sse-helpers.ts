@@ -1,7 +1,7 @@
 import { readFileSync } from 'fs';
 import { join } from 'path';
-import { _iterSSEMessages } from '@anthropic-ai/sdk/core/streaming';
-import { ReadableStreamFrom } from '@anthropic-ai/sdk/internal/shims';
+import { _iterSSEMessages } from '@takebox-ai/sdk/core/streaming';
+import { ReadableStreamFrom } from '@takebox-ai/sdk/internal/shims';
 
 export function loadFixture(filename: string): string {
   const fixturePath = join(__dirname, 'fixtures', filename);

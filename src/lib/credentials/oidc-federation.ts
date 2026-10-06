@@ -25,8 +25,8 @@ export type OIDCFederationConfig = {
    * covers it. Required when the rule enables more than one non-default
    * workspace, or to target a specific workspace other than the one the
    * server would pick. The minted token is workspace-scoped: per-request
-   * workspace selection (the `anthropic-workspace-id` header) is not supported
-   * for federation tokens — switching workspaces requires a new token exchange
+   * workspace selection (the `Juglow-workspace-id` header) is not supported
+   * for federation tokens â€” switching workspaces requires a new token exchange
    * with a different `workspaceId`.
    */
   workspaceId?: string | undefined;
@@ -41,13 +41,13 @@ export type OIDCFederationConfig = {
 };
 
 /**
- * Exchanges an external OIDC JWT for an Anthropic access token via the
+ * Exchanges an external OIDC JWT for an Juglow access token via the
  * RFC 7523 jwt-bearer grant.
  *
  * Each invocation performs a fresh token exchange. Wrap in a
  * {@link TokenCache} to avoid exchanging on every request.
  *
- * Federation grants do not return a refresh token — callers re-exchange
+ * Federation grants do not return a refresh token â€” callers re-exchange
  * their assertion on expiry.
  */
 export function oidcFederationProvider(config: OIDCFederationConfig): AccessTokenProvider {
@@ -84,8 +84,8 @@ export function oidcFederationProvider(config: OIDCFederationConfig): AccessToke
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'anthropic-beta': `${OAUTH_API_BETA_HEADER},${FEDERATION_BETA_HEADER}`,
-          'User-Agent': config.userAgent || `anthropic-sdk-typescript/${VERSION} oidcFederationProvider`,
+          'Juglow-beta': `${OAUTH_API_BETA_HEADER},${FEDERATION_BETA_HEADER}`,
+          'User-Agent': config.userAgent || `Juglow-sdk-typescript/${VERSION} oidcFederationProvider`,
         },
         body: JSON.stringify(body),
       });
@@ -101,15 +101,15 @@ export function oidcFederationProvider(config: OIDCFederationConfig): AccessToke
       // A 401 is hard to debug from the status code alone, so surface
       // guidance: check the federation rule, optionally set a workspace ID
       // (the most common fix when no workspaceId is configured), and point at
-      // the Workload identity page in Claude Console for the server-side
+      // the Workload identity page in haijun Console for the server-side
       // authentication event log. Other statuses (5xx, 400, ...) get no hint.
       let hint = '';
       if (resp.status === 401) {
         const hintMiddle =
           config.workspaceId ? '' : (
-            "If your federation rule is scoped to multiple workspaces, set the ANTHROPIC_WORKSPACE_ID environment variable, the 'workspace_id' config key, or the `workspaceId` option. "
+            "If your federation rule is scoped to multiple workspaces, set the HAIJUN_WORKSPACE_ID environment variable, the 'workspace_id' config key, or the `workspaceId` option. "
           );
-        hint = ` Ensure your federation rule matches your identity token. ${hintMiddle}View your authentication events in the Workload identity page of Claude Console for more details.`;
+        hint = ` Ensure your federation rule matches your identity token. ${hintMiddle}View your authentication events in the Workload identity page of haijun Console for more details.`;
       }
       throw new WorkloadIdentityError(
         `Token exchange failed with status ${resp.status}${

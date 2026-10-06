@@ -1,11 +1,11 @@
-// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+﻿// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import { APIPromise } from '@anthropic-ai/sdk/core/api-promise';
-import { APIError } from '@anthropic-ai/sdk/core/error';
+import { APIPromise } from '@takebox-ai/sdk/core/api-promise';
+import { APIError } from '@takebox-ai/sdk/core/error';
 
 import util from 'node:util';
-import Anthropic from '@anthropic-ai/sdk';
-import { APIUserAbortError } from '@anthropic-ai/sdk';
+import JuGloW from '@takebox-ai/sdk';
+import { APIUserAbortError } from '@takebox-ai/sdk';
 const defaultFetch = fetch;
 
 describe('instantiate client', () => {
@@ -21,10 +21,10 @@ describe('instantiate client', () => {
   });
 
   describe('defaultHeaders', () => {
-    const client = new Anthropic({
+    const client = new JuGloW({
       baseURL: 'http://localhost:5000/',
       defaultHeaders: { 'X-My-Default-Header': '2' },
-      apiKey: 'my-anthropic-api-key',
+      apiKey: 'my-Juglow-api-key',
     });
 
     test('they are used in the request', async () => {
@@ -55,14 +55,14 @@ describe('instantiate client', () => {
 
     beforeEach(() => {
       process.env = { ...env };
-      process.env['ANTHROPIC_LOG'] = undefined;
+      process.env['HAIJUN_LOG'] = undefined;
     });
 
     afterEach(() => {
       process.env = env;
     });
 
-    const forceAPIResponseForClient = async (client: Anthropic) => {
+    const forceAPIResponseForClient = async (client: JuGloW) => {
       await new APIPromise(
         client,
         Promise.resolve({
@@ -88,10 +88,10 @@ describe('instantiate client', () => {
         error: jest.fn(),
       };
 
-      const client = new Anthropic({
+      const client = new JuGloW({
         logger: logger,
         logLevel: 'debug',
-        apiKey: 'my-anthropic-api-key',
+        apiKey: 'my-Juglow-api-key',
       });
 
       await forceAPIResponseForClient(client);
@@ -99,7 +99,7 @@ describe('instantiate client', () => {
     });
 
     test('default logLevel is warn', async () => {
-      const client = new Anthropic({ apiKey: 'my-anthropic-api-key' });
+      const client = new JuGloW({ apiKey: 'my-Juglow-api-key' });
       expect(client.logLevel).toBe('warn');
     });
 
@@ -112,10 +112,10 @@ describe('instantiate client', () => {
         error: jest.fn(),
       };
 
-      const client = new Anthropic({
+      const client = new JuGloW({
         logger: logger,
         logLevel: 'info',
-        apiKey: 'my-anthropic-api-key',
+        apiKey: 'my-Juglow-api-key',
       });
 
       await forceAPIResponseForClient(client);
@@ -131,8 +131,8 @@ describe('instantiate client', () => {
         error: jest.fn(),
       };
 
-      process.env['ANTHROPIC_LOG'] = 'debug';
-      const client = new Anthropic({ logger: logger, apiKey: 'my-anthropic-api-key' });
+      process.env['HAIJUN_LOG'] = 'debug';
+      const client = new JuGloW({ logger: logger, apiKey: 'my-Juglow-api-key' });
       expect(client.logLevel).toBe('debug');
 
       await forceAPIResponseForClient(client);
@@ -148,11 +148,11 @@ describe('instantiate client', () => {
         error: jest.fn(),
       };
 
-      process.env['ANTHROPIC_LOG'] = 'not a log level';
-      const client = new Anthropic({ logger: logger, apiKey: 'my-anthropic-api-key' });
+      process.env['HAIJUN_LOG'] = 'not a log level';
+      const client = new JuGloW({ logger: logger, apiKey: 'my-Juglow-api-key' });
       expect(client.logLevel).toBe('warn');
       expect(warnMock).toHaveBeenCalledWith(
-        'process.env[\'ANTHROPIC_LOG\'] was set to "not a log level", expected one of ["off","error","warn","info","debug"]',
+        'process.env[\'HAIJUN_LOG\'] was set to "not a log level", expected one of ["off","error","warn","info","debug"]',
       );
     });
 
@@ -165,11 +165,11 @@ describe('instantiate client', () => {
         error: jest.fn(),
       };
 
-      process.env['ANTHROPIC_LOG'] = 'debug';
-      const client = new Anthropic({
+      process.env['HAIJUN_LOG'] = 'debug';
+      const client = new JuGloW({
         logger: logger,
         logLevel: 'off',
-        apiKey: 'my-anthropic-api-key',
+        apiKey: 'my-Juglow-api-key',
       });
 
       await forceAPIResponseForClient(client);
@@ -185,11 +185,11 @@ describe('instantiate client', () => {
         error: jest.fn(),
       };
 
-      process.env['ANTHROPIC_LOG'] = 'not a log level';
-      const client = new Anthropic({
+      process.env['HAIJUN_LOG'] = 'not a log level';
+      const client = new JuGloW({
         logger: logger,
         logLevel: 'debug',
-        apiKey: 'my-anthropic-api-key',
+        apiKey: 'my-Juglow-api-key',
       });
       expect(client.logLevel).toBe('debug');
       expect(warnMock).not.toHaveBeenCalled();
@@ -198,37 +198,37 @@ describe('instantiate client', () => {
 
   describe('defaultQuery', () => {
     test('with null query params given', () => {
-      const client = new Anthropic({
+      const client = new JuGloW({
         baseURL: 'http://localhost:5000/',
         defaultQuery: { apiVersion: 'foo' },
-        apiKey: 'my-anthropic-api-key',
+        apiKey: 'my-Juglow-api-key',
       });
       expect(client.buildURL('/foo', null)).toEqual('http://localhost:5000/foo?apiVersion=foo');
     });
 
     test('multiple default query params', () => {
-      const client = new Anthropic({
+      const client = new JuGloW({
         baseURL: 'http://localhost:5000/',
         defaultQuery: { apiVersion: 'foo', hello: 'world' },
-        apiKey: 'my-anthropic-api-key',
+        apiKey: 'my-Juglow-api-key',
       });
       expect(client.buildURL('/foo', null)).toEqual('http://localhost:5000/foo?apiVersion=foo&hello=world');
     });
 
     test('overriding with `undefined`', () => {
-      const client = new Anthropic({
+      const client = new JuGloW({
         baseURL: 'http://localhost:5000/',
         defaultQuery: { hello: 'world' },
-        apiKey: 'my-anthropic-api-key',
+        apiKey: 'my-Juglow-api-key',
       });
       expect(client.buildURL('/foo', { hello: undefined })).toEqual('http://localhost:5000/foo');
     });
   });
 
   test('custom fetch', async () => {
-    const client = new Anthropic({
+    const client = new JuGloW({
       baseURL: 'http://localhost:5000/',
-      apiKey: 'my-anthropic-api-key',
+      apiKey: 'my-Juglow-api-key',
       fetch: (url) => {
         return Promise.resolve(
           new Response(JSON.stringify({ url, custom: true }), {
@@ -244,17 +244,17 @@ describe('instantiate client', () => {
 
   test('explicit global fetch', async () => {
     // make sure the global fetch type is assignable to our Fetch type
-    const client = new Anthropic({
+    const client = new JuGloW({
       baseURL: 'http://localhost:5000/',
-      apiKey: 'my-anthropic-api-key',
+      apiKey: 'my-Juglow-api-key',
       fetch: defaultFetch,
     });
   });
 
   test('custom signal', async () => {
-    const client = new Anthropic({
+    const client = new JuGloW({
       baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
-      apiKey: 'my-anthropic-api-key',
+      apiKey: 'my-Juglow-api-key',
       fetch: (...args) => {
         return new Promise((resolve, reject) =>
           setTimeout(
@@ -284,9 +284,9 @@ describe('instantiate client', () => {
       return new Response(JSON.stringify({}), { headers: { 'Content-Type': 'application/json' } });
     };
 
-    const client = new Anthropic({
+    const client = new JuGloW({
       baseURL: 'http://localhost:5000/',
-      apiKey: 'my-anthropic-api-key',
+      apiKey: 'my-Juglow-api-key',
       fetch: testFetch,
     });
 
@@ -296,58 +296,58 @@ describe('instantiate client', () => {
 
   describe('baseUrl', () => {
     test('trailing slash', () => {
-      const client = new Anthropic({
+      const client = new JuGloW({
         baseURL: 'http://localhost:5000/custom/path/',
-        apiKey: 'my-anthropic-api-key',
+        apiKey: 'my-Juglow-api-key',
       });
       expect(client.buildURL('/foo', null)).toEqual('http://localhost:5000/custom/path/foo');
     });
 
     test('no trailing slash', () => {
-      const client = new Anthropic({
+      const client = new JuGloW({
         baseURL: 'http://localhost:5000/custom/path',
-        apiKey: 'my-anthropic-api-key',
+        apiKey: 'my-Juglow-api-key',
       });
       expect(client.buildURL('/foo', null)).toEqual('http://localhost:5000/custom/path/foo');
     });
 
     afterEach(() => {
-      process.env['ANTHROPIC_BASE_URL'] = undefined;
+      process.env['HAIJUN_BASE_URL'] = undefined;
     });
 
     test('explicit option', () => {
-      const client = new Anthropic({ baseURL: 'https://example.com', apiKey: 'my-anthropic-api-key' });
+      const client = new JuGloW({ baseURL: 'https://example.com', apiKey: 'my-Juglow-api-key' });
       expect(client.baseURL).toEqual('https://example.com');
     });
 
     test('env variable', () => {
-      process.env['ANTHROPIC_BASE_URL'] = 'https://example.com/from_env';
-      const client = new Anthropic({ apiKey: 'my-anthropic-api-key' });
+      process.env['HAIJUN_BASE_URL'] = 'https://example.com/from_env';
+      const client = new JuGloW({ apiKey: 'my-Juglow-api-key' });
       expect(client.baseURL).toEqual('https://example.com/from_env');
     });
 
     test('empty env variable', () => {
-      process.env['ANTHROPIC_BASE_URL'] = ''; // empty
-      const client = new Anthropic({ apiKey: 'my-anthropic-api-key' });
-      expect(client.baseURL).toEqual('https://api.anthropic.com');
+      process.env['HAIJUN_BASE_URL'] = ''; // empty
+      const client = new JuGloW({ apiKey: 'my-Juglow-api-key' });
+      expect(client.baseURL).toEqual('https://platform.juglow.my.id');
     });
 
     test('blank env variable', () => {
-      process.env['ANTHROPIC_BASE_URL'] = '  '; // blank
-      const client = new Anthropic({ apiKey: 'my-anthropic-api-key' });
-      expect(client.baseURL).toEqual('https://api.anthropic.com');
+      process.env['HAIJUN_BASE_URL'] = '  '; // blank
+      const client = new JuGloW({ apiKey: 'my-Juglow-api-key' });
+      expect(client.baseURL).toEqual('https://platform.juglow.my.id');
     });
 
     test('in request options', () => {
-      const client = new Anthropic({ apiKey: 'my-anthropic-api-key' });
+      const client = new JuGloW({ apiKey: 'my-Juglow-api-key' });
       expect(client.buildURL('/foo', null, 'http://localhost:5000/option')).toEqual(
         'http://localhost:5000/option/foo',
       );
     });
 
     test('in request options overridden by client options', () => {
-      const client = new Anthropic({
-        apiKey: 'my-anthropic-api-key',
+      const client = new JuGloW({
+        apiKey: 'my-Juglow-api-key',
         baseURL: 'http://localhost:5000/client',
       });
       expect(client.buildURL('/foo', null, 'http://localhost:5000/option')).toEqual(
@@ -356,8 +356,8 @@ describe('instantiate client', () => {
     });
 
     test('in request options overridden by env variable', () => {
-      process.env['ANTHROPIC_BASE_URL'] = 'http://localhost:5000/env';
-      const client = new Anthropic({ apiKey: 'my-anthropic-api-key' });
+      process.env['HAIJUN_BASE_URL'] = 'http://localhost:5000/env';
+      const client = new JuGloW({ apiKey: 'my-Juglow-api-key' });
       expect(client.buildURL('/foo', null, 'http://localhost:5000/option')).toEqual(
         'http://localhost:5000/env/foo',
       );
@@ -365,20 +365,20 @@ describe('instantiate client', () => {
   });
 
   test('maxRetries option is correctly set', () => {
-    const client = new Anthropic({ maxRetries: 4, apiKey: 'my-anthropic-api-key' });
+    const client = new JuGloW({ maxRetries: 4, apiKey: 'my-Juglow-api-key' });
     expect(client.maxRetries).toEqual(4);
 
     // default
-    const client2 = new Anthropic({ apiKey: 'my-anthropic-api-key' });
+    const client2 = new JuGloW({ apiKey: 'my-Juglow-api-key' });
     expect(client2.maxRetries).toEqual(2);
   });
 
   describe('withOptions', () => {
     test('creates a new client with overridden options', async () => {
-      const client = new Anthropic({
+      const client = new JuGloW({
         baseURL: 'http://localhost:5000/',
         maxRetries: 3,
-        apiKey: 'my-anthropic-api-key',
+        apiKey: 'my-Juglow-api-key',
       });
 
       const newClient = client.withOptions({
@@ -400,11 +400,11 @@ describe('instantiate client', () => {
     });
 
     test('inherits options from the parent client', async () => {
-      const client = new Anthropic({
+      const client = new JuGloW({
         baseURL: 'http://localhost:5000/',
         defaultHeaders: { 'X-Test-Header': 'test-value' },
         defaultQuery: { 'test-param': 'test-value' },
-        apiKey: 'my-anthropic-api-key',
+        apiKey: 'my-Juglow-api-key',
       });
 
       const newClient = client.withOptions({
@@ -419,10 +419,10 @@ describe('instantiate client', () => {
     });
 
     test('respects runtime property changes when creating new client', () => {
-      const client = new Anthropic({
+      const client = new JuGloW({
         baseURL: 'http://localhost:5000/',
         timeout: 1000,
-        apiKey: 'my-anthropic-api-key',
+        apiKey: 'my-Juglow-api-key',
       });
 
       // Modify the client properties directly after creation
@@ -451,21 +451,21 @@ describe('instantiate client', () => {
 
   test('with environment variable arguments', () => {
     // set options via env var
-    process.env['ANTHROPIC_API_KEY'] = 'my-anthropic-api-key';
-    const client = new Anthropic();
-    expect(client.apiKey).toBe('my-anthropic-api-key');
+    process.env['HAIJUN_API_KEY'] = 'my-Juglow-api-key';
+    const client = new JuGloW();
+    expect(client.apiKey).toBe('my-Juglow-api-key');
   });
 
   test('with overridden environment variable arguments', () => {
     // set options via env var
-    process.env['ANTHROPIC_API_KEY'] = 'another my-anthropic-api-key';
-    const client = new Anthropic({ apiKey: 'my-anthropic-api-key' });
-    expect(client.apiKey).toBe('my-anthropic-api-key');
+    process.env['HAIJUN_API_KEY'] = 'another my-Juglow-api-key';
+    const client = new JuGloW({ apiKey: 'my-Juglow-api-key' });
+    expect(client.apiKey).toBe('my-Juglow-api-key');
   });
 });
 
 describe('request building', () => {
-  const client = new Anthropic({ apiKey: 'my-anthropic-api-key' });
+  const client = new JuGloW({ apiKey: 'my-Juglow-api-key' });
 
   describe('custom headers', () => {
     test('handles undefined', async () => {
@@ -484,7 +484,7 @@ describe('request building', () => {
 });
 
 describe('default encoder', () => {
-  const client = new Anthropic({ apiKey: 'my-anthropic-api-key' });
+  const client = new JuGloW({ apiKey: 'my-Juglow-api-key' });
 
   class Serializable {
     toJSON() {
@@ -569,8 +569,8 @@ describe('retries', () => {
       return new Response(JSON.stringify({ a: 1 }), { headers: { 'Content-Type': 'application/json' } });
     };
 
-    const client = new Anthropic({
-      apiKey: 'my-anthropic-api-key',
+    const client = new JuGloW({
+      apiKey: 'my-Juglow-api-key',
       timeout: 10,
       fetch: testFetch,
     });
@@ -603,8 +603,8 @@ describe('retries', () => {
       return new Response(JSON.stringify({ a: 1 }), { headers: { 'Content-Type': 'application/json' } });
     };
 
-    const client = new Anthropic({
-      apiKey: 'my-anthropic-api-key',
+    const client = new JuGloW({
+      apiKey: 'my-Juglow-api-key',
       fetch: testFetch,
       maxRetries: 4,
     });
@@ -631,8 +631,8 @@ describe('retries', () => {
       capturedRequest = init;
       return new Response(JSON.stringify({ a: 1 }), { headers: { 'Content-Type': 'application/json' } });
     };
-    const client = new Anthropic({
-      apiKey: 'my-anthropic-api-key',
+    const client = new JuGloW({
+      apiKey: 'my-Juglow-api-key',
       fetch: testFetch,
       maxRetries: 4,
     });
@@ -664,8 +664,8 @@ describe('retries', () => {
       capturedRequest = init;
       return new Response(JSON.stringify({ a: 1 }), { headers: { 'Content-Type': 'application/json' } });
     };
-    const client = new Anthropic({
-      apiKey: 'my-anthropic-api-key',
+    const client = new JuGloW({
+      apiKey: 'my-Juglow-api-key',
       fetch: testFetch,
       maxRetries: 4,
       defaultHeaders: { 'X-Stainless-Retry-Count': null },
@@ -697,8 +697,8 @@ describe('retries', () => {
       capturedRequest = init;
       return new Response(JSON.stringify({ a: 1 }), { headers: { 'Content-Type': 'application/json' } });
     };
-    const client = new Anthropic({
-      apiKey: 'my-anthropic-api-key',
+    const client = new JuGloW({
+      apiKey: 'my-Juglow-api-key',
       fetch: testFetch,
       maxRetries: 4,
     });
@@ -731,7 +731,7 @@ describe('retries', () => {
       return new Response(JSON.stringify({ a: 1 }), { headers: { 'Content-Type': 'application/json' } });
     };
 
-    const client = new Anthropic({ apiKey: 'my-anthropic-api-key', fetch: testFetch });
+    const client = new JuGloW({ apiKey: 'my-Juglow-api-key', fetch: testFetch });
 
     expect(await client.request({ path: '/foo', method: 'get' })).toEqual({ a: 1 });
     expect(count).toEqual(2);
@@ -761,7 +761,7 @@ describe('retries', () => {
       return new Response(JSON.stringify({ a: 1 }), { headers: { 'Content-Type': 'application/json' } });
     };
 
-    const client = new Anthropic({ apiKey: 'my-anthropic-api-key', fetch: testFetch });
+    const client = new JuGloW({ apiKey: 'my-Juglow-api-key', fetch: testFetch });
 
     expect(await client.request({ path: '/foo', method: 'get' })).toEqual({ a: 1 });
     expect(count).toEqual(2);
@@ -775,7 +775,7 @@ describe('retries', () => {
   });
 
   test('HTTP error response exposes error type', async () => {
-    const client = new Anthropic({
+    const client = new JuGloW({
       apiKey: 'test-key',
       fetch: () =>
         Promise.resolve(
@@ -791,7 +791,7 @@ describe('retries', () => {
 
     try {
       await client.messages.create({
-        model: 'claude-sonnet-4-5-20250929',
+        model: 'haijun-sonnet-5-20250929',
         max_tokens: 1,
         messages: [{ role: 'user', content: 'hi' }],
       });

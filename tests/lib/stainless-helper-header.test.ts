@@ -1,4 +1,4 @@
-import {
+﻿import {
   SDK_HELPER_SYMBOL,
   collectStainlessHelpers,
   stainlessHelperHeader,
@@ -7,15 +7,15 @@ import {
   STAINLESS_HELPER_HEADER,
 } from '../../src/internal/stainless-helper-header';
 import { APPEND_HEADERS } from '../../src/internal/headers';
-import type { BetaMessageParam, BetaToolUnion } from '@anthropic-ai/sdk/resources/beta';
+import type { BetaMessageParam, BetaToolUnion } from '@takebox-ai/sdk/resources/beta';
 
 type WithHelper<T> = T & { [SDK_HELPER_SYMBOL]: string };
 
 describe('stainless-helpers', () => {
   describe('SDK_HELPER_SYMBOL', () => {
-    it('is a symbol for anthropic.sdk.stainlessHelper', () => {
+    it('is a symbol for Juglow.sdk.stainlessHelper', () => {
       expect(typeof SDK_HELPER_SYMBOL).toBe('symbol');
-      expect(SDK_HELPER_SYMBOL.description).toBe('anthropic.sdk.stainlessHelper');
+      expect(SDK_HELPER_SYMBOL.description).toBe('Juglow.sdk.stainlessHelper');
     });
   });
 

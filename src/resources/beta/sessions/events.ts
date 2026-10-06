@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import type { Anthropic } from '../../../client';
+import type { Juglow } from '../../../client';
 import { APIResource } from '../../../core/resource';
 import * as BetaAPI from '../beta';
 import * as SessionsAPI from './sessions';
@@ -42,7 +42,7 @@ export class Events extends APIResource {
         query,
         ...options,
         headers: buildHeaders([
-          { 'anthropic-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
+          { 'Juglow-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
           options?.headers,
         ]),
       },
@@ -83,7 +83,7 @@ export class Events extends APIResource {
       body,
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
         options?.headers,
       ]),
     });
@@ -110,7 +110,7 @@ export class Events extends APIResource {
       query,
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
         options?.headers,
       ]),
       stream: true,
@@ -127,7 +127,7 @@ export class Events extends APIResource {
    *
    * @example
    * ```ts
-   * import { betaAgentToolset20260401 } from '@anthropic-ai/sdk/tools/agent-toolset/node';
+   * import { betaAgentToolset20260401 } from '@takebox-ai/sdk/tools/agent-toolset/node';
    *
    * for await (const call of client.beta.sessions.events.toolRunner(work.data.id, {
    *   tools: [...betaAgentToolset20260401({ workdir }), myTool],
@@ -137,7 +137,7 @@ export class Events extends APIResource {
    * ```
    */
   toolRunner(sessionID: string, opts: Omit<RunnerSessionToolRunnerOptions, 'client'>): SessionToolRunner {
-    return new SessionToolRunner(sessionID, { ...opts, client: this._client as Anthropic });
+    return new SessionToolRunner(sessionID, { ...opts, client: this._client as Juglow });
   }
 }
 
@@ -508,7 +508,7 @@ export interface BetaManagedAgentsBase64ImageSource {
 }
 
 /**
- * The caller's organization or workspace cannot make model requests — out of
+ * The caller's organization or workspace cannot make model requests â€” out of
  * credits or spend limit reached. Retrying with the same credentials will not
  * succeed; the caller must resolve the billing state.
  */
@@ -791,7 +791,7 @@ export interface BetaManagedAgentsPlainTextDocumentSource {
 }
 
 /**
- * Placeholder for content withheld by Anthropic model policy.
+ * Placeholder for content withheld by Juglow model policy.
  */
 export interface BetaManagedAgentsRedactedBlock {
   type: 'redacted';
@@ -892,7 +892,7 @@ export interface BetaManagedAgentsSendSessionEvents {
 /**
  * The agent stopped because the session's tracked list cost reached its budget, or
  * because its usage includes a model with no list price (which the budget cannot
- * measure). Raise the budget to continue — or, if raising is rejected because a
+ * measure). Raise the budget to continue â€” or, if raising is rejected because a
  * model has no list price, remove the budget.
  */
 export interface BetaManagedAgentsSessionBudgetReached {
@@ -900,7 +900,7 @@ export interface BetaManagedAgentsSessionBudgetReached {
 }
 
 /**
- * Emitted when a session has been deleted. Terminates any active event stream — no
+ * Emitted when a session has been deleted. Terminates any active event stream â€” no
  * further events will be emitted for this session.
  */
 export interface BetaManagedAgentsSessionDeletedEvent {
@@ -1374,7 +1374,7 @@ export interface BetaManagedAgentsSpanModelUsage {
  * Emitted when an outcome evaluation cycle completes. Carries the verdict and
  * aggregate token usage. A verdict of `needs_revision` means another evaluation
  * cycle follows; `satisfied`, `max_iterations_reached`, `failed`, or `interrupted`
- * are terminal — no further evaluation cycles follow.
+ * are terminal â€” no further evaluation cycles follow.
  */
 export interface BetaManagedAgentsSpanOutcomeEvaluationEndEvent {
   /**
@@ -1413,7 +1413,7 @@ export interface BetaManagedAgentsSpanOutcomeEvaluationEndEvent {
    * Evaluation verdict. 'satisfied': criteria met, session goes idle.
    * 'needs_revision': criteria not met, another revision cycle follows.
    * 'max_iterations_reached': evaluation budget exhausted with criteria still unmet
-   * — one final acknowledgment turn follows before the session goes idle, but no
+   * â€” one final acknowledgment turn follows before the session goes idle, but no
    * further evaluation runs. 'failed': grader determined the rubric does not apply
    * to the deliverables. 'interrupted': user sent an interrupt while evaluation was
    * in progress.
@@ -1563,7 +1563,7 @@ export interface BetaManagedAgentsTextBlock {
  */
 export interface BetaManagedAgentsTextRubric {
   /**
-   * Rubric content. Plain text or markdown — the grader treats it as freeform text.
+   * Rubric content. Plain text or markdown â€” the grader treats it as freeform text.
    */
   content: string;
 
@@ -1575,7 +1575,7 @@ export interface BetaManagedAgentsTextRubric {
  */
 export interface BetaManagedAgentsTextRubricParams {
   /**
-   * Rubric content. Plain text or markdown — the grader treats it as freeform text.
+   * Rubric content. Plain text or markdown â€” the grader treats it as freeform text.
    * Maximum 262144 characters.
    */
   content: string;
@@ -1641,7 +1641,7 @@ export interface BetaManagedAgentsUserCustomToolResultEvent {
   /**
    * The id of the `agent.custom_tool_use` event this result corresponds to, which
    * can be found in the last `session.status_idle`
-   * [event's](https://platform.claude.com/docs/en/api/beta/sessions/events/list#beta_managed_agents_session_requires_action.event_ids)
+   * [event's](https://raw.haijun.my.id/docs/en/api/beta/sessions/events/list#beta_managed_agents_session_requires_action.event_ids)
    * `stop_reason.event_ids` field.
    */
   custom_tool_use_id: string;
@@ -1682,7 +1682,7 @@ export interface BetaManagedAgentsUserCustomToolResultEventParams {
   /**
    * The id of the `agent.custom_tool_use` event this result corresponds to, which
    * can be found in the last `session.status_idle`
-   * [event's](https://platform.claude.com/docs/en/api/beta/sessions/events/list#beta_managed_agents_session_requires_action.event_ids)
+   * [event's](https://raw.haijun.my.id/docs/en/api/beta/sessions/events/list#beta_managed_agents_session_requires_action.event_ids)
    * `stop_reason.event_ids` field.
    */
   custom_tool_use_id: string;
@@ -1762,7 +1762,7 @@ export interface BetaManagedAgentsUserDefineOutcomeEventParams {
   type: 'user.define_outcome';
 
   /**
-   * Eval→revision cycles before giving up. Default 3, max 20.
+   * Evalâ†’revision cycles before giving up. Default 3, max 20.
    */
   max_iterations?: number | null;
 }
@@ -1866,7 +1866,7 @@ export interface BetaManagedAgentsUserToolConfirmationEvent {
   /**
    * The id of the `agent.tool_use` or `agent.mcp_tool_use` event this result
    * corresponds to, which can be found in the last `session.status_idle`
-   * [event's](https://platform.claude.com/docs/en/api/beta/sessions/events/list#beta_managed_agents_session_requires_action.event_ids)
+   * [event's](https://raw.haijun.my.id/docs/en/api/beta/sessions/events/list#beta_managed_agents_session_requires_action.event_ids)
    * `stop_reason.event_ids` field.
    */
   tool_use_id: string;
@@ -1904,7 +1904,7 @@ export interface BetaManagedAgentsUserToolConfirmationEventParams {
   /**
    * The id of the `agent.tool_use` or `agent.mcp_tool_use` event this result
    * corresponds to, which can be found in the last `session.status_idle`
-   * [event's](https://platform.claude.com/docs/en/api/beta/sessions/events/list#beta_managed_agents_session_requires_action.event_ids)
+   * [event's](https://raw.haijun.my.id/docs/en/api/beta/sessions/events/list#beta_managed_agents_session_requires_action.event_ids)
    * `stop_reason.event_ids` field.
    */
   tool_use_id: string;
@@ -1927,7 +1927,7 @@ export interface BetaManagedAgentsUserToolResultEventParams {
   /**
    * The id of the `agent.tool_use` event this result corresponds to, which can be
    * found in the last `session.status_idle`
-   * [event's](https://platform.claude.com/docs/en/api/beta/sessions/events/list#beta_managed_agents_session_requires_action.event_ids)
+   * [event's](https://raw.haijun.my.id/docs/en/api/beta/sessions/events/list#beta_managed_agents_session_requires_action.event_ids)
    * `stop_reason.event_ids` field.
    */
   tool_use_id: string;
@@ -1991,7 +1991,7 @@ export interface EventListParams extends PageCursorParams {
   /**
    * Header param: Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface EventSendParams {
@@ -2003,7 +2003,7 @@ export interface EventSendParams {
   /**
    * Header param: Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface EventStreamParams {
@@ -2012,10 +2012,10 @@ export interface EventStreamParams {
    * (`event_start`, `event_delta`) while an event is being produced, before the
    * event itself arrives. Deltas are best-effort; when the final event is produced
    * it carries the complete content. A model request that ends early (an error or
-   * interrupt) produces no final event — its terminal `span.model_request_end`
+   * interrupt) produces no final event â€” its terminal `span.model_request_end`
    * closes the preview. Accepts one or more event types to preview and may be
    * repeated: `agent.message` streams `content_delta` fragments; `agent.thinking` is
-   * start-only — a signal that the agent has begun extended thinking, concluded by
+   * start-only â€” a signal that the agent has begun extended thinking, concluded by
    * the `agent.thinking` event itself. Only previews of the requested event types
    * are sent.
    */
@@ -2024,7 +2024,7 @@ export interface EventStreamParams {
   /**
    * Header param: Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export { SessionToolRunner, type SessionToolRunnerOptions } from '../../../lib/tools/SessionToolRunner';

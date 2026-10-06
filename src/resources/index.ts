@@ -1,9 +1,9 @@
-// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+﻿// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 export * from './shared';
 export {
   Beta,
-  type AnthropicBeta,
+  type JuglowBeta,
   type BetaAPIError,
   type BetaAuthenticationError,
   type BetaBillingError,

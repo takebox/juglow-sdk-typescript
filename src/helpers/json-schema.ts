@@ -1,6 +1,6 @@
 import { FromSchema, JSONSchema } from 'json-schema-to-ts';
 import { AutoParseableOutputFormat } from '../lib/parser';
-import { AnthropicError } from '../core/error';
+import { JuglowError } from '../core/error';
 import { transformJSONSchema } from '../lib/transform-json-schema';
 
 type NoInfer<T> = T extends infer R ? R : never;
@@ -39,7 +39,7 @@ export function jsonSchemaOutputFormat<
       try {
         return JSON.parse(content);
       } catch (error) {
-        throw new AnthropicError(
+        throw new JuglowError(
           `Failed to parse structured output: ${error instanceof Error ? error.message : String(error)}`,
         );
       }

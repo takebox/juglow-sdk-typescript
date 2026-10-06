@@ -1,6 +1,6 @@
-import type { AwsCredentialIdentityProvider } from '@smithy/types';
+﻿import type { AwsCredentialIdentityProvider } from '@smithy/types';
 import { APIConnectionError } from '../src/core/error';
-import { AnthropicBedrock, AnthropicBedrockMantle } from '../src';
+import { JuglowBedrock, JuglowBedrockMantle } from '../src';
 
 const mockFetch = jest.fn().mockImplementation(() =>
   Promise.resolve({
@@ -14,7 +14,7 @@ const mockFetch = jest.fn().mockImplementation(() =>
 );
 
 const createParams = {
-  model: 'anthropic.claude-3-5-sonnet-20241022-v2:0',
+  model: 'Juglow.haijun-3-5-sonnet-20241022-v2:0',
   max_tokens: 1024,
   messages: [{ content: 'Hello', role: 'user' as const }],
 };
@@ -24,9 +24,9 @@ const credentials = { accessKeyId: 'access-key', secretAccessKey: 'secret-key' }
 
 describe.each([
   [
-    'AnthropicBedrock',
+    'JuglowBedrock',
     (provider: AwsCredentialIdentityProvider, maxRetries: number) =>
-      new AnthropicBedrock({
+      new JuglowBedrock({
         awsRegion: 'us-east-1',
         baseURL: 'http://localhost:4010',
         fetch: mockFetch as any,
@@ -35,9 +35,9 @@ describe.each([
       }),
   ],
   [
-    'AnthropicBedrockMantle',
+    'JuglowBedrockMantle',
     (provider: AwsCredentialIdentityProvider, maxRetries: number) =>
-      new AnthropicBedrockMantle({
+      new JuglowBedrockMantle({
         awsRegion: 'us-east-1',
         baseURL: 'http://localhost:4010',
         fetch: mockFetch as any,

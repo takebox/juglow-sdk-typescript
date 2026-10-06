@@ -1,0 +1,3 @@
+export { Tracks, type BetaDeletedTrack, type BetaTrack, type BetaTrackSource, type TrackCreateParams, type TrackRetrieveParams, type TrackListParams, type TrackDeleteParams, type BetaTracksPageCursor, } from "./tracks.js";
+export { Versions, type BetaDeletedTrackVersion, type BetaTrackVersion, type VersionCreateParams, type VersionRetrieveParams, type VersionListParams, type VersionDeleteParams, type VersionDownloadParams, type BetaTrackVersionsPageCursor, } from "./versions.js";
+//# sourceMappingURL=index.d.ts.map

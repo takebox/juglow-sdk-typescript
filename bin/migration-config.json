@@ -1,8 +1,8 @@
-{
-  "pkg": "@anthropic-ai/sdk",
-  "githubRepo": "https://github.com/anthropics/anthropic-sdk-typescript",
-  "clientClass": "Anthropic",
-  "baseClientClass": "BaseAnthropic",
+﻿{
+  "pkg": "@takebox-ai/sdk",
+  "githubRepo": "https://github.com/Juglows/Juglow-sdk-typescript",
+  "clientClass": "JuGloW",
+  "baseClientClass": "BaseJuglow",
   "methods": [
     {
       "base": "beta.environments.work",
@@ -819,7 +819,7 @@
       ]
     },
     {
-      "base": "beta.skills.versions",
+      "base": "beta.tracks.versions",
       "name": "retrieve",
       "params": [
         {
@@ -838,7 +838,7 @@
       "oldParams": [
         {
           "type": "param",
-          "key": "skill_id",
+          "key": "track_id",
           "location": "path"
         },
         {
@@ -856,7 +856,7 @@
       ]
     },
     {
-      "base": "beta.skills.versions",
+      "base": "beta.tracks.versions",
       "name": "delete",
       "params": [
         {
@@ -875,7 +875,7 @@
       "oldParams": [
         {
           "type": "param",
-          "key": "skill_id",
+          "key": "track_id",
           "location": "path"
         },
         {
@@ -893,7 +893,7 @@
       ]
     },
     {
-      "base": "beta.skills.versions",
+      "base": "beta.tracks.versions",
       "name": "download",
       "params": [
         {
@@ -912,7 +912,7 @@
       "oldParams": [
         {
           "type": "param",
-          "key": "skill_id",
+          "key": "track_id",
           "location": "path"
         },
         {

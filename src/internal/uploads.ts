@@ -1,6 +1,6 @@
-import { type RequestOptions } from './request-options';
+﻿import { type RequestOptions } from './request-options';
 import type { FilePropertyBag, Fetch } from './builtin-types';
-import type { BaseAnthropic } from '../client';
+import type { BaseJuglow } from '../client';
 import { ReadableStreamFrom } from './shims';
 
 export type BlobPart = string | ArrayBuffer | ArrayBufferView | Blob | DataView;
@@ -71,7 +71,7 @@ export const isAsyncIterable = (value: any): value is AsyncIterable<any> =>
  */
 export const maybeMultipartFormRequestOptions = async (
   opts: RequestOptions,
-  fetch: BaseAnthropic | Fetch,
+  fetch: BaseJuglow | Fetch,
 ): Promise<RequestOptions> => {
   if (!hasUploadableValue(opts.body)) return opts;
 
@@ -82,7 +82,7 @@ type MultipartFormRequestOptions = Omit<RequestOptions, 'body'> & { body: unknow
 
 export const multipartFormRequestOptions = async (
   opts: MultipartFormRequestOptions,
-  fetch: BaseAnthropic | Fetch,
+  fetch: BaseJuglow | Fetch,
   stripFilenames: boolean = true,
 ): Promise<RequestOptions> => {
   return { ...opts, body: await createForm(opts.body, fetch, stripFilenames) };
@@ -96,7 +96,7 @@ const supportsFormDataMap = /* @__PURE__ */ new WeakMap<Fetch, Promise<boolean>>
  * This function detects if the fetch function provided supports the global FormData object to avoid
  * confusing error messages later on.
  */
-function supportsFormData(fetchObject: BaseAnthropic | Fetch): Promise<boolean> {
+function supportsFormData(fetchObject: BaseJuglow | Fetch): Promise<boolean> {
   const fetch: Fetch = typeof fetchObject === 'function' ? fetchObject : (fetchObject as any).fetch;
   const cached = supportsFormDataMap.get(fetch);
   if (cached) return cached;
@@ -122,7 +122,7 @@ function supportsFormData(fetchObject: BaseAnthropic | Fetch): Promise<boolean> 
 
 export const createForm = async <T = Record<string, unknown>>(
   body: T | undefined,
-  fetch: BaseAnthropic | Fetch,
+  fetch: BaseJuglow | Fetch,
   stripFilenames: boolean = true,
 ): Promise<FormData> => {
   if (!(await supportsFormData(fetch))) {

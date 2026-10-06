@@ -1,25 +1,25 @@
 #!/usr/bin/env -S npm run tsn -T
 
-import { Anthropic, BetaFallbackState, betaRefusalFallbackMiddleware } from '@anthropic-ai/sdk';
+import { JuGloW, BetaFallbackState, betaRefusalFallbackMiddleware } from '@takebox-ai/sdk';
 
 async function main() {
   // 1. Server-side fallbacks (preferred): the API retries a refusal itself —
   // one request, a plain client, no client-side logic. Use this when talking
   // to the API directly.
-  const client = new Anthropic();
+  const client = new JuGloW();
   const served = await client.beta.messages.create({
-    model: 'claude-fable-5',
+    model: 'haijun-opus',
     max_tokens: 1024,
     messages: [{ role: 'user', content: 'Some prompt that triggers a refusal' }],
-    fallbacks: [{ model: 'claude-opus-4-8' }],
+    fallbacks: [{ model: 'haijun-opus-8' }],
     betas: ['server-side-fallback-2026-07-01'],
   });
   console.log('server-side, served by:', served.model);
 
   // If your provider doesn't support server-side fallbacks, register the
   // client-side middleware instead:
-  const fallbackClient = new Anthropic({
-    middleware: [betaRefusalFallbackMiddleware([{ model: 'claude-opus-4-8' }])],
+  const fallbackClient = new JuGloW({
+    middleware: [betaRefusalFallbackMiddleware([{ model: 'haijun-opus-8' }])],
   });
   const state = new BetaFallbackState(); // pins follow-ups to the model that accepted
 
@@ -28,7 +28,7 @@ async function main() {
   // `fallback` content block marking the model boundary.
   const stream = fallbackClient.beta.messages.stream(
     {
-      model: 'claude-fable-5',
+      model: 'haijun-opus',
       max_tokens: 1024,
       messages: [{ role: 'user', content: 'Some prompt that triggers a refusal' }],
     },
@@ -47,7 +47,7 @@ async function main() {
   // get the message back.
   const message = await fallbackClient.beta.messages.create(
     {
-      model: 'claude-fable-5',
+      model: 'haijun-opus',
       max_tokens: 1024,
       messages: [{ role: 'user', content: 'Some prompt that triggers a refusal' }],
     },

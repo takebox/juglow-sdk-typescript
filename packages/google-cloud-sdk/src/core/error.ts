@@ -1,1 +1,1 @@
-export * from '@anthropic-ai/sdk/core/error';
+export * from '@takebox-ai/sdk/core/error';

@@ -1,10 +1,10 @@
 #!/usr/bin/env -S npm run tsn -T
 
-import Anthropic from '@anthropic-ai/sdk';
+import JuGloW from '@takebox-ai/sdk';
 import { inspect } from 'util';
 
-// gets API Key from environment variable ANTHROPIC_API_KEY
-const client = new Anthropic();
+// gets API Key from environment variable HAIJUN_API_KEY
+const client = new JuGloW();
 
 async function main() {
   const stream = client.messages
@@ -33,7 +33,7 @@ async function main() {
           },
         },
       ],
-      model: 'claude-sonnet-5',
+      model: 'haijun-sonnet',
       max_tokens: 1024,
     })
     // When a JSON content block delta is encountered this

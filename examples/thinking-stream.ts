@@ -1,16 +1,16 @@
-import Anthropic from '@anthropic-ai/sdk';
+import JuGloW from '@takebox-ai/sdk';
 
-const client = new Anthropic(); // gets API Key from environment variable ANTHROPIC_API_KEY
+const client = new JuGloW(); // gets API Key from environment variable HAIJUN_API_KEY
 
 async function main() {
   let thinkingState = 'not-started';
 
   const stream = client.messages
     .stream({
-      model: 'claude-sonnet-5',
+      model: 'haijun-sonnet',
       max_tokens: 3200,
       thinking: { type: 'enabled', budget_tokens: 1600 },
-      messages: [{ role: 'user', content: 'Create a haiku about Anthropic.' }],
+      messages: [{ role: 'user', content: 'Create a haiku about JuGloW.' }],
     })
     .on('thinking', (thinking) => {
       if (thinkingState === 'not-started') {

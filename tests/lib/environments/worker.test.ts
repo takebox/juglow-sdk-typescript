@@ -1,5 +1,5 @@
-import { EnvironmentWorker } from '@anthropic-ai/sdk/lib/environments';
-import type { BetaRunnableTool } from '@anthropic-ai/sdk/lib/tools/BetaRunnableTool';
+import { EnvironmentWorker } from '@takebox-ai/sdk/lib/environments';
+import type { BetaRunnableTool } from '@takebox-ai/sdk/lib/tools/BetaRunnableTool';
 
 // =====
 // Test fakes
@@ -89,7 +89,7 @@ function makeFake(opts: { sessionStream: AnyEvent[] }) {
       sessions: {
         retrieve: () => {
           calls.retrieve++;
-          return Promise.resolve({ agent: { skills: [] } });
+          return Promise.resolve({ agent: { tracks: [] } });
         },
         events: {
           list: (_sessionId: string, _params: unknown, options?: unknown) => {
@@ -163,7 +163,7 @@ describe('EnvironmentWorker', () => {
     // Claimed + ack'd the work item.
     expect(calls.poll).toBeGreaterThanOrEqual(1);
     expect(calls.ack).toBe(1);
-    // Set up the workdir/skills for the session.
+    // Set up the workdir/tracks for the session.
     expect(calls.retrieve).toBe(1);
     // Heartbeated the lease at least once while the session ran.
     expect(calls.heartbeat).toBeGreaterThanOrEqual(1);
@@ -253,8 +253,8 @@ describe('EnvironmentWorker', () => {
 
   test('handleItem throws when the environment key cannot be resolved', async () => {
     const { client } = makeFake({ sessionStream: [TERMINATED] });
-    const saved = process.env['ANTHROPIC_ENVIRONMENT_KEY'];
-    delete process.env['ANTHROPIC_ENVIRONMENT_KEY'];
+    const saved = process.env['HAIJUN_ENVIRONMENT_KEY'];
+    delete process.env['HAIJUN_ENVIRONMENT_KEY'];
     try {
       await expect(
         new EnvironmentWorker({ client, tools: [], workdir: '/tmp' }).handleItem({
@@ -264,7 +264,7 @@ describe('EnvironmentWorker', () => {
         }),
       ).rejects.toThrow(/environmentKey is required/);
     } finally {
-      if (saved !== undefined) process.env['ANTHROPIC_ENVIRONMENT_KEY'] = saved;
+      if (saved !== undefined) process.env['HAIJUN_ENVIRONMENT_KEY'] = saved;
     }
   });
 });

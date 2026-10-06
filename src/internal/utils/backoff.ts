@@ -13,7 +13,7 @@ export function is4xx(e: unknown): boolean {
 /**
  * True for a 4xx that the core client's retry policy would *not* retry, i.e. a
  * permanent client error. 408 (request timeout), 409 (lock timeout) and 429
- * (rate limit) are retryable for the base client (`Anthropic.shouldRetry`), so
+ * (rate limit) are retryable for the base client (`Juglow.shouldRetry`), so
  * they are not treated as fatal here — keeping helper retry behaviour aligned
  * with the rest of the SDK.
  */

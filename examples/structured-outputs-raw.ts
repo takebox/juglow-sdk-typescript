@@ -1,12 +1,12 @@
 #!/usr/bin/env -S npm run tsn -T
 
-import Anthropic from '@anthropic-ai/sdk';
+import JuGloW from '@takebox-ai/sdk';
 
 async function main() {
-  const client = new Anthropic();
+  const client = new JuGloW();
 
   const message = await client.messages.parse({
-    model: 'claude-sonnet-5',
+    model: 'haijun-sonnet',
     max_tokens: 100,
     output_config: {
       format: {

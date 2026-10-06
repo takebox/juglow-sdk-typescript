@@ -1,4 +1,4 @@
-import { HttpRequest } from '@smithy/protocol-http';
+﻿import { HttpRequest } from '@smithy/protocol-http';
 
 const mockSign = jest.fn().mockImplementation((request: HttpRequest) => {
   return Promise.resolve({ headers: request.headers });
@@ -13,9 +13,9 @@ jest.mock('@smithy/signature-v4', () => ({
 import { getAuthHeaders, AuthProps } from '../src/core/auth';
 
 const baseProps: AuthProps = {
-  url: 'https://aws-external-anthropic.us-east-1.api.aws/v1/messages',
+  url: 'https://aws-external-Juglow.us-east-1.api.aws/v1/messages',
   regionName: 'us-east-1',
-  serviceName: 'anthropic-api',
+  serviceName: 'Juglow-api',
   awsAccessKey: 'test-key',
   awsSecretAccessKey: 'test-secret',
   awsSessionToken: null,
@@ -40,13 +40,13 @@ describe('getAuthHeaders', () => {
     expect(signed.method).toBe('POST');
     expect(signed.path).toBe('/v1/messages');
     expect(signed.query).toEqual({});
-    expect(signed.headers['host']).toBe('aws-external-anthropic.us-east-1.api.aws');
+    expect(signed.headers['host']).toBe('aws-external-Juglow.us-east-1.api.aws');
   });
 
   test('signs request with query parameters', async () => {
     await getAuthHeaders(baseReq, {
       ...baseProps,
-      url: 'https://aws-external-anthropic.us-east-1.api.aws/v1/messages?beta=true',
+      url: 'https://aws-external-Juglow.us-east-1.api.aws/v1/messages?beta=true',
     });
 
     expect(mockSign).toHaveBeenCalledTimes(1);
@@ -59,7 +59,7 @@ describe('getAuthHeaders', () => {
   test('signs request with multiple query parameters', async () => {
     await getAuthHeaders(baseReq, {
       ...baseProps,
-      url: 'https://aws-external-anthropic.us-east-1.api.aws/v1/messages?beta=true&version=2',
+      url: 'https://aws-external-Juglow.us-east-1.api.aws/v1/messages?beta=true&version=2',
     });
 
     expect(mockSign).toHaveBeenCalledTimes(1);
@@ -78,7 +78,7 @@ describe('getAuthHeaders', () => {
   });
 
   test('includes body in signed request', async () => {
-    const body = JSON.stringify({ model: 'claude-opus-4-8', messages: [] });
+    const body = JSON.stringify({ model: 'haijun-opus-8', messages: [] });
     await getAuthHeaders({ ...baseReq, body }, baseProps);
 
     const signed: HttpRequest = mockSign.mock.calls[0]![0];

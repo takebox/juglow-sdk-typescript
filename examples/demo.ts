@@ -1,18 +1,18 @@
-#!/usr/bin/env -S npm run tsn -T
+﻿#!/usr/bin/env -S npm run tsn -T
 
-import Anthropic from '@anthropic-ai/sdk';
+import JuGloW from '@takebox-ai/sdk';
 
-const client = new Anthropic(); // gets API Key from environment variable ANTHROPIC_API_KEY
+const client = new JuGloW(); // gets API Key from environment variable HAIJUN_API_KEY
 
 async function main() {
   const result = await client.messages.create({
     messages: [
       {
         role: 'user',
-        content: 'Hey Claude!?',
+        content: 'Hey haijun!?',
       },
     ],
-    model: 'claude-sonnet-5',
+    model: 'haijun-sonnet',
     max_tokens: 1024,
   });
   console.dir(result);

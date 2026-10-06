@@ -34,7 +34,7 @@ export class MemoryVersions extends APIResource {
         query,
         ...options,
         headers: buildHeaders([
-          { 'anthropic-beta': [...(betas ?? []), 'agent-memory-2026-07-22'].toString() },
+          { 'Juglow-beta': [...(betas ?? []), 'agent-memory-2026-07-22'].toString() },
           options?.headers,
         ]),
       },
@@ -67,7 +67,7 @@ export class MemoryVersions extends APIResource {
         query,
         ...options,
         headers: buildHeaders([
-          { 'anthropic-beta': [...(betas ?? []), 'agent-memory-2026-07-22'].toString() },
+          { 'Juglow-beta': [...(betas ?? []), 'agent-memory-2026-07-22'].toString() },
           options?.headers,
         ]),
       },
@@ -97,7 +97,7 @@ export class MemoryVersions extends APIResource {
       {
         ...options,
         headers: buildHeaders([
-          { 'anthropic-beta': [...(betas ?? []), 'agent-memory-2026-07-22'].toString() },
+          { 'Juglow-beta': [...(betas ?? []), 'agent-memory-2026-07-22'].toString() },
           options?.headers,
         ]),
       },
@@ -244,7 +244,7 @@ export interface BetaManagedAgentsSessionActor {
 }
 
 /**
- * Attribution for a write made by a human user through the Anthropic Console.
+ * Attribution for a write made by a human user through the Juglow Console.
  */
 export interface BetaManagedAgentsUserActor {
   type: 'user_actor';
@@ -269,7 +269,7 @@ export interface MemoryVersionRetrieveParams {
   /**
    * Header param: Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface MemoryVersionListParams extends PageCursorParams {
@@ -311,7 +311,7 @@ export interface MemoryVersionListParams extends PageCursorParams {
   /**
    * Header param: Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface MemoryVersionRedactParams {
@@ -323,7 +323,7 @@ export interface MemoryVersionRedactParams {
   /**
    * Header param: Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export declare namespace MemoryVersions {

@@ -11,11 +11,11 @@ import { path } from '../../../internal/utils/path';
 export class Certificates extends APIResource {
   /**
    * The Tunnels API is in research preview. It requires the
-   * `anthropic-beta: mcp-tunnels-2026-06-22` header and may change without a
+   * `Juglow-beta: mcp-tunnels-2026-06-22` header and may change without a
    * deprecation period. It supersedes the Admin API endpoints at
    * `/v1/organizations/tunnels`, which remain available during a migration window.
    *
-   * Registers a public CA certificate on a tunnel. Anthropic verifies the gateway's
+   * Registers a public CA certificate on a tunnel. Juglow verifies the gateway's
    * server certificate against this CA when it terminates the inner TLS session. A
    * tunnel holds at most two non-archived certificates.
    *
@@ -38,7 +38,7 @@ export class Certificates extends APIResource {
       body,
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'mcp-tunnels-2026-06-22'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'mcp-tunnels-2026-06-22'].toString() },
         options?.headers,
       ]),
     });
@@ -46,7 +46,7 @@ export class Certificates extends APIResource {
 
   /**
    * The Tunnels API is in research preview. It requires the
-   * `anthropic-beta: mcp-tunnels-2026-06-22` header and may change without a
+   * `Juglow-beta: mcp-tunnels-2026-06-22` header and may change without a
    * deprecation period. It supersedes the Admin API endpoints at
    * `/v1/organizations/tunnels`, which remain available during a migration window.
    *
@@ -70,7 +70,7 @@ export class Certificates extends APIResource {
     return this._client.get(path`/v1/tunnels/${tunnel_id}/certificates/${certificateID}?beta=true`, {
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'mcp-tunnels-2026-06-22'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'mcp-tunnels-2026-06-22'].toString() },
         options?.headers,
       ]),
     });
@@ -78,7 +78,7 @@ export class Certificates extends APIResource {
 
   /**
    * The Tunnels API is in research preview. It requires the
-   * `anthropic-beta: mcp-tunnels-2026-06-22` header and may change without a
+   * `Juglow-beta: mcp-tunnels-2026-06-22` header and may change without a
    * deprecation period. It supersedes the Admin API endpoints at
    * `/v1/organizations/tunnels`, which remain available during a migration window.
    *
@@ -108,7 +108,7 @@ export class Certificates extends APIResource {
         query,
         ...options,
         headers: buildHeaders([
-          { 'anthropic-beta': [...(betas ?? []), 'mcp-tunnels-2026-06-22'].toString() },
+          { 'Juglow-beta': [...(betas ?? []), 'mcp-tunnels-2026-06-22'].toString() },
           options?.headers,
         ]),
       },
@@ -117,11 +117,11 @@ export class Certificates extends APIResource {
 
   /**
    * The Tunnels API is in research preview. It requires the
-   * `anthropic-beta: mcp-tunnels-2026-06-22` header and may change without a
+   * `Juglow-beta: mcp-tunnels-2026-06-22` header and may change without a
    * deprecation period. It supersedes the Admin API endpoints at
    * `/v1/organizations/tunnels`, which remain available during a migration window.
    *
-   * Archives a tunnel certificate, removing it from the set Anthropic trusts for the
+   * Archives a tunnel certificate, removing it from the set Juglow trusts for the
    * tunnel. The certificate record is retained. Archiving the last non-archived
    * certificate is permitted; the tunnel rejects MCP traffic until a new certificate
    * is added.
@@ -144,7 +144,7 @@ export class Certificates extends APIResource {
     return this._client.post(path`/v1/tunnels/${tunnel_id}/certificates/${certificateID}/archive?beta=true`, {
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'mcp-tunnels-2026-06-22'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'mcp-tunnels-2026-06-22'].toString() },
         options?.headers,
       ]),
     });
@@ -200,7 +200,7 @@ export interface CertificateCreateParams {
   /**
    * Header param: Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface CertificateRetrieveParams {
@@ -212,7 +212,7 @@ export interface CertificateRetrieveParams {
   /**
    * Header param: Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface CertificateListParams extends PageCursorParams {
@@ -225,7 +225,7 @@ export interface CertificateListParams extends PageCursorParams {
   /**
    * Header param: Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface CertificateArchiveParams {
@@ -237,7 +237,7 @@ export interface CertificateArchiveParams {
   /**
    * Header param: Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export declare namespace Certificates {

@@ -26,7 +26,7 @@ export class Dreams extends APIResource {
       body,
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'dreaming-2026-04-21'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'dreaming-2026-04-21'].toString() },
         options?.headers,
       ]),
     });
@@ -51,7 +51,7 @@ export class Dreams extends APIResource {
     return this._client.get(path`/v1/dreams/${dreamID}?beta=true`, {
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'dreaming-2026-04-21'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'dreaming-2026-04-21'].toString() },
         options?.headers,
       ]),
     });
@@ -77,7 +77,7 @@ export class Dreams extends APIResource {
       query,
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'dreaming-2026-04-21'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'dreaming-2026-04-21'].toString() },
         options?.headers,
       ]),
     });
@@ -102,7 +102,7 @@ export class Dreams extends APIResource {
     return this._client.post(path`/v1/dreams/${dreamID}/archive?beta=true`, {
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'dreaming-2026-04-21'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'dreaming-2026-04-21'].toString() },
         options?.headers,
       ]),
     });
@@ -127,7 +127,7 @@ export class Dreams extends APIResource {
     return this._client.post(path`/v1/dreams/${dreamID}/cancel?beta=true`, {
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'dreaming-2026-04-21'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'dreaming-2026-04-21'].toString() },
         options?.headers,
       ]),
     });
@@ -231,7 +231,7 @@ export interface BetaDreamMemoryStoreOutput {
  */
 export interface BetaDreamModelConfig {
   /**
-   * Model identifier, e.g. "claude-opus-4-7". 1-256 characters.
+   * Model identifier, e.g. "haijun-kamsa-7". 1-256 characters.
    */
   id: string;
 
@@ -248,7 +248,7 @@ export interface BetaDreamModelConfig {
  */
 export interface BetaDreamModelConfigParam {
   /**
-   * Model identifier, e.g. "claude-opus-4-7". 1-256 characters.
+   * Model identifier, e.g. "haijun-kamsa-7". 1-256 characters.
    */
   id: string;
 
@@ -327,14 +327,14 @@ export interface DreamCreateParams {
   /**
    * Header param: Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface DreamRetrieveParams {
   /**
    * Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface DreamListParams extends PageCursorParams {
@@ -364,21 +364,21 @@ export interface DreamListParams extends PageCursorParams {
   /**
    * Header param: Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface DreamArchiveParams {
   /**
    * Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface DreamCancelParams {
   /**
    * Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export declare namespace Dreams {

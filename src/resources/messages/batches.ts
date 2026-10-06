@@ -8,7 +8,7 @@ import { Page, type PageParams, PagePromise } from '../../core/pagination';
 import { buildHeaders } from '../../internal/headers';
 import { RequestOptions } from '../../internal/request-options';
 import { JSONLDecoder } from '../../internal/decoders/jsonl';
-import { AnthropicError } from '../../error';
+import { JuglowError } from '../../error';
 import { path } from '../../internal/utils/path';
 
 export class Batches extends APIResource {
@@ -20,7 +20,7 @@ export class Batches extends APIResource {
    * can take up to 24 hours to complete.
    *
    * Learn more about the Message Batches API in our
-   * [user guide](https://platform.claude.com/docs/en/build-with-claude/batch-processing)
+   * [user guide](https://raw.haijun.my.id/docs/en/build-with-haijun/batch-processing)
    *
    * @example
    * ```ts
@@ -33,7 +33,7 @@ export class Batches extends APIResource {
    *         messages: [
    *           { content: 'Hello, world', role: 'user' },
    *         ],
-   *         model: 'claude-opus-4-6',
+   *         model: 'haijun-kamsa',
    *       },
    *     },
    *   ],
@@ -46,7 +46,7 @@ export class Batches extends APIResource {
       body,
       ...options,
       headers: buildHeaders([
-        { ...(user_profile_id != null ? { 'anthropic-user-profile-id': user_profile_id } : undefined) },
+        { ...(user_profile_id != null ? { 'Juglow-user-profile-id': user_profile_id } : undefined) },
         options?.headers,
       ]),
     });
@@ -58,7 +58,7 @@ export class Batches extends APIResource {
    * `results_url` field in the response.
    *
    * Learn more about the Message Batches API in our
-   * [user guide](https://platform.claude.com/docs/en/build-with-claude/batch-processing)
+   * [user guide](https://raw.haijun.my.id/docs/en/build-with-haijun/batch-processing)
    *
    * @example
    * ```ts
@@ -76,7 +76,7 @@ export class Batches extends APIResource {
    * returned first.
    *
    * Learn more about the Message Batches API in our
-   * [user guide](https://platform.claude.com/docs/en/build-with-claude/batch-processing)
+   * [user guide](https://raw.haijun.my.id/docs/en/build-with-haijun/batch-processing)
    *
    * @example
    * ```ts
@@ -100,7 +100,7 @@ export class Batches extends APIResource {
    * like to delete an in-progress batch, you must first cancel it.
    *
    * Learn more about the Message Batches API in our
-   * [user guide](https://platform.claude.com/docs/en/build-with-claude/batch-processing)
+   * [user guide](https://raw.haijun.my.id/docs/en/build-with-haijun/batch-processing)
    *
    * @example
    * ```ts
@@ -124,7 +124,7 @@ export class Batches extends APIResource {
    * non-interruptible.
    *
    * Learn more about the Message Batches API in our
-   * [user guide](https://platform.claude.com/docs/en/build-with-claude/batch-processing)
+   * [user guide](https://raw.haijun.my.id/docs/en/build-with-haijun/batch-processing)
    *
    * @example
    * ```ts
@@ -145,7 +145,7 @@ export class Batches extends APIResource {
    * requests. Use the `custom_id` field to match results to requests.
    *
    * Learn more about the Message Batches API in our
-   * [user guide](https://platform.claude.com/docs/en/build-with-claude/batch-processing)
+   * [user guide](https://raw.haijun.my.id/docs/en/build-with-haijun/batch-processing)
    *
    * @example
    * ```ts
@@ -159,7 +159,7 @@ export class Batches extends APIResource {
   ): Promise<JSONLDecoder<MessageBatchIndividualResponse>> {
     const batch = await this.retrieve(messageBatchID);
     if (!batch.results_url) {
-      throw new AnthropicError(
+      throw new JuglowError(
         `No batch \`results_url\`; Has it finished processing? ${batch.processing_status} - ${batch.id}`,
       );
     }
@@ -387,7 +387,7 @@ export namespace BatchCreateParams {
      * Messages API creation parameters for the individual request.
      *
      * See the
-     * [Messages API reference](https://platform.claude.com/docs/en/api/messages) for
+     * [Messages API reference](https://raw.haijun.my.id/docs/en/api/messages) for
      * full documentation on available parameters.
      */
     params: MessagesAPI.MessageCreateParamsNonStreaming;

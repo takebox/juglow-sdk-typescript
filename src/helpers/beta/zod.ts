@@ -1,6 +1,6 @@
 import { transformJSONSchema } from '../..//lib/transform-json-schema';
 import * as z from 'zod/v4';
-import { AnthropicError } from '../../core/error';
+import { JuglowError } from '../../core/error';
 import { AutoParseableBetaOutputFormat } from '../../lib/beta-parser';
 import { BetaRunnableTool, BetaToolRunContext, Promisable } from '../../lib/tools/BetaRunnableTool';
 import { BetaToolResultContentBlockParam } from '../../resources/beta';
@@ -29,7 +29,7 @@ export function betaZodOutputFormat<ZodInput extends z.ZodType>(
       const output = zodObject.safeParse(JSON.parse(content));
 
       if (!output.success) {
-        throw new AnthropicError(
+        throw new JuglowError(
           `Failed to parse structured output: ${output.error.message} cause: ${output.error.issues}`,
         );
       }

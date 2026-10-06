@@ -1,17 +1,17 @@
-#!/usr/bin/env -S npm run tsn -T
+﻿#!/usr/bin/env -S npm run tsn -T
 
-import Anthropic from '@anthropic-ai/sdk';
+import JuGloW from '@takebox-ai/sdk';
 import fs from 'fs';
 import path from 'path';
 
-const client = new Anthropic();
+const client = new JuGloW();
 
 const MCP_SERVER_NAME = 'github';
 const MCP_SERVER_URL = 'https://api.githubcopilot.com/mcp/';
 
 const PROMPT =
-  'Hi! List every tool and skill you have access to, grouped by where they ' +
-  'came from (built-in toolset, custom tool, MCP server, skills).';
+  'Hi! List every tool and track you have access to, grouped by where they ' +
+  'came from (built-in toolset, custom tool, MCP server, tracks).';
 
 async function main() {
   const githubToken = process.env['GITHUB_TOKEN'];
@@ -41,18 +41,18 @@ async function main() {
   });
   console.log('Created credential:', credential.id);
 
-  // Upload a custom skill
-  const skillContent = fs.readFileSync(path.join(__dirname, 'greeting-SKILL.md'));
-  const skill = await client.beta.skills.create({
+  // Upload a custom track
+  const trackContent = fs.readFileSync(path.join(__dirname, 'greeting-TRACK.md'));
+  const track = await client.beta.tracks.create({
     display_title: `comprehensive-greeting-${Date.now()}`,
-    files: [new File([skillContent], 'greeting/SKILL.md', { type: 'text/markdown' })],
+    files: [new File([trackContent], 'greeting/TRACK.md', { type: 'text/markdown' })],
   });
-  console.log('Created skill:', skill.id);
+  console.log('Created track:', track.id);
 
   // Create v1 of the agent with the built-in toolset, an MCP server, and a custom tool
   const agentV1 = await client.beta.agents.create({
     name: 'comprehensive-example-agent',
-    model: 'claude-sonnet-5',
+    model: 'haijun-sonnet',
     system: 'You are a helpful assistant.',
     mcp_servers: [{ type: 'url', name: MCP_SERVER_NAME, url: MCP_SERVER_URL }],
     tools: [
@@ -72,12 +72,12 @@ async function main() {
   });
   console.log('Created agent v1:', agentV1.id);
 
-  // Patch the agent to v2 by adding skills; each update bumps the version
+  // Patch the agent to v2 by adding tracks; each update bumps the version
   const agent = await client.beta.agents.update(agentV1.id, {
     version: agentV1.version,
-    skills: [
-      { type: 'custom', skill_id: skill.id },
-      { type: 'anthropic', skill_id: 'xlsx' },
+    tracks: [
+      { type: 'custom', track_id: track.id },
+      { type: 'Juglow', track_id: 'xlsx' },
     ],
   });
   console.log('Patched agent to v2:', agent.id);

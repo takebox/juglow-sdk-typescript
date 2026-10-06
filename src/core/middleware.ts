@@ -1,11 +1,11 @@
-import type { BaseAnthropic } from '../client';
+import type { BaseJuglow } from '../client';
 import type { Fetch } from '../internal/builtin-types';
 import { castToError, isAbortError } from '../internal/errors';
 import { addRequestID } from '../internal/parse';
 import type { FinalRequestOptions } from '../internal/request-options';
 import { defaultLogger, loggerFor, type Logger } from '../internal/utils/log';
 import type { APIRequest } from './api';
-import { AnthropicError, APIConnectionError, RetryableError } from './error';
+import { JuglowError, APIConnectionError, RetryableError } from './error';
 import { Stream } from './streaming';
 
 /**
@@ -31,11 +31,11 @@ export interface MiddlewareContext {
 
   /**
    * The client's logger, pre-filtered to the client's configured log level
-   * (the `logLevel` client option or the `ANTHROPIC_LOG` environment
+   * (the `logLevel` client option or the `HAIJUN_LOG` environment
    * variable). Calls below the active level are no-ops, so it's always safe
    * to call; with no logger configured it writes to the global `console`.
    *
-   * Values are logged as-is — when logging request or response headers,
+   * Values are logged as-is â€” when logging request or response headers,
    * redact credentials (`authorization`, `x-api-key`, `cookie`) the way the
    * SDK's own logs do.
    *
@@ -56,7 +56,7 @@ export interface MiddlewareContext {
    *   property attached like SDK return values, and anything else resolves
    *   to the body text.
    * - For streaming requests ({@link options}`.stream`), resolves immediately
-   *   with a {@link Stream} reading an independent copy of the response body —
+   *   with a {@link Stream} reading an independent copy of the response body â€”
    *   iterating it doesn't consume the client's events, and aborting or
    *   `break`ing out of it doesn't cancel the underlying request. Each call
    *   returns a fresh `Stream` (streams are single-consumer, so they aren't
@@ -89,13 +89,13 @@ export interface MiddlewareContext {
  * or replace the response, short-circuit by returning a `Response` without
  * calling `next`, or call `next` multiple times to implement custom retries.
  *
- * Middleware always observes the canonical Anthropic-shaped request — e.g.
+ * Middleware always observes the canonical Juglow-shaped request â€” e.g.
  * `POST .../v1/messages` with `model` and `stream` in the JSON body and
- * `anthropic-beta` as a header — with the client's logical credentials
+ * `Juglow-beta` as a header â€” with the client's logical credentials
  * (`x-api-key` / `Authorization`) applied. On clients for third-party
- * backends (Bedrock, Vertex, Foundry), the backend adaptation — URL and body
+ * backends (Bedrock, Vertex, Foundry), the backend adaptation â€” URL and body
  * rewriting, request signing (e.g. AWS SigV4), and response normalization
- * (e.g. AWS EventStream to SSE) — runs *inside* `next`, so middleware behaves
+ * (e.g. AWS EventStream to SSE) â€” runs *inside* `next`, so middleware behaves
  * identically on every backend: mutating the request is safe (signing covers
  * the final body), and streaming responses are observed as SSE. Each `next()`
  * call re-runs the adaptation, so custom retries re-sign from scratch. To
@@ -113,7 +113,7 @@ export interface MiddlewareContext {
  *
  * Middleware errors are **not** retried apart from connection-level errors:
  * timeout/abort errors, errors thrown by `fetch()`, and `APIConnectionError`s
- * or `RetryableError`s — thrown directly or present anywhere in an error's
+ * or `RetryableError`s â€” thrown directly or present anywhere in an error's
  * `cause` chain. Retryable middleware errors still propagate to the caller
  * as-is once retries are exhausted.
  *
@@ -126,7 +126,7 @@ export interface MiddlewareContext {
  *   return response;
  * };
  *
- * const client = new Anthropic({ middleware: [logger] });
+ * const client = new Juglow({ middleware: [logger] });
  * ```
  */
 export type Middleware = (
@@ -152,7 +152,7 @@ export function isFetchOriginError(err: unknown): boolean {
 /**
  * Whether an error thrown by middleware should stay on the SDK's
  * connection-error retry policy: fetch-origin, abort, `APIConnectionError`, or
- * `RetryableError` — checked through the error's `cause` chain.
+ * `RetryableError` â€” checked through the error's `cause` chain.
  */
 export function isRetryableError(err: unknown): boolean {
   const seen = new Set<unknown>(); // guard against `cause` cycles
@@ -181,18 +181,18 @@ export function isRetryableError(err: unknown): boolean {
  * chain. The chain is composed per call, so mutations of a `middleware`
  * array are picked up by later requests.
  *
- * `options` — the SDK request options behind this call, when there are any —
+ * `options` â€” the SDK request options behind this call, when there are any â€”
  * is surfaced to middleware as `ctx.options` and drives `ctx.parse`.
  *
  * `client` supplies `ctx.logger` (the client's level-filtered logger);
  * without it, `ctx.logger` falls back to the client defaults: `console`,
- * filtered to `ANTHROPIC_LOG` or `'warn'`.
+ * filtered to `HAIJUN_LOG` or `'warn'`.
  */
 export function wrapFetchWithMiddleware(
   fetchFn: Fetch,
   middleware: readonly Middleware[],
   options?: FinalRequestOptions | undefined,
-  client?: BaseAnthropic | undefined,
+  client?: BaseJuglow | undefined,
 ): Fetch {
   return async (url, init = {}) => {
     if (middleware.length === 0) {
@@ -216,7 +216,7 @@ export function wrapFetchWithMiddleware(
     // Catch a footgun before the client tries to read the body itself and
     // fails with a confusing low-level stream error.
     if (response.bodyUsed || response.body?.locked) {
-      throw new AnthropicError(
+      throw new JuglowError(
         'middleware consumed the response body; use response.clone() to inspect it, ' +
           'or return new Response(body, response) to consume and replace it',
       );
@@ -230,7 +230,7 @@ export function wrapFetchWithMiddleware(
  */
 function createMiddlewareContext(
   options: FinalRequestOptions | undefined,
-  client: BaseAnthropic | undefined,
+  client: BaseJuglow | undefined,
 ): MiddlewareContext {
   // Keyed on the Response so each `next()` call's response (e.g. with custom
   // retries, or a middleware swapping in a replacement) parses independently,
@@ -267,13 +267,13 @@ async function parseMiddlewareResponse(
   options: FinalRequestOptions | undefined,
 ): Promise<unknown> {
   if (response.bodyUsed || response.body?.locked) {
-    throw new AnthropicError(
+    throw new JuglowError(
       'cannot ctx.parse() a response whose body was already consumed; ' +
         'call ctx.parse() instead of reading the body, or read via response.clone()',
     );
   }
 
-  // Error responses parse as JSON/text below — the SDK only stream-parses
+  // Error responses parse as JSON/text below â€” the SDK only stream-parses
   // successful responses, and middleware typically wants the error body.
   if (options?.stream && response.ok) {
     // A fresh controller rather than the request's own: aborting (or
@@ -312,7 +312,7 @@ export function applyMiddleware(
   fetchFn: Fetch,
   middleware: readonly Middleware[],
   options?: FinalRequestOptions | undefined,
-  client?: BaseAnthropic | undefined,
+  client?: BaseJuglow | undefined,
 ): MiddlewareNext {
   // use undefined this binding; fetch errors if bound to something else in browser/cloudflare
   let next: MiddlewareNext = async ({ url, ...init }) => {

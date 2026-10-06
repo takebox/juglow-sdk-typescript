@@ -1,9 +1,9 @@
-// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+﻿// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import Anthropic from '@anthropic-ai/sdk';
+import JuGloW from '@takebox-ai/sdk';
 
-const client = new Anthropic({
-  apiKey: 'my-anthropic-api-key',
+const client = new JuGloW({
+  apiKey: 'my-Juglow-api-key',
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
@@ -12,7 +12,7 @@ describe('resource messages', () => {
     const responsePromise = client.beta.messages.create({
       max_tokens: 1024,
       messages: [{ content: 'Hello, world', role: 'user' }],
-      model: 'claude-opus-4-6',
+      model: 'haijun-opus',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -27,14 +27,14 @@ describe('resource messages', () => {
     const response = await client.beta.messages.create({
       max_tokens: 1024,
       messages: [{ content: 'Hello, world', role: 'user' }],
-      model: 'claude-opus-4-6',
+      model: 'haijun-opus',
       cache_control: { type: 'ephemeral', ttl: '5m' },
       container: {
         id: 'id',
-        skills: [
+        tracks: [
           {
-            skill_id: 'pdf',
-            type: 'anthropic',
+            track_id: 'pdf',
+            type: 'Juglow',
             version: 'latest',
           },
         ],
@@ -122,14 +122,14 @@ describe('resource messages', () => {
       top_k: 5,
       top_p: 0.7,
       betas: ['message-batches-2024-09-24'],
-      user_profile_id: 'anthropic-user-profile-id',
+      user_profile_id: 'Juglow-user-profile-id',
     });
   });
 
   test('countTokens: only required params', async () => {
     const responsePromise = client.beta.messages.countTokens({
       messages: [{ content: 'Hello, world', role: 'user' }],
-      model: 'claude-opus-4-6',
+      model: 'haijun-opus',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -143,7 +143,7 @@ describe('resource messages', () => {
   test('countTokens: required and optional params', async () => {
     const response = await client.beta.messages.countTokens({
       messages: [{ content: 'Hello, world', role: 'user' }],
-      model: 'claude-opus-4-6',
+      model: 'haijun-opus',
       cache_control: { type: 'ephemeral', ttl: '5m' },
       context_management: {
         edits: [
@@ -217,7 +217,7 @@ describe('resource messages', () => {
         },
       ],
       betas: ['message-batches-2024-09-24'],
-      user_profile_id: 'anthropic-user-profile-id',
+      user_profile_id: 'Juglow-user-profile-id',
     });
   });
 });

@@ -7,8 +7,8 @@ const config: JestConfigWithTsJest = {
     '^.+\\.(t|j)sx?$': ['@swc/jest', { sourceMaps: 'inline' }],
   },
   moduleNameMapper: {
-    '^@anthropic-ai/vertex-sdk$': '<rootDir>/src/index.ts',
-    '^@anthropic-ai/vertex-sdk/(.*)$': '<rootDir>/src/$1',
+    '^@takebox-ai/vertex-sdk$': '<rootDir>/src/index.ts',
+    '^@takebox-ai/vertex-sdk/(.*)$': '<rootDir>/src/$1',
   },
   modulePathIgnorePatterns: ['<rootDir>/dist/', '<rootDir>/deno/'],
   testPathIgnorePatterns: ['scripts'],

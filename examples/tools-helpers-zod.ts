@@ -1,10 +1,10 @@
 #!/usr/bin/env -S npm run tsn -T
 
-import Anthropic from '@anthropic-ai/sdk';
-import { betaZodTool } from '@anthropic-ai/sdk/helpers/beta/zod';
+import JuGloW from '@takebox-ai/sdk';
+import { betaZodTool } from '@takebox-ai/sdk/helpers/beta/zod';
 import { z } from 'zod/v4';
 
-const client = new Anthropic();
+const client = new JuGloW();
 
 async function main() {
   const message = await client.beta.messages.toolRunner({
@@ -26,7 +26,7 @@ async function main() {
         },
       }),
     ],
-    model: 'claude-sonnet-5',
+    model: 'haijun-sonnet',
     max_tokens: 1024,
     // the maximum number of iterations to run the tool
     max_iterations: 10,

@@ -1,9 +1,9 @@
-import Anthropic, { BetaFallbackState, type Middleware } from '@anthropic-ai/sdk';
+﻿import JuGloW, { BetaFallbackState, type Middleware } from '@takebox-ai/sdk';
 import { mockFetch } from '../../lib/mock-fetch';
-import { BetaMessage, BetaContentBlock, BetaToolResultBlockParam } from '@anthropic-ai/sdk/resources/beta';
-import { BetaRunnableTool, BetaToolRunContext } from '@anthropic-ai/sdk/lib/tools/BetaRunnableTool';
-import { BetaRawMessageStreamEvent, ToolError } from '@anthropic-ai/sdk/resources/beta/messages';
-import { Fetch } from '@anthropic-ai/sdk/internal/builtin-types';
+import { BetaMessage, BetaContentBlock, BetaToolResultBlockParam } from '@takebox-ai/sdk/resources/beta';
+import { BetaRunnableTool, BetaToolRunContext } from '@takebox-ai/sdk/lib/tools/BetaRunnableTool';
+import { BetaRawMessageStreamEvent, ToolError } from '@takebox-ai/sdk/resources/beta/messages';
+import { Fetch } from '@takebox-ai/sdk/internal/builtin-types';
 import { SDK_HELPER_SYMBOL } from '../../../src/internal/stainless-helper-header';
 
 const weatherTool: BetaRunnableTool<{ location: string }> = {
@@ -209,14 +209,14 @@ function betaMessageToStreamEvents(message: BetaMessage): BetaRawMessageStreamEv
 
 // Overloaded setupTest function for both streaming and non-streaming
 interface SetupTestResult<Stream extends boolean> {
-  runner: Anthropic.Beta.Messages.BetaToolRunner<Stream>;
+  runner: JuGloW.Beta.Messages.BetaToolRunner<Stream>;
   fetch: ReturnType<typeof mockFetch>['fetch'];
   handleRequest: (fetch: Fetch) => void;
   handleAssistantMessage: (...content: BetaContentBlock[]) => BetaMessage;
   handleAssistantMessageStream: (...content: BetaContentBlock[]) => BetaMessage;
 }
 
-type ToolRunnerParams = Parameters<typeof Anthropic.Beta.Messages.prototype.toolRunner>[0];
+type ToolRunnerParams = Parameters<typeof JuGloW.Beta.Messages.prototype.toolRunner>[0];
 
 function setupTest(params?: Partial<ToolRunnerParams> & { stream?: false }): SetupTestResult<false>;
 function setupTest(params: Partial<ToolRunnerParams> & { stream: true }): SetupTestResult<true>;
@@ -233,7 +233,7 @@ function setupTest(params: Partial<ToolRunnerParams> = {}): SetupTestResult<bool
       type: 'message',
       role: 'assistant',
       content,
-      model: 'claude-3-5-sonnet-latest',
+      model: 'haijun-3-5-sonnet-latest',
       stop_details: null,
       stop_reason,
       stop_sequence: null,
@@ -273,7 +273,7 @@ function setupTest(params: Partial<ToolRunnerParams> = {}): SetupTestResult<bool
       type: 'message',
       role: 'assistant',
       content,
-      model: 'claude-3-5-sonnet-latest',
+      model: 'haijun-3-5-sonnet-latest',
       stop_details: null,
       stop_reason,
       stop_sequence: null,
@@ -300,11 +300,11 @@ function setupTest(params: Partial<ToolRunnerParams> = {}): SetupTestResult<bool
     return message;
   };
 
-  const client = new Anthropic({ apiKey: 'test-key', fetch: fetch, maxRetries: 0 });
+  const client = new JuGloW({ apiKey: 'test-key', fetch: fetch, maxRetries: 0 });
 
   const runnerParams: ToolRunnerParams = {
     messages: params.messages || [{ role: 'user', content: 'What is the weather?' }],
-    model: params.model || 'claude-3-5-sonnet-latest',
+    model: params.model || 'haijun-3-5-sonnet-latest',
     max_tokens: params.max_tokens || 1000,
     tools: params.tools || [weatherTool],
     ...params,
@@ -831,13 +831,13 @@ describe('ToolRunner', () => {
       const { runner, handleRequest } = setupTest({ tools: [spiedWeatherTool] });
 
       // A refusal can cut the turn off after a tool_use block has started, so the message can
-      // carry a tool_use with partial input — the runner must treat the turn as terminal.
+      // carry a tool_use with partial input â€” the runner must treat the turn as terminal.
       const refusalMessage: BetaMessage = {
         id: 'msg_refusal',
         type: 'message',
         role: 'assistant',
         content: [getWeatherToolUse('SF')],
-        model: 'claude-3-5-sonnet-latest',
+        model: 'haijun-3-5-sonnet-latest',
         stop_details: null,
         stop_reason: 'refusal',
         stop_sequence: null,
@@ -884,11 +884,11 @@ describe('ToolRunner', () => {
   });
 
   describe('tool_removal / tool_addition via param-mutation APIs', () => {
-    const removeWeatherTool: Anthropic.Beta.Messages.BetaMessageParam = {
+    const removeWeatherTool: JuGloW.Beta.Messages.BetaMessageParam = {
       role: 'system',
       content: [{ type: 'tool_removal', tool: { type: 'tool_reference', name: 'getWeather' } }],
     };
-    const addWeatherTool: Anthropic.Beta.Messages.BetaMessageParam = {
+    const addWeatherTool: JuGloW.Beta.Messages.BetaMessageParam = {
       role: 'system',
       content: [{ type: 'tool_addition', tool: { type: 'tool_reference', name: 'getWeather' } }],
     };
@@ -1000,7 +1000,7 @@ describe('ToolRunner', () => {
       await expectEvent(iterator);
       runner.pushMessages({ role: 'assistant', content: firstTurn.content }, addWeatherTool, {
         role: 'user',
-        content: 'It is available again — check SF.',
+        content: 'It is available again â€” check SF.',
       });
 
       handleAssistantMessage(getWeatherToolUse('SF'));
@@ -1052,7 +1052,7 @@ describe('ToolRunner', () => {
       // Update parameters before iteration
       runner.setMessagesParams({
         messages: [{ role: 'user', content: 'Updated message' }],
-        model: 'claude-3-5-sonnet-latest',
+        model: 'haijun-3-5-sonnet-latest',
         max_tokens: 200,
         tools: [weatherTool],
       });
@@ -1253,7 +1253,7 @@ describe('ToolRunner', () => {
   describe('x-stainless-helper header', () => {
     it('includes BetaToolRunner for regular tools', async () => {
       const { fetch, handleRequest } = mockFetch();
-      const client = new Anthropic({ apiKey: 'test-key', fetch, maxRetries: 0 });
+      const client = new JuGloW({ apiKey: 'test-key', fetch, maxRetries: 0 });
 
       let capturedHelperHeader: string | null = null;
       handleRequest(async (_req, init) => {
@@ -1267,7 +1267,7 @@ describe('ToolRunner', () => {
             type: 'message',
             role: 'assistant',
             content: [{ type: 'text', text: 'Hello!' }],
-            model: 'claude-3-5-sonnet-latest',
+            model: 'haijun-3-5-sonnet-latest',
             stop_reason: 'end_turn',
             stop_sequence: null,
             container: null,
@@ -1279,7 +1279,7 @@ describe('ToolRunner', () => {
       });
 
       const runner = client.beta.messages.toolRunner({
-        model: 'claude-3-5-sonnet-latest',
+        model: 'haijun-3-5-sonnet-latest',
         max_tokens: 1000,
         messages: [{ role: 'user', content: 'Hello' }],
         tools: [weatherTool],
@@ -1292,7 +1292,7 @@ describe('ToolRunner', () => {
 
     it('includes BetaToolRunner,mcpTool for MCP tools', async () => {
       const { fetch, handleRequest } = mockFetch();
-      const client = new Anthropic({ apiKey: 'test-key', fetch, maxRetries: 0 });
+      const client = new JuGloW({ apiKey: 'test-key', fetch, maxRetries: 0 });
 
       // Create an MCP-like tool with the symbol
       const mcpMarkedTool = {
@@ -1317,7 +1317,7 @@ describe('ToolRunner', () => {
             type: 'message',
             role: 'assistant',
             content: [{ type: 'text', text: 'Hello!' }],
-            model: 'claude-3-5-sonnet-latest',
+            model: 'haijun-3-5-sonnet-latest',
             stop_reason: 'end_turn',
             stop_sequence: null,
             container: null,
@@ -1329,7 +1329,7 @@ describe('ToolRunner', () => {
       });
 
       const runner = client.beta.messages.toolRunner({
-        model: 'claude-3-5-sonnet-latest',
+        model: 'haijun-3-5-sonnet-latest',
         max_tokens: 1000,
         messages: [{ role: 'user', content: 'Hello' }],
         tools: [mcpMarkedTool],
@@ -1342,7 +1342,7 @@ describe('ToolRunner', () => {
 
     it('includes only BetaToolRunner,mcpTool once for multiple MCP tools', async () => {
       const { fetch, handleRequest } = mockFetch();
-      const client = new Anthropic({ apiKey: 'test-key', fetch, maxRetries: 0 });
+      const client = new JuGloW({ apiKey: 'test-key', fetch, maxRetries: 0 });
 
       // Create multiple MCP-like tools
       const mcpTool1 = {
@@ -1373,7 +1373,7 @@ describe('ToolRunner', () => {
             type: 'message',
             role: 'assistant',
             content: [{ type: 'text', text: 'Hello!' }],
-            model: 'claude-3-5-sonnet-latest',
+            model: 'haijun-3-5-sonnet-latest',
             stop_reason: 'end_turn',
             stop_sequence: null,
             container: null,
@@ -1385,7 +1385,7 @@ describe('ToolRunner', () => {
       });
 
       const runner = client.beta.messages.toolRunner({
-        model: 'claude-3-5-sonnet-latest',
+        model: 'haijun-3-5-sonnet-latest',
         max_tokens: 1000,
         messages: [{ role: 'user', content: 'Hello' }],
         tools: [mcpTool1, mcpTool2],
@@ -1399,7 +1399,7 @@ describe('ToolRunner', () => {
 
     it('includes BetaToolRunner,mcpTool for mixed tools (MCP and regular)', async () => {
       const { fetch, handleRequest } = mockFetch();
-      const client = new Anthropic({ apiKey: 'test-key', fetch, maxRetries: 0 });
+      const client = new JuGloW({ apiKey: 'test-key', fetch, maxRetries: 0 });
 
       const mcpMarkedTool = {
         type: 'custom' as const,
@@ -1421,7 +1421,7 @@ describe('ToolRunner', () => {
             type: 'message',
             role: 'assistant',
             content: [{ type: 'text', text: 'Hello!' }],
-            model: 'claude-3-5-sonnet-latest',
+            model: 'haijun-3-5-sonnet-latest',
             stop_reason: 'end_turn',
             stop_sequence: null,
             container: null,
@@ -1433,7 +1433,7 @@ describe('ToolRunner', () => {
       });
 
       const runner = client.beta.messages.toolRunner({
-        model: 'claude-3-5-sonnet-latest',
+        model: 'haijun-3-5-sonnet-latest',
         max_tokens: 1000,
         messages: [{ role: 'user', content: 'Hello' }],
         tools: [weatherTool, mcpMarkedTool], // Mix of regular and MCP tools
@@ -1447,7 +1447,7 @@ describe('ToolRunner', () => {
 
     it('preserves x-stainless-helper header when signal is passed via constructor options', async () => {
       const { fetch, handleRequest } = mockFetch();
-      const client = new Anthropic({ apiKey: 'test-key', fetch, maxRetries: 0 });
+      const client = new JuGloW({ apiKey: 'test-key', fetch, maxRetries: 0 });
 
       const controller = new AbortController();
       let capturedHelperHeader: string | null = null;
@@ -1462,7 +1462,7 @@ describe('ToolRunner', () => {
             type: 'message',
             role: 'assistant',
             content: [{ type: 'text', text: 'Hello!' }],
-            model: 'claude-3-5-sonnet-latest',
+            model: 'haijun-3-5-sonnet-latest',
             stop_reason: 'end_turn',
             stop_sequence: null,
             container: null,
@@ -1475,7 +1475,7 @@ describe('ToolRunner', () => {
 
       const runner = client.beta.messages.toolRunner(
         {
-          model: 'claude-3-5-sonnet-latest',
+          model: 'haijun-3-5-sonnet-latest',
           max_tokens: 1000,
           messages: [{ role: 'user', content: 'Hello' }],
           tools: [weatherTool],
@@ -1489,7 +1489,7 @@ describe('ToolRunner', () => {
 
     it('includes message helpers when using marked messages', async () => {
       const { fetch, handleRequest } = mockFetch();
-      const client = new Anthropic({ apiKey: 'test-key', fetch, maxRetries: 0 });
+      const client = new JuGloW({ apiKey: 'test-key', fetch, maxRetries: 0 });
 
       // Create a message marked with the symbol (simulating mcpMessage)
       const markedMessage = {
@@ -1510,7 +1510,7 @@ describe('ToolRunner', () => {
             type: 'message',
             role: 'assistant',
             content: [{ type: 'text', text: 'Hello!' }],
-            model: 'claude-3-5-sonnet-latest',
+            model: 'haijun-3-5-sonnet-latest',
             stop_reason: 'end_turn',
             stop_sequence: null,
             container: null,
@@ -1522,7 +1522,7 @@ describe('ToolRunner', () => {
       });
 
       const runner = client.beta.messages.toolRunner({
-        model: 'claude-3-5-sonnet-latest',
+        model: 'haijun-3-5-sonnet-latest',
         max_tokens: 1000,
         messages: [markedMessage],
         tools: [weatherTool],
@@ -1554,7 +1554,7 @@ describe('ToolRunner', () => {
       };
 
       const { fetch, handleRequest } = mockFetch();
-      const client = new Anthropic({ apiKey: 'test-key', fetch, maxRetries: 0 });
+      const client = new JuGloW({ apiKey: 'test-key', fetch, maxRetries: 0 });
       const controller = new AbortController();
 
       // First response: tool use
@@ -1565,7 +1565,7 @@ describe('ToolRunner', () => {
             type: 'message',
             role: 'assistant',
             content: [{ type: 'tool_use', id: 'tool_1', name: 'signalTool', input: { value: 'hello' } }],
-            model: 'claude-3-5-sonnet-latest',
+            model: 'haijun-3-5-sonnet-latest',
             stop_reason: 'tool_use',
             stop_sequence: null,
             container: null,
@@ -1584,7 +1584,7 @@ describe('ToolRunner', () => {
             type: 'message',
             role: 'assistant',
             content: [{ type: 'text', text: 'Done!', citations: null }],
-            model: 'claude-3-5-sonnet-latest',
+            model: 'haijun-3-5-sonnet-latest',
             stop_reason: 'end_turn',
             stop_sequence: null,
             container: null,
@@ -1597,7 +1597,7 @@ describe('ToolRunner', () => {
 
       const runner = client.beta.messages.toolRunner(
         {
-          model: 'claude-3-5-sonnet-latest',
+          model: 'haijun-3-5-sonnet-latest',
           max_tokens: 1000,
           messages: [{ role: 'user', content: 'Test signal' }],
           tools: [signalTool],
@@ -1678,7 +1678,7 @@ describe('ToolRunner', () => {
       };
 
       const { fetch, handleRequest } = mockFetch();
-      const client = new Anthropic({ apiKey: 'test-key', fetch, maxRetries: 0 });
+      const client = new JuGloW({ apiKey: 'test-key', fetch, maxRetries: 0 });
       const controller = new AbortController();
 
       // First response: tool use
@@ -1693,7 +1693,7 @@ describe('ToolRunner', () => {
             type: 'message',
             role: 'assistant',
             content: [{ type: 'tool_use', id: 'tool_1', name: 'signalTool', input: { value: 'hello' } }],
-            model: 'claude-3-5-sonnet-latest',
+            model: 'haijun-3-5-sonnet-latest',
             stop_reason: 'tool_use',
             stop_sequence: null,
             container: null,
@@ -1712,7 +1712,7 @@ describe('ToolRunner', () => {
             type: 'message',
             role: 'assistant',
             content: [{ type: 'text', text: 'Done!', citations: null }],
-            model: 'claude-3-5-sonnet-latest',
+            model: 'haijun-3-5-sonnet-latest',
             stop_reason: 'end_turn',
             stop_sequence: null,
             container: null,
@@ -1725,7 +1725,7 @@ describe('ToolRunner', () => {
 
       // Create runner without signal initially
       const runner = client.beta.messages.toolRunner({
-        model: 'claude-3-5-sonnet-latest',
+        model: 'haijun-3-5-sonnet-latest',
         max_tokens: 1000,
         messages: [{ role: 'user', content: 'Test' }],
         tools: [signalTool],
@@ -1758,7 +1758,7 @@ describe('ToolRunner', () => {
       };
 
       const { fetch, handleRequest } = mockFetch();
-      const client = new Anthropic({ apiKey: 'test-key', fetch, maxRetries: 0 });
+      const client = new JuGloW({ apiKey: 'test-key', fetch, maxRetries: 0 });
       const controller = new AbortController();
 
       // First response: tool use
@@ -1769,7 +1769,7 @@ describe('ToolRunner', () => {
             type: 'message',
             role: 'assistant',
             content: [{ type: 'tool_use', id: 'tool_1', name: 'signalTool', input: { value: 'hello' } }],
-            model: 'claude-3-5-sonnet-latest',
+            model: 'haijun-3-5-sonnet-latest',
             stop_reason: 'tool_use',
             stop_sequence: null,
             container: null,
@@ -1788,7 +1788,7 @@ describe('ToolRunner', () => {
             type: 'message',
             role: 'assistant',
             content: [{ type: 'text', text: 'Done!', citations: null }],
-            model: 'claude-3-5-sonnet-latest',
+            model: 'haijun-3-5-sonnet-latest',
             stop_reason: 'end_turn',
             stop_sequence: null,
             container: null,
@@ -1800,7 +1800,7 @@ describe('ToolRunner', () => {
       });
 
       const runner = client.beta.messages.toolRunner({
-        model: 'claude-3-5-sonnet-latest',
+        model: 'haijun-3-5-sonnet-latest',
         max_tokens: 1000,
         messages: [{ role: 'user', content: 'Test' }],
         tools: [signalTool],
@@ -1828,7 +1828,7 @@ describe('ToolRunner', () => {
       };
 
       const { fetch, handleRequest } = mockFetch();
-      const client = new Anthropic({ apiKey: 'test-key', fetch, maxRetries: 0, middleware: [middleware] });
+      const client = new JuGloW({ apiKey: 'test-key', fetch, maxRetries: 0, middleware: [middleware] });
 
       // First response: tool use
       handleRequest(async () => {
@@ -1838,7 +1838,7 @@ describe('ToolRunner', () => {
             type: 'message',
             role: 'assistant',
             content: [{ type: 'tool_use', id: 'tool_1', name: 'getWeather', input: { location: 'SF' } }],
-            model: 'claude-3-5-sonnet-latest',
+            model: 'haijun-3-5-sonnet-latest',
             stop_reason: 'tool_use',
             stop_sequence: null,
             container: null,
@@ -1857,7 +1857,7 @@ describe('ToolRunner', () => {
             type: 'message',
             role: 'assistant',
             content: [{ type: 'text', text: 'Done!', citations: null }],
-            model: 'claude-3-5-sonnet-latest',
+            model: 'haijun-3-5-sonnet-latest',
             stop_reason: 'end_turn',
             stop_sequence: null,
             container: null,
@@ -1871,7 +1871,7 @@ describe('ToolRunner', () => {
       const fallbackState = new BetaFallbackState();
       const runner = client.beta.messages.toolRunner(
         {
-          model: 'claude-3-5-sonnet-latest',
+          model: 'haijun-3-5-sonnet-latest',
           max_tokens: 1000,
           messages: [{ role: 'user', content: 'Test' }],
           tools: [weatherTool],

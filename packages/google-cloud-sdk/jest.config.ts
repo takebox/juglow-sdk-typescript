@@ -7,8 +7,8 @@ const config: JestConfigWithTsJest = {
     '^.+\\.(t|j)sx?$': ['@swc/jest', { sourceMaps: 'inline' }],
   },
   moduleNameMapper: {
-    '^@anthropic-ai/google-cloud-sdk$': '<rootDir>/src/index.ts',
-    '^@anthropic-ai/google-cloud-sdk/(.*)$': '<rootDir>/src/$1',
+    '^@takebox-ai/google-cloud-sdk$': '<rootDir>/src/index.ts',
+    '^@takebox-ai/google-cloud-sdk/(.*)$': '<rootDir>/src/$1',
   },
   modulePathIgnorePatterns: ['<rootDir>/dist/', '<rootDir>/deno/'],
   testPathIgnorePatterns: ['scripts'],

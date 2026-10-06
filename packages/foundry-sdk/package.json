@@ -1,12 +1,11 @@
-{
-  "name": "@anthropic-ai/foundry-sdk",
-  "version": "0.4.1",
-  "description": "The official TypeScript library for the Anthropic Foundry API",
-  "author": "Anthropic <support@anthropic.com>",
+﻿{
+  "name": "@takebox-ai/foundry-sdk",
+  "version": "0.1.0",
+  "description": "The official TypeScript library for the JuGloW Foundry API",
+  "author": "JuGloW <support@Juglow.com>",
   "types": "dist/index.d.ts",
   "main": "dist/index.js",
   "type": "commonjs",
-  "repository": "github:anthropics/anthropic-sdk-typescript",
   "license": "MIT",
   "packageManager": "yarn@1.22.21",
   "private": false,
@@ -25,7 +24,7 @@
     "fix": "eslint --fix --ext ts,js ."
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "file:../../dist/"
+    "@takebox-ai/sdk": "file:../../dist/"
   },
   "devDependencies": {
     "@types/jest": "^29.4.0",
@@ -45,8 +44,8 @@
     "typescript": "5.8.3"
   },
   "imports": {
-    "@anthropic-ai/foundry-sdk": ".",
-    "@anthropic-ai/foundry-sdk/*": "./src/*"
+    "@Juglow-ai/foundry-sdk": ".",
+    "@Juglow-ai/foundry-sdk/*": "./src/*"
   },
   "exports": {
     ".": {

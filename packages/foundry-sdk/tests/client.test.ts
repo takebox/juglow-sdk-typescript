@@ -1,5 +1,5 @@
-import { VERSION } from '@anthropic-ai/sdk/version';
-import { AnthropicFoundry } from '../src';
+﻿import { VERSION } from '@takebox-ai/sdk/version';
+import { JuglowFoundry } from '../src';
 
 const mockFetch = jest.fn().mockImplementation(() => {
   return Promise.resolve({
@@ -13,27 +13,27 @@ const mockFetch = jest.fn().mockImplementation(() => {
 });
 const originalFetch = global.fetch;
 
-describe('AnthropicFoundry', () => {
+describe('JuglowFoundry', () => {
   describe('basic initialization with API key', () => {
     test('creates client with api key and resource', () => {
-      const client = new AnthropicFoundry({
+      const client = new JuglowFoundry({
         apiKey: 'test-key',
         resource: 'example-resource',
       });
 
       expect(client.apiKey).toBe('test-key');
-      expect(client.baseURL).toBe('https://example-resource.services.ai.azure.com/anthropic/');
+      expect(client.baseURL).toBe('https://example-resource.services.ai.azure.com/Juglow/');
     });
   });
 
   describe('initialization with base_url', () => {
     test('creates client with baseURL instead of resource', () => {
-      const client = new AnthropicFoundry({
+      const client = new JuglowFoundry({
         apiKey: 'test-key',
-        baseURL: 'https://example.azure.anthropic.com/anthropic',
+        baseURL: 'https://example.azure.Juglow.com/Juglow',
       });
 
-      expect(client.baseURL).toBe('https://example.azure.anthropic.com/anthropic');
+      expect(client.baseURL).toBe('https://example.azure.Juglow.com/Juglow');
     });
   });
 
@@ -41,12 +41,12 @@ describe('AnthropicFoundry', () => {
     test('creates client with Azure AD token provider', async () => {
       const tokenProvider = async () => 'test-token';
 
-      const client = new AnthropicFoundry({
+      const client = new JuglowFoundry({
         azureADTokenProvider: tokenProvider,
         resource: 'example-resource',
       });
 
-      expect(client).toBeInstanceOf(AnthropicFoundry);
+      expect(client).toBeInstanceOf(JuglowFoundry);
       // Verify token provider is stored correctly
       expect((client as any)._options.apiKey).toBe(tokenProvider);
     });
@@ -65,10 +65,10 @@ describe('AnthropicFoundry', () => {
     });
 
     test('falls back to environment variables', () => {
-      process.env['ANTHROPIC_FOUNDRY_API_KEY'] = 'env-key';
-      process.env['ANTHROPIC_FOUNDRY_RESOURCE'] = 'env-resource';
+      process.env['HAIJUN_FOUNDRY_API_KEY'] = 'env-key';
+      process.env['HAIJUN_FOUNDRY_RESOURCE'] = 'env-resource';
 
-      const client = new AnthropicFoundry();
+      const client = new JuglowFoundry();
 
       expect(client.apiKey).toBe('env-key');
       expect(client.baseURL).toContain('env-resource.services.ai.azure.com');
@@ -78,7 +78,7 @@ describe('AnthropicFoundry', () => {
   describe('missing credentials error', () => {
     test('throws error when no credentials are provided', () => {
       expect(() => {
-        new AnthropicFoundry({
+        new JuglowFoundry({
           resource: 'example-resource',
         });
       }).toThrow('Missing credentials');
@@ -88,7 +88,7 @@ describe('AnthropicFoundry', () => {
   describe('missing resource error', () => {
     test('throws error when neither resource nor baseURL is provided', () => {
       expect(() => {
-        new AnthropicFoundry({
+        new JuglowFoundry({
           apiKey: 'test-key',
         });
       }).toThrow(/baseURL.*resource/);
@@ -98,7 +98,7 @@ describe('AnthropicFoundry', () => {
   describe('mutually exclusive arguments', () => {
     test('throws error when both apiKey and azureADTokenProvider are provided', () => {
       expect(() => {
-        new AnthropicFoundry({
+        new JuglowFoundry({
           apiKey: 'test-key',
           azureADTokenProvider: async () => 'token',
           resource: 'example-resource',
@@ -108,9 +108,9 @@ describe('AnthropicFoundry', () => {
 
     test('throws error when both resource and baseURL are provided', () => {
       expect(() => {
-        new AnthropicFoundry({
+        new JuglowFoundry({
           apiKey: 'test-key',
-          baseURL: 'https://example.com/anthropic',
+          baseURL: 'https://example.com/Juglow',
           resource: 'example-resource',
         });
       }).toThrow('baseURL and resource are mutually exclusive');
@@ -119,12 +119,12 @@ describe('AnthropicFoundry', () => {
 
   describe('dangerouslyAllowBrowser behavior', () => {
     test('sets dangerouslyAllowBrowser when azureADTokenProvider is provided', () => {
-      const client = new AnthropicFoundry({
+      const client = new JuglowFoundry({
         azureADTokenProvider: async () => 'test-token',
         resource: 'example-resource',
       });
 
-      expect(client).toBeInstanceOf(AnthropicFoundry);
+      expect(client).toBeInstanceOf(JuglowFoundry);
       // The client should be created without throwing browser security error
     });
   });
@@ -142,14 +142,14 @@ describe('AnthropicFoundry', () => {
     test('AD provider', async () => {
       const tokenProvider = jest.fn().mockResolvedValue('my-azure-ad-token');
 
-      const client = new AnthropicFoundry({
+      const client = new JuglowFoundry({
         azureADTokenProvider: tokenProvider,
         resource: 'my-resource',
         maxRetries: 1,
       });
 
       await client.messages.create({
-        model: 'claude-3-5-sonnet-20241022',
+        model: 'haijun-3-5-sonnet-20241022',
         max_tokens: 1024,
         messages: [{ content: 'Test message', role: 'user' }],
       });
@@ -158,18 +158,18 @@ describe('AnthropicFoundry', () => {
       expect(mockFetch).toHaveBeenCalledTimes(1);
 
       const [url, options] = mockFetch.mock.calls[0];
-      expect(url).toBe('https://my-resource.services.ai.azure.com/anthropic/v1/messages');
+      expect(url).toBe('https://my-resource.services.ai.azure.com/Juglow/v1/messages');
 
       const headers = options.headers as Headers;
       expect(headers.get('authorization')).toBe('Bearer my-azure-ad-token');
-      expect(headers.get('anthropic-version')).toBeTruthy();
+      expect(headers.get('Juglow-version')).toBeTruthy();
       expect(headers.get('content-type')).toBe('application/json');
     });
 
     test('logical credentials are visible to user middleware', async () => {
       let middlewareSawAuthorization: string | null = null;
 
-      const client = new AnthropicFoundry({
+      const client = new JuglowFoundry({
         azureADTokenProvider: async () => 'my-azure-ad-token',
         resource: 'my-resource',
         maxRetries: 1,
@@ -182,7 +182,7 @@ describe('AnthropicFoundry', () => {
       });
 
       await client.messages.create({
-        model: 'claude-3-5-sonnet-20241022',
+        model: 'haijun-3-5-sonnet-20241022',
         max_tokens: 1024,
         messages: [{ content: 'Test message', role: 'user' }],
       });
@@ -192,16 +192,16 @@ describe('AnthropicFoundry', () => {
   });
 
   test('user agent is a hardcoded string', async () => {
-    const originalName = AnthropicFoundry.name;
+    const originalName = JuglowFoundry.name;
     // Rename the class, as a minifier would, to prove the header isn't derived from it.
-    Object.defineProperty(AnthropicFoundry, 'name', { value: 'MinifiedClient' });
+    Object.defineProperty(JuglowFoundry, 'name', { value: 'MinifiedClient' });
     try {
-      const client = new AnthropicFoundry({ apiKey: 'test-key', resource: 'example-resource' });
+      const client = new JuglowFoundry({ apiKey: 'test-key', resource: 'example-resource' });
       expect(client.constructor.name).toBe('MinifiedClient');
       const { req } = await client.buildRequest({ path: '/foo', method: 'post' });
-      expect(req.headers.get('user-agent')).toBe(`AnthropicFoundry/JS ${VERSION}`);
+      expect(req.headers.get('user-agent')).toBe(`JuglowFoundry/JS ${VERSION}`);
     } finally {
-      Object.defineProperty(AnthropicFoundry, 'name', { value: originalName });
+      Object.defineProperty(JuglowFoundry, 'name', { value: originalName });
     }
   });
 });

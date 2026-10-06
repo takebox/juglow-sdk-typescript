@@ -1,4 +1,4 @@
-import { AnthropicError } from './error';
+import { JuglowError } from './error';
 import { type ReadableStream } from '../internal/shim-types';
 import { makeReadableStream } from '../internal/shims';
 import { findDoubleNewlineIndex, LineDecoder } from '../internal/decoders/line';
@@ -7,7 +7,7 @@ import { isAbortError } from '../internal/errors';
 import { safeJSON } from '../internal/utils/values';
 import { encodeUTF8 } from '../internal/utils/bytes';
 import { loggerFor } from '../internal/utils/log';
-import type { BaseAnthropic } from '../client';
+import type { BaseJuglow } from '../client';
 
 import { APIError } from './error';
 import type { ErrorType } from '../resources/shared';
@@ -23,19 +23,19 @@ export type ServerSentEvent = {
 
 export class Stream<Item> implements AsyncIterable<Item> {
   controller: AbortController;
-  #client: BaseAnthropic | undefined;
+  #client: BaseJuglow | undefined;
 
   constructor(
     private iterator: () => AsyncIterator<Item>,
     controller: AbortController,
-    client?: BaseAnthropic,
+    client?: BaseJuglow,
   ) {
     this.controller = controller;
     this.#client = client;
   }
 
   /**
-   * Iterate the raw Server-Sent Events from `response` — `{event, data, raw}`
+   * Iterate the raw Server-Sent Events from `response` â€” `{event, data, raw}`
    * objects, before any JSON parsing or event-name filtering.
    *
    * This reads `response.body` directly (not a clone), so the response is
@@ -52,14 +52,14 @@ export class Stream<Item> implements AsyncIterable<Item> {
   static fromSSEResponse<Item>(
     response: Response,
     controller: AbortController,
-    client?: BaseAnthropic,
+    client?: BaseJuglow,
   ): Stream<Item> {
     let consumed = false;
     const logger = client ? loggerFor(client) : console;
 
     async function* iterator(): AsyncIterator<Item, any, undefined> {
       if (consumed) {
-        throw new AnthropicError('Cannot iterate over a consumed stream, use `.tee()` to split the stream.');
+        throw new JuglowError('Cannot iterate over a consumed stream, use `.tee()` to split the stream.');
       }
       consumed = true;
       let done = false;
@@ -164,7 +164,7 @@ export class Stream<Item> implements AsyncIterable<Item> {
   static fromReadableStream<Item>(
     readableStream: ReadableStream,
     controller: AbortController,
-    client?: BaseAnthropic,
+    client?: BaseJuglow,
   ): Stream<Item> {
     let consumed = false;
 
@@ -185,7 +185,7 @@ export class Stream<Item> implements AsyncIterable<Item> {
 
     async function* iterator(): AsyncIterator<Item, any, undefined> {
       if (consumed) {
-        throw new AnthropicError('Cannot iterate over a consumed stream, use `.tee()` to split the stream.');
+        throw new JuglowError('Cannot iterate over a consumed stream, use `.tee()` to split the stream.');
       }
       consumed = true;
       let done = false;
@@ -283,11 +283,11 @@ export async function* _iterSSEMessages(
       typeof (globalThis as any).navigator !== 'undefined' &&
       (globalThis as any).navigator.product === 'ReactNative'
     ) {
-      throw new AnthropicError(
+      throw new JuglowError(
         `The default react-native fetch implementation does not support streaming. Please use expo/fetch: https://docs.expo.dev/versions/latest/sdk/expo/#expofetch-api`,
       );
     }
-    throw new AnthropicError(`Attempted to iterate over a response with no body`);
+    throw new JuglowError(`Attempted to iterate over a response with no body`);
   }
 
   const sseDecoder = new SSEDecoder();

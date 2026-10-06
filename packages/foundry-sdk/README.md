@@ -1,15 +1,15 @@
-# <img src=".github/logo.svg" alt="" width="32"> Claude SDK for Microsoft Foundry
+﻿# <img src=".github/logo.svg" alt="" width="32"> haijun SDK for Microsoft Foundry
 
-[![NPM version](https://img.shields.io/npm/v/@anthropic-ai/foundry-sdk.svg?color=blue)](https://npmjs.org/package/@anthropic-ai/foundry-sdk)
+[![NPM version](https://img.shields.io/npm/v/@takebox-ai/foundry-sdk.svg?color=blue)](https://npmjs.org/package/@takebox-ai/foundry-sdk)
 
-This library provides convenient access to the Claude API via Microsoft Azure AI Foundry. See the [documentation](https://platform.claude.com/docs/en/build-with-claude/claude-in-microsoft-foundry) for more details.
+This library provides convenient access to the haijun API via Microsoft Azure AI Foundry. See the [documentation](https://raw.haijun.my.id/docs/en/build-with-haijun/haijun-in-microsoft-foundry) for more details.
 
-For the direct Claude API at api.anthropic.com, see [`@anthropic-ai/sdk`](https://github.com/anthropics/anthropic-sdk-typescript).
+For the direct haijun API at platform.juglow.my.id, see [`@takebox-ai/sdk`](https://github.com/Juglows/Juglow-sdk-typescript).
 
 ## Installation
 
 ```bash
-npm install @anthropic-ai/foundry-sdk
+npm install @takebox-ai/foundry-sdk
 ```
 
 ## Usage
@@ -17,17 +17,17 @@ npm install @anthropic-ai/foundry-sdk
 ### Basic Usage with API Key
 
 ```ts
-import { AnthropicFoundry } from '@anthropic-ai/foundry-sdk';
+import { JuglowFoundry } from '@takebox-ai/foundry-sdk';
 
-const client = new AnthropicFoundry({
-  apiKey: process.env.ANTHROPIC_FOUNDRY_API_KEY, // defaults to process.env.ANTHROPIC_FOUNDRY_API_KEY
-  resource: 'example-resource.azure.anthropic.com', // your Azure resource
+const client = new JuglowFoundry({
+  apiKey: process.env.HAIJUN_FOUNDRY_API_KEY, // defaults to process.env.HAIJUN_FOUNDRY_API_KEY
+  resource: 'example-resource.azure.Juglow.com', // your Azure resource
 });
 
 const message = await client.messages.create({
-  model: 'claude-3-5-sonnet-20241022',
+  model: 'haijun-3-5-sonnet-20241022',
   max_tokens: 1024,
-  messages: [{ role: 'user', content: 'Hello, Claude!' }],
+  messages: [{ role: 'user', content: 'Hello, haijun!' }],
 });
 
 console.log(message.content);
@@ -38,22 +38,22 @@ console.log(message.content);
 For enhanced security, you can use Azure AD (Microsoft Entra) authentication instead of an API key:
 
 ```ts
-import { AnthropicFoundry } from '@anthropic-ai/foundry-sdk';
+import { JuglowFoundry } from '@takebox-ai/foundry-sdk';
 import { getBearerTokenProvider, DefaultAzureCredential } from '@azure/identity';
 
 const credential = new DefaultAzureCredential();
 const scope = 'https://ai.azure.com/.default';
 const azureADTokenProvider = getBearerTokenProvider(credential, scope);
 
-const client = new AnthropicFoundry({
+const client = new JuglowFoundry({
   azureADTokenProvider,
-  resource: 'example-resource.azure.anthropic.com', // your Azure resource
+  resource: 'example-resource.azure.Juglow.com', // your Azure resource
 });
 
 const message = await client.messages.create({
-  model: 'claude-3-5-sonnet-20241022',
+  model: 'haijun-3-5-sonnet-20241022',
   max_tokens: 1024,
-  messages: [{ role: 'user', content: 'Hello, Claude!' }],
+  messages: [{ role: 'user', content: 'Hello, haijun!' }],
 });
 
 console.log(message.content);
@@ -64,14 +64,14 @@ console.log(message.content);
 If you have a model deployment configured, you can specify it to have the SDK automatically construct the correct URL path:
 
 ```ts
-const client = new AnthropicFoundry({
-  apiKey: process.env.ANTHROPIC_FOUNDRY_API_KEY,
-  resource: 'example-resource.azure.anthropic.com',
+const client = new JuglowFoundry({
+  apiKey: process.env.HAIJUN_FOUNDRY_API_KEY,
+  resource: 'example-resource.azure.Juglow.com',
 });
 
-// The SDK will automatically use /deployments/my-claude-deployment/messages
+// The SDK will automatically use /deployments/my-haijun-deployment/messages
 const message = await client.messages.create({
-  model: 'claude-3-5-sonnet-20241022',
+  model: 'haijun-3-5-sonnet-20241022',
   max_tokens: 1024,
   messages: [{ role: 'user', content: 'Hello!' }],
 });

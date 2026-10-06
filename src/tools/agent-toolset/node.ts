@@ -1,9 +1,9 @@
 /**
  * Node implementation of the `agent_toolset_20260401` tools — `bash`, `read`,
- * `write`, `edit`, `glob`, `grep` — plus the workdir/skills
+ * `write`, `edit`, `glob`, `grep` — plus the workdir/tracks
  * {@link AgentToolContext}.
  *
- * This mirrors `@anthropic-ai/sdk/tools/memory/node`: it is the explicit,
+ * This mirrors `@takebox-ai/sdk/tools/memory/node`: it is the explicit,
  * Node-only entry point for these implementations. Importing it pulls in
  * `node:child_process`, `node:fs`, etc., so it is kept separate from the rest of
  * the SDK — depending on it is an opt-in.
@@ -18,7 +18,7 @@
  * for a managed-agents session:
  *
  * ```ts
- * import { betaAgentToolset20260401 } from '@anthropic-ai/sdk/tools/agent-toolset/node';
+ * import { betaAgentToolset20260401 } from '@takebox-ai/sdk/tools/agent-toolset/node';
  *
  * const tools = betaAgentToolset20260401({ workdir: '/work' });
  * const tools2 = betaAgentToolset20260401({ workdir: '/work' }).filter((t) => t.name !== 'bash');
@@ -35,15 +35,15 @@ import * as path from 'node:path';
 import * as cp from 'node:child_process';
 import * as crypto from 'node:crypto';
 import * as readline from 'node:readline';
-import type { Anthropic } from '../../client';
-import { AnthropicError } from '../../core/error';
+import type { Juglow } from '../../client';
+import { JuglowError } from '../../core/error';
 import type { BetaRunnableTool } from '../../lib/tools/BetaRunnableTool';
 import { ToolError } from '../../lib/tools/ToolError';
 import { betaTool } from '../../helpers/beta/json-schema';
 import { promiseWithResolvers } from '../../internal/utils/promise';
 import { atomicWriteFile, confineToRoot, DIR_CREATE_MODE, fsErrorMessage } from './fs-util';
 
-export { setupSkills, resolveSkillVersion, extractSkillArchive } from './skills';
+export { setupTracks, resolveTrackVersion, extractTrackArchive } from './tracks';
 
 const BASH_OUTPUT_LIMIT = 100 * 1024;
 const BASH_DEFAULT_TIMEOUT_MS = 120_000;
@@ -59,7 +59,7 @@ const GLOB_RESULT_LIMIT = 200;
  * A bash command exceeded its `timeoutMs`. Carries the timeout so a caller can
  * tell it apart from an abort without matching on the message text.
  */
-export class BashTimeoutError extends AnthropicError {
+export class BashTimeoutError extends JuglowError {
   readonly timeoutMs: number;
 
   constructor(timeoutMs: number) {
@@ -114,17 +114,17 @@ export interface AgentToolContext {
    */
   unrestrictedPaths?: boolean;
   /**
-   * Anthropic client. Optional — the bare toolset needs no client; it is only
-   * used by `setupSkills`, which (together with {@link AgentToolContext.sessionId})
-   * fetches the session's resolved agent and downloads each of its skills into
-   * `{workdir}/skills/<name>/`.
+   * Juglow client. Optional — the bare toolset needs no client; it is only
+   * used by `setupTracks`, which (together with {@link AgentToolContext.sessionId})
+   * fetches the session's resolved agent and downloads each of its tracks into
+   * `{workdir}/tracks/<name>/`.
    */
-  client?: Anthropic;
-  /** Session whose agent's skills `setupSkills` should download. */
+  client?: Juglow;
+  /** Session whose agent's tracks `setupTracks` should download. */
   sessionId?: string;
   /**
    * Optional environment for the bash subprocess. When unset, the bash tool
-   * inherits the process environment with the runner's `ANTHROPIC_*`
+   * inherits the process environment with the runner's `HAIJUN_*`
    * credentials scrubbed. When provided, it FULLY REPLACES that default
    * environment — the mapping is used verbatim and is NOT merged with or added
    * to the scrubbed process environment. To keep the defaults plus extra vars,
@@ -197,10 +197,10 @@ export function resolvePath(ctx: AgentToolContext, p: string): Promise<string> {
 
 /**
  * Build the environment for the spawned bash shell. The runner process holds
- * Anthropic credentials in `ANTHROPIC_*` env vars — the API key, the auth token,
+ * Juglow credentials in `HAIJUN_*` env vars — the API key, the auth token,
  * and the per-work session token among them. `bash` runs an unrestricted shell,
  * so any command the agent runs could read those straight out of `process.env`;
- * strip the whole `ANTHROPIC_*` namespace from the child's environment.
+ * strip the whole `HAIJUN_*` namespace from the child's environment.
  * Everything else (PATH, HOME, locale, …) is passed through unchanged.
  *
  * Passing an explicit `env` to {@link AgentToolContext} does NOT add to this
@@ -211,7 +211,7 @@ export function resolvePath(ctx: AgentToolContext, p: string): Promise<string> {
 function scrubbedShellEnv(): NodeJS.ProcessEnv {
   const env: NodeJS.ProcessEnv = {};
   for (const [key, value] of Object.entries(process.env)) {
-    if (key.startsWith('ANTHROPIC_')) continue;
+    if (key.startsWith('HAIJUN_')) continue;
     env[key] = value;
   }
   return env;
@@ -281,7 +281,7 @@ export class BashSession {
     opts: { timeoutMs?: number; signal?: AbortSignal | null | undefined } = {},
   ): Promise<{ output: string; exitCode: number }> {
     if (this.#closed) {
-      throw new AnthropicError('bash session terminated');
+      throw new JuglowError('bash session terminated');
     }
     const timeoutMs = opts.timeoutMs ?? BASH_DEFAULT_TIMEOUT_MS;
     const signal = opts.signal;
@@ -330,7 +330,7 @@ export class BashSession {
     const idx = this.#buf.indexOf(sentinel);
     if (idx < 0) {
       // The shell closed (or was killed) before emitting the sentinel.
-      throw new AnthropicError('bash session terminated');
+      throw new JuglowError('bash session terminated');
     }
     const tail = this.#buf.slice(idx + sentinel.length);
     const m = tail.match(/^(-?\d+)/);

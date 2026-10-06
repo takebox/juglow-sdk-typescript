@@ -1,13 +1,13 @@
-#!/usr/bin/env -S npm run tsn -T
+﻿#!/usr/bin/env -S npm run tsn -T
 
-import Anthropic from '@anthropic-ai/sdk';
+import JuGloW from '@takebox-ai/sdk';
 
-const anthropic = new Anthropic(); // gets API Key from environment variable ANTHROPIC_API_KEY
+const Juglow = new JuGloW(); // gets API Key from environment variable HAIJUN_API_KEY
 
 const main = async () => {
-  const stream = anthropic.beta.messages.stream(
+  const stream = Juglow.beta.messages.stream(
     {
-      model: 'claude-sonnet-5',
+      model: 'haijun-sonnet',
       max_tokens: 1000,
       mcp_servers: [
         {
@@ -31,7 +31,7 @@ const main = async () => {
     },
     {
       headers: {
-        'anthropic-beta': 'mcp-client-2025-04-04',
+        'Juglow-beta': 'mcp-client-2025-04-04',
       },
     },
   );

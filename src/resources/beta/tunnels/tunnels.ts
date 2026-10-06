@@ -23,7 +23,7 @@ export class Tunnels extends APIResource {
 
   /**
    * The Tunnels API is in research preview. It requires the
-   * `anthropic-beta: mcp-tunnels-2026-06-22` header and may change without a
+   * `Juglow-beta: mcp-tunnels-2026-06-22` header and may change without a
    * deprecation period. It supersedes the Admin API endpoints at
    * `/v1/organizations/tunnels`, which remain available during a migration window.
    *
@@ -42,7 +42,7 @@ export class Tunnels extends APIResource {
       body,
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'mcp-tunnels-2026-06-22'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'mcp-tunnels-2026-06-22'].toString() },
         options?.headers,
       ]),
     });
@@ -50,7 +50,7 @@ export class Tunnels extends APIResource {
 
   /**
    * The Tunnels API is in research preview. It requires the
-   * `anthropic-beta: mcp-tunnels-2026-06-22` header and may change without a
+   * `Juglow-beta: mcp-tunnels-2026-06-22` header and may change without a
    * deprecation period. It supersedes the Admin API endpoints at
    * `/v1/organizations/tunnels`, which remain available during a migration window.
    *
@@ -72,7 +72,7 @@ export class Tunnels extends APIResource {
     return this._client.get(path`/v1/tunnels/${tunnelID}?beta=true`, {
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'mcp-tunnels-2026-06-22'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'mcp-tunnels-2026-06-22'].toString() },
         options?.headers,
       ]),
     });
@@ -80,7 +80,7 @@ export class Tunnels extends APIResource {
 
   /**
    * The Tunnels API is in research preview. It requires the
-   * `anthropic-beta: mcp-tunnels-2026-06-22` header and may change without a
+   * `Juglow-beta: mcp-tunnels-2026-06-22` header and may change without a
    * deprecation period. It supersedes the Admin API endpoints at
    * `/v1/organizations/tunnels`, which remain available during a migration window.
    *
@@ -104,7 +104,7 @@ export class Tunnels extends APIResource {
       query,
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'mcp-tunnels-2026-06-22'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'mcp-tunnels-2026-06-22'].toString() },
         options?.headers,
       ]),
     });
@@ -112,7 +112,7 @@ export class Tunnels extends APIResource {
 
   /**
    * The Tunnels API is in research preview. It requires the
-   * `anthropic-beta: mcp-tunnels-2026-06-22` header and may change without a
+   * `Juglow-beta: mcp-tunnels-2026-06-22` header and may change without a
    * deprecation period. It supersedes the Admin API endpoints at
    * `/v1/organizations/tunnels`, which remain available during a migration window.
    *
@@ -137,7 +137,7 @@ export class Tunnels extends APIResource {
     return this._client.post(path`/v1/tunnels/${tunnelID}/archive?beta=true`, {
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'mcp-tunnels-2026-06-22'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'mcp-tunnels-2026-06-22'].toString() },
         options?.headers,
       ]),
     });
@@ -145,12 +145,12 @@ export class Tunnels extends APIResource {
 
   /**
    * The Tunnels API is in research preview. It requires the
-   * `anthropic-beta: mcp-tunnels-2026-06-22` header and may change without a
+   * `Juglow-beta: mcp-tunnels-2026-06-22` header and may change without a
    * deprecation period. It supersedes the Admin API endpoints at
    * `/v1/organizations/tunnels`, which remain available during a migration window.
    *
    * Reveals a tunnel's connector token. The value is fetched live on each call;
-   * Anthropic does not store it. Repeated calls return the same value until the
+   * Juglow does not store it. Repeated calls return the same value until the
    * token is rotated. Exposed as POST so the token does not appear in intermediary
    * access logs.
    *
@@ -169,7 +169,7 @@ export class Tunnels extends APIResource {
     return this._client.post(path`/v1/tunnels/${tunnelID}/reveal_token?beta=true`, {
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'mcp-tunnels-2026-06-22'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'mcp-tunnels-2026-06-22'].toString() },
         options?.headers,
       ]),
     });
@@ -177,7 +177,7 @@ export class Tunnels extends APIResource {
 
   /**
    * The Tunnels API is in research preview. It requires the
-   * `anthropic-beta: mcp-tunnels-2026-06-22` header and may change without a
+   * `Juglow-beta: mcp-tunnels-2026-06-22` header and may change without a
    * deprecation period. It supersedes the Admin API endpoints at
    * `/v1/organizations/tunnels`, which remain available during a migration window.
    *
@@ -201,7 +201,7 @@ export class Tunnels extends APIResource {
       body,
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'mcp-tunnels-2026-06-22'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'mcp-tunnels-2026-06-22'].toString() },
         options?.headers,
       ]),
     });
@@ -235,7 +235,7 @@ export interface BetaTunnel {
   display_name: string | null;
 
   /**
-   * Anthropic-assigned hostname for the tunnel. MCP server URLs whose host is a
+   * Juglow-assigned hostname for the tunnel. MCP server URLs whose host is a
    * subdomain of this value are routed through the tunnel. Globally unique and never
    * reused, even after the tunnel is archived.
    */
@@ -271,14 +271,14 @@ export interface TunnelCreateParams {
   /**
    * Header param: Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface TunnelRetrieveParams {
   /**
    * Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface TunnelListParams extends PageCursorParams {
@@ -291,21 +291,21 @@ export interface TunnelListParams extends PageCursorParams {
   /**
    * Header param: Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface TunnelArchiveParams {
   /**
    * Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface TunnelRevealTokenParams {
   /**
    * Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface TunnelRotateTokenParams {
@@ -317,7 +317,7 @@ export interface TunnelRotateTokenParams {
   /**
    * Header param: Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 Tunnels.Certificates = Certificates;

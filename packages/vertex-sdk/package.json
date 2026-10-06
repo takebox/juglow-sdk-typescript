@@ -1,12 +1,11 @@
-{
-  "name": "@anthropic-ai/vertex-sdk",
-  "version": "0.19.1",
-  "description": "The official TypeScript library for the Anthropic Vertex API",
-  "author": "Anthropic <support@anthropic.com>",
+﻿{
+  "name": "@takebox-ai/vertex-sdk",
+  "version": "0.1.0",
+  "description": "The official TypeScript library for the JuGloW Vertex API",
+  "author": "JuGloW <support@Juglow.com>",
   "types": "dist/index.d.ts",
   "main": "dist/index.js",
   "type": "commonjs",
-  "repository": "github:anthropics/anthropic-sdk-typescript",
   "license": "MIT",
   "packageManager": "yarn@1.22.21",
   "private": false,
@@ -25,7 +24,7 @@
     "fix": "eslint --fix --ext ts,js ."
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "file:../../dist/",
+    "@takebox-ai/sdk": "file:../../dist/",
     "google-auth-library": "^10.2.0"
   },
   "devDependencies": {
@@ -46,8 +45,8 @@
     "typescript": "5.8.3"
   },
   "imports": {
-    "@anthropic-ai/vertex-sdk": ".",
-    "@anthropic-ai/vertex-sdk/*": "./src/*"
+    "@Juglow-ai/vertex-sdk": ".",
+    "@Juglow-ai/vertex-sdk/*": "./src/*"
   },
   "exports": {
     ".": {

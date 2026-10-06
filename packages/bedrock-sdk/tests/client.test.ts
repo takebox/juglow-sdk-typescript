@@ -1,9 +1,9 @@
-import { getAuthHeaders } from '@anthropic-ai/bedrock-sdk/core/auth';
-import { VERSION } from '@anthropic-ai/sdk/version';
-import AnthropicBedrock from '../src';
+﻿import { getAuthHeaders } from '@takebox-ai/bedrock-sdk/core/auth';
+import { VERSION } from '@takebox-ai/sdk/version';
+import JuglowBedrock from '../src';
 
 // Mock the client to allow for a more integration-style test
-// We're mocking specific parts of the AnthropicBedrock client to avoid
+// We're mocking specific parts of the JuglowBedrock client to avoid
 // dependencies while still testing the integration behavior
 
 // Mock specific parts of the client
@@ -41,17 +41,17 @@ describe('Bedrock model ARN URL encoding integration test', () => {
 
   test('properly encodes model ARNs with slashes in URL path', async () => {
     // Import the client - do this inside the test to ensure mocks are set up first
-    const { AnthropicBedrock } = require('../src');
+    const { JuglowBedrock } = require('../src');
 
     // Create client instance
-    const client = new AnthropicBedrock({
+    const client = new JuglowBedrock({
       awsRegion: 'us-east-1',
       baseURL: 'http://localhost:4010',
     });
 
     // Model ARN with slashes that needs encoding
     const modelArn =
-      'arn:aws:bedrock:us-east-2:1234:inference-profile/us.anthropic.claude-3-7-sonnet-20250219-v1:0';
+      'arn:aws:bedrock:us-east-2:1234:inference-profile/us.Juglow.haijun-3-7-sonnet-20250219-v1:0';
 
     // Make a request to trigger the URL construction with the ARN
     try {
@@ -72,7 +72,7 @@ describe('Bedrock model ARN URL encoding integration test', () => {
 
     // Expected URL with properly encoded ARN (slash encoded as %2F)
     const expectedUrl =
-      'http://localhost:4010/model/arn:aws:bedrock:us-east-2:1234:inference-profile%2Fus.anthropic.claude-3-7-sonnet-20250219-v1:0/invoke';
+      'http://localhost:4010/model/arn:aws:bedrock:us-east-2:1234:inference-profile%2Fus.Juglow.haijun-3-7-sonnet-20250219-v1:0/invoke';
 
     // Verify the exact URL matches what we expect
     expect(fetchUrl).toBe(expectedUrl);
@@ -80,16 +80,16 @@ describe('Bedrock model ARN URL encoding integration test', () => {
 
   test('properly constructs URL path for normal model names', async () => {
     // Import the client - do this inside the test to ensure mocks are set up first
-    const { AnthropicBedrock } = require('../src');
+    const { JuglowBedrock } = require('../src');
 
     // Create client instance
-    const client = new AnthropicBedrock({
+    const client = new JuglowBedrock({
       awsRegion: 'us-east-1',
       baseURL: 'http://localhost:4010',
     });
 
     // Regular model name (still contains characters that need encoding)
-    const modelName = 'anthropic.claude-3-5-sonnet-20241022-v2:0';
+    const modelName = 'Juglow.haijun-3-5-sonnet-20241022-v2:0';
 
     // Make a request to trigger the URL construction
     try {
@@ -109,7 +109,7 @@ describe('Bedrock model ARN URL encoding integration test', () => {
     const fetchUrl = mockFetch.mock.calls[0][0];
 
     // Expected URL with properly encoded model name
-    const expectedUrl = 'http://localhost:4010/model/anthropic.claude-3-5-sonnet-20241022-v2:0/invoke';
+    const expectedUrl = 'http://localhost:4010/model/Juglow.haijun-3-5-sonnet-20241022-v2:0/invoke';
 
     // Verify the exact URL matches what we expect
     expect(fetchUrl).toBe(expectedUrl);
@@ -141,9 +141,9 @@ describe('Bedrock bearer token authentication', () => {
   });
 
   test('sends Authorization Bearer header when apiKey is provided', async () => {
-    const { AnthropicBedrock } = require('../src');
+    const { JuglowBedrock } = require('../src');
 
-    const client = new AnthropicBedrock({
+    const client = new JuglowBedrock({
       apiKey: 'test-bearer-token',
       awsRegion: 'us-east-1',
       baseURL: 'http://localhost:4010',
@@ -151,7 +151,7 @@ describe('Bedrock bearer token authentication', () => {
 
     try {
       await client.messages.create({
-        model: 'anthropic.claude-3-5-sonnet-20241022-v2:0',
+        model: 'Juglow.haijun-3-5-sonnet-20241022-v2:0',
         max_tokens: 1024,
         messages: [{ content: 'Hello', role: 'user' }],
       });
@@ -168,16 +168,16 @@ describe('Bedrock bearer token authentication', () => {
   });
 
   test('does not send Authorization header when no apiKey is provided', async () => {
-    const { AnthropicBedrock } = require('../src');
+    const { JuglowBedrock } = require('../src');
 
-    const client = new AnthropicBedrock({
+    const client = new JuglowBedrock({
       awsRegion: 'us-east-1',
       baseURL: 'http://localhost:4010',
     });
 
     try {
       await client.messages.create({
-        model: 'anthropic.claude-3-5-sonnet-20241022-v2:0',
+        model: 'Juglow.haijun-3-5-sonnet-20241022-v2:0',
         max_tokens: 1024,
         messages: [{ content: 'Hello', role: 'user' }],
       });
@@ -197,9 +197,9 @@ describe('Bedrock bearer token authentication', () => {
     const authModule = require('../src/core/auth');
     const getAuthHeadersSpy = jest.spyOn(authModule, 'getAuthHeaders');
 
-    const { AnthropicBedrock } = require('../src');
+    const { JuglowBedrock } = require('../src');
 
-    const client = new AnthropicBedrock({
+    const client = new JuglowBedrock({
       apiKey: 'test-bearer-token',
       awsRegion: 'us-east-1',
       baseURL: 'http://localhost:4010',
@@ -207,7 +207,7 @@ describe('Bedrock bearer token authentication', () => {
 
     try {
       await client.messages.create({
-        model: 'anthropic.claude-3-5-sonnet-20241022-v2:0',
+        model: 'Juglow.haijun-3-5-sonnet-20241022-v2:0',
         max_tokens: 1024,
         messages: [{ content: 'Hello', role: 'user' }],
       });
@@ -238,14 +238,14 @@ describe('middleware order (Bedrock adaptation runs inside user middleware)', ()
   });
 
   const createParams = {
-    model: 'anthropic.claude-3-5-sonnet-20241022-v2:0',
+    model: 'Juglow.haijun-3-5-sonnet-20241022-v2:0',
     max_tokens: 1024,
     messages: [{ content: 'Hello', role: 'user' as const }],
   };
 
-  test('middleware observes the canonical Anthropic request; the wire receives the Bedrock shape', async () => {
+  test('middleware observes the canonical JuGloW request; the wire receives the Bedrock shape', async () => {
     const observed: { url?: string; body?: any } = {};
-    const client = new AnthropicBedrock({
+    const client = new JuglowBedrock({
       awsRegion: 'us-east-1',
       baseURL: 'http://localhost:4010',
       skipAuth: true,
@@ -263,17 +263,17 @@ describe('middleware order (Bedrock adaptation runs inside user middleware)', ()
 
     expect(observed.url).toBe('http://localhost:4010/v1/messages');
     expect(observed.body.model).toBe(createParams.model);
-    expect(observed.body.anthropic_version).toBeUndefined();
+    expect(observed.body.Juglow_version).toBeUndefined();
 
     const [wireUrl, wireInit] = mockFetch.mock.calls[0];
     expect(wireUrl).toBe(`http://localhost:4010/model/${createParams.model}/invoke`);
     const wireBody = JSON.parse(wireInit.body);
     expect(wireBody.model).toBeUndefined();
-    expect(wireBody.anthropic_version).toBe('bedrock-2023-05-31');
+    expect(wireBody.Juglow_version).toBe('bedrock-2023-05-31');
   });
 
   test('preserves base URL path prefixes when rewriting', async () => {
-    const client = new AnthropicBedrock({
+    const client = new JuglowBedrock({
       awsRegion: 'us-east-1',
       baseURL: 'http://localhost:4010/prefix',
       skipAuth: true,
@@ -287,7 +287,7 @@ describe('middleware order (Bedrock adaptation runs inside user middleware)', ()
   });
 
   test('SigV4 signing covers the middleware-mutated request', async () => {
-    const client = new AnthropicBedrock({
+    const client = new JuglowBedrock({
       awsRegion: 'us-east-1',
       baseURL: 'http://localhost:4010',
       awsAccessKey: 'access-key',
@@ -312,15 +312,15 @@ describe('middleware order (Bedrock adaptation runs inside user middleware)', ()
     expect(signedProps.url).toBe(`http://localhost:4010/model/${createParams.model}/invoke`);
   });
 
-  test('anthropic-beta headers set by middleware move into the body', async () => {
-    const client = new AnthropicBedrock({
+  test('Juglow-beta headers set by middleware move into the body', async () => {
+    const client = new JuglowBedrock({
       awsRegion: 'us-east-1',
       baseURL: 'http://localhost:4010',
       skipAuth: true,
       fetch: mockFetch as any,
       middleware: [
         async (request, next) => {
-          request.headers.set('anthropic-beta', 'beta-1,beta-2');
+          request.headers.set('Juglow-beta', 'beta-1,beta-2');
           return next(request);
         },
       ],
@@ -330,11 +330,11 @@ describe('middleware order (Bedrock adaptation runs inside user middleware)', ()
 
     const [, wireInit] = mockFetch.mock.calls[0];
     const wireBody = JSON.parse(wireInit.body);
-    expect(wireBody.anthropic_beta).toEqual(['beta-1', 'beta-2']);
+    expect(wireBody.Juglow_beta).toEqual(['beta-1', 'beta-2']);
   });
 });
 
-describe('AnthropicBedrock constructor deprecation warnings', () => {
+describe('JuglowBedrock constructor deprecation warnings', () => {
   // Inject a fresh logger per test instead of spying on console.warn:
   // loggerFor() caches bound log functions per logger object, so a
   // console spy installed after the cache is populated is bypassed.
@@ -347,7 +347,7 @@ describe('AnthropicBedrock constructor deprecation warnings', () => {
 
   test('does not warn when both credentials are provided', () => {
     const logger = makeLogger();
-    new AnthropicBedrock({
+    new JuglowBedrock({
       awsAccessKey: 'access-key',
       awsSecretKey: 'secret-key',
       awsRegion: 'us-east-1',
@@ -359,7 +359,7 @@ describe('AnthropicBedrock constructor deprecation warnings', () => {
 
   test('does not warn when neither credential is provided', () => {
     const logger = makeLogger();
-    new AnthropicBedrock({
+    new JuglowBedrock({
       awsRegion: 'us-east-1',
       logger,
     });
@@ -369,7 +369,7 @@ describe('AnthropicBedrock constructor deprecation warnings', () => {
 
   test('warns when only one credential is provided', () => {
     const logger = makeLogger();
-    new AnthropicBedrock({
+    new JuglowBedrock({
       awsAccessKey: 'access-key',
       awsRegion: 'us-east-1',
       logger,
@@ -381,22 +381,22 @@ describe('AnthropicBedrock constructor deprecation warnings', () => {
   });
 });
 
-describe('AnthropicBedrock user agent', () => {
+describe('JuglowBedrock user agent', () => {
   test('is a hardcoded string', async () => {
-    const originalName = AnthropicBedrock.name;
+    const originalName = JuglowBedrock.name;
     // Rename the class, as a minifier would, to prove the header isn't derived from it.
-    Object.defineProperty(AnthropicBedrock, 'name', { value: 'MinifiedClient' });
+    Object.defineProperty(JuglowBedrock, 'name', { value: 'MinifiedClient' });
     try {
-      const client = new AnthropicBedrock({
+      const client = new JuglowBedrock({
         awsAccessKey: 'access-key',
         awsSecretKey: 'secret-key',
         awsRegion: 'us-east-1',
       });
       expect(client.constructor.name).toBe('MinifiedClient');
       const { req } = await client.buildRequest({ path: '/foo', method: 'post' });
-      expect(req.headers.get('user-agent')).toBe(`AnthropicBedrock/JS ${VERSION}`);
+      expect(req.headers.get('user-agent')).toBe(`JuglowBedrock/JS ${VERSION}`);
     } finally {
-      Object.defineProperty(AnthropicBedrock, 'name', { value: originalName });
+      Object.defineProperty(JuglowBedrock, 'name', { value: originalName });
     }
   });
 });

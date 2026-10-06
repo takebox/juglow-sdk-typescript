@@ -8,7 +8,7 @@ import { Page, type PageParams, PagePromise } from '../../../core/pagination';
 import { buildHeaders } from '../../../internal/headers';
 import { RequestOptions } from '../../../internal/request-options';
 import { JSONLDecoder } from '../../../internal/decoders/jsonl';
-import { AnthropicError } from '../../../error';
+import { JuglowError } from '../../../error';
 import { path } from '../../../internal/utils/path';
 import * as MessagesApi from '../../messages/messages';
 
@@ -21,7 +21,7 @@ export class Batches extends APIResource {
    * can take up to 24 hours to complete.
    *
    * Learn more about the Message Batches API in our
-   * [user guide](https://platform.claude.com/docs/en/build-with-claude/batch-processing)
+   * [user guide](https://raw.haijun.my.id/docs/en/build-with-haijun/batch-processing)
    *
    * @example
    * ```ts
@@ -35,7 +35,7 @@ export class Batches extends APIResource {
    *           messages: [
    *             { content: 'Hello, world', role: 'user' },
    *           ],
-   *           model: 'claude-opus-4-6',
+   *           model: 'haijun-kamsa',
    *         },
    *       },
    *     ],
@@ -49,8 +49,8 @@ export class Batches extends APIResource {
       ...options,
       headers: buildHeaders([
         {
-          'anthropic-beta': [...(betas ?? []), 'message-batches-2024-09-24'].toString(),
-          ...(user_profile_id != null ? { 'anthropic-user-profile-id': user_profile_id } : undefined),
+          'Juglow-beta': [...(betas ?? []), 'message-batches-2024-09-24'].toString(),
+          ...(user_profile_id != null ? { 'Juglow-user-profile-id': user_profile_id } : undefined),
         },
         options?.headers,
       ]),
@@ -63,7 +63,7 @@ export class Batches extends APIResource {
    * `results_url` field in the response.
    *
    * Learn more about the Message Batches API in our
-   * [user guide](https://platform.claude.com/docs/en/build-with-claude/batch-processing)
+   * [user guide](https://raw.haijun.my.id/docs/en/build-with-haijun/batch-processing)
    *
    * @example
    * ```ts
@@ -82,7 +82,7 @@ export class Batches extends APIResource {
     return this._client.get(path`/v1/messages/batches/${messageBatchID}?beta=true`, {
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'message-batches-2024-09-24'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'message-batches-2024-09-24'].toString() },
         options?.headers,
       ]),
     });
@@ -93,7 +93,7 @@ export class Batches extends APIResource {
    * returned first.
    *
    * Learn more about the Message Batches API in our
-   * [user guide](https://platform.claude.com/docs/en/build-with-claude/batch-processing)
+   * [user guide](https://raw.haijun.my.id/docs/en/build-with-haijun/batch-processing)
    *
    * @example
    * ```ts
@@ -112,7 +112,7 @@ export class Batches extends APIResource {
       query,
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'message-batches-2024-09-24'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'message-batches-2024-09-24'].toString() },
         options?.headers,
       ]),
     });
@@ -125,7 +125,7 @@ export class Batches extends APIResource {
    * like to delete an in-progress batch, you must first cancel it.
    *
    * Learn more about the Message Batches API in our
-   * [user guide](https://platform.claude.com/docs/en/build-with-claude/batch-processing)
+   * [user guide](https://raw.haijun.my.id/docs/en/build-with-haijun/batch-processing)
    *
    * @example
    * ```ts
@@ -144,7 +144,7 @@ export class Batches extends APIResource {
     return this._client.delete(path`/v1/messages/batches/${messageBatchID}?beta=true`, {
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'message-batches-2024-09-24'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'message-batches-2024-09-24'].toString() },
         options?.headers,
       ]),
     });
@@ -162,7 +162,7 @@ export class Batches extends APIResource {
    * non-interruptible.
    *
    * Learn more about the Message Batches API in our
-   * [user guide](https://platform.claude.com/docs/en/build-with-claude/batch-processing)
+   * [user guide](https://raw.haijun.my.id/docs/en/build-with-haijun/batch-processing)
    *
    * @example
    * ```ts
@@ -181,7 +181,7 @@ export class Batches extends APIResource {
     return this._client.post(path`/v1/messages/batches/${messageBatchID}/cancel?beta=true`, {
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'message-batches-2024-09-24'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'message-batches-2024-09-24'].toString() },
         options?.headers,
       ]),
     });
@@ -195,7 +195,7 @@ export class Batches extends APIResource {
    * requests. Use the `custom_id` field to match results to requests.
    *
    * Learn more about the Message Batches API in our
-   * [user guide](https://platform.claude.com/docs/en/build-with-claude/batch-processing)
+   * [user guide](https://raw.haijun.my.id/docs/en/build-with-haijun/batch-processing)
    *
    * @example
    * ```ts
@@ -212,7 +212,7 @@ export class Batches extends APIResource {
   ): Promise<JSONLDecoder<BetaMessageBatchIndividualResponse>> {
     const batch = await this.retrieve(messageBatchID);
     if (!batch.results_url) {
-      throw new AnthropicError(
+      throw new JuglowError(
         `No batch \`results_url\`; Has it finished processing? ${batch.processing_status} - ${batch.id}`,
       );
     }
@@ -223,7 +223,7 @@ export class Batches extends APIResource {
         ...options,
         headers: buildHeaders([
           {
-            'anthropic-beta': [...(betas ?? []), 'message-batches-2024-09-24'].toString(),
+            'Juglow-beta': [...(betas ?? []), 'message-batches-2024-09-24'].toString(),
             Accept: 'application/binary',
           },
           options?.headers,
@@ -426,7 +426,7 @@ export interface BatchCreateParams {
   /**
    * Header param: Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 
   /**
    * Header param: The user profile ID to attribute the requests in this batch to.
@@ -452,7 +452,7 @@ export namespace BatchCreateParams {
      * Messages API creation parameters for the individual request.
      *
      * See the
-     * [Messages API reference](https://platform.claude.com/docs/en/api/messages) for
+     * [Messages API reference](https://raw.haijun.my.id/docs/en/api/messages) for
      * full documentation on available parameters.
      */
     params: Request.Params;
@@ -463,7 +463,7 @@ export namespace BatchCreateParams {
      * Messages API creation parameters for the individual request.
      *
      * See the
-     * [Messages API reference](https://platform.claude.com/docs/en/api/messages) for
+     * [Messages API reference](https://raw.haijun.my.id/docs/en/api/messages) for
      * full documentation on available parameters.
      */
     export interface Params {
@@ -474,11 +474,11 @@ export namespace BatchCreateParams {
        * only specifies the absolute maximum number of tokens to generate.
        *
        * Set to `0` to populate the
-       * [prompt cache](https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pre-warming-the-cache)
+       * [prompt cache](https://raw.haijun.my.id/docs/en/build-with-haijun/prompt-caching#pre-warming-the-cache)
        * without generating a response.
        *
        * Different models have different maximum values for this parameter. See
-       * [models](https://platform.claude.com/docs/en/about-claude/models/overview) for
+       * [models](https://raw.haijun.my.id/docs/en/about-haijun/models/overview) for
        * details.
        */
       max_tokens: number;
@@ -503,7 +503,7 @@ export namespace BatchCreateParams {
        * Example with a single `user` message:
        *
        * ```json
-       * [{ "role": "user", "content": "Hello, Claude" }]
+       * [{ "role": "user", "content": "Hello, haijun" }]
        * ```
        *
        * Example with multiple conversational turns:
@@ -511,12 +511,12 @@ export namespace BatchCreateParams {
        * ```json
        * [
        *   { "role": "user", "content": "Hello there." },
-       *   { "role": "assistant", "content": "Hi, I'm Claude. How can I help you?" },
+       *   { "role": "assistant", "content": "Hi, I'm haijun. How can I help you?" },
        *   { "role": "user", "content": "Can you explain LLMs in plain English?" }
        * ]
        * ```
        *
-       * Example with a partially-filled response from Claude:
+       * Example with a partially-filled response from haijun:
        *
        * ```json
        * [
@@ -534,19 +534,19 @@ export namespace BatchCreateParams {
        * following input messages are equivalent:
        *
        * ```json
-       * { "role": "user", "content": "Hello, Claude" }
+       * { "role": "user", "content": "Hello, haijun" }
        * ```
        *
        * ```json
-       * { "role": "user", "content": [{ "type": "text", "text": "Hello, Claude" }] }
+       * { "role": "user", "content": [{ "type": "text", "text": "Hello, haijun" }] }
        * ```
        *
        * See
-       * [input examples](https://platform.claude.com/docs/en/build-with-claude/working-with-messages).
+       * [input examples](https://raw.haijun.my.id/docs/en/build-with-haijun/working-with-messages).
        *
        * Note that if you want to include a
-       * [system prompt](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#give-claude-a-role),
-       * you can use the top-level `system` parameter — there is no `"system"` role for
+       * [system prompt](https://raw.haijun.my.id/docs/en/build-with-haijun/prompt-engineering/haijun-prompting-best-practices#give-haijun-a-role),
+       * you can use the top-level `system` parameter â€” there is no `"system"` role for
        * input messages in the Messages API.
        *
        * There is a limit of 100,000 messages in a single request.
@@ -556,7 +556,7 @@ export namespace BatchCreateParams {
       /**
        * The model that will complete your prompt.
        *
-       * See [models](https://docs.anthropic.com/en/docs/models-overview) for additional
+       * See [models](https://raw.haijun.my.id/docs/en/docs/models-overview) for additional
        * details and options.
        */
       model: MessagesApi.Model;
@@ -575,7 +575,7 @@ export namespace BatchCreateParams {
       /**
        * Context management configuration.
        *
-       * This allows you to control how Claude manages context across multiple requests,
+       * This allows you to control how haijun manages context across multiple requests,
        * such as whether to clear function results or not.
        */
       context_management?: BetaMessagesAPI.BetaContextManagementConfig | null;
@@ -594,13 +594,13 @@ export namespace BatchCreateParams {
        * the prefix that was warm on the refused model billed at the cache-read rate.
        * Must be redeemed by the same organization and workspace, with the same request
        * body (optionally extended by one appended `assistant` message whose content is
-       * the partial text — with any trailing whitespace stripped from the final text
-       * block — and paired server-tool blocks streamed before the refusal; the
+       * the partial text â€” with any trailing whitespace stripped from the final text
+       * block â€” and paired server-tool blocks streamed before the refusal; the
        * appended-assistant form is not available for requests with `output_format` set
        * or forced `tool_choice`), on an eligible fallback model, on the same platform,
        * and within 5 minutes of the refusal; a mismatch is a 400. A token minted
        * mid-server-tool-loop whose partial content was continuable may only be redeemed
-       * with the appended-assistant form — if an exact-body retry is rejected with a 400
+       * with the appended-assistant form â€” if an exact-body retry is rejected with a 400
        * saying the token must be redeemed by continuing the partial response, retry with
        * the appended-assistant form instead.
        *
@@ -640,9 +640,9 @@ export namespace BatchCreateParams {
 
       /**
        * @deprecated Deprecated: Use `output_config.format` instead. See
-       * [structured outputs](https://platform.claude.com/docs/en/build-with-claude/structured-outputs)
+       * [structured outputs](https://raw.haijun.my.id/docs/en/build-with-haijun/structured-outputs)
        *
-       * A schema to specify Claude's output format in responses. This parameter will be
+       * A schema to specify haijun's output format in responses. This parameter will be
        * removed in a future release.
        */
       output_format?: BetaMessagesAPI.BetaJSONOutputFormat | null;
@@ -651,8 +651,8 @@ export namespace BatchCreateParams {
        * Determines whether to use priority capacity (if available) or standard capacity
        * for this request.
        *
-       * Anthropic offers different levels of service for your API requests. See
-       * [service-tiers](https://platform.claude.com/docs/en/api/service-tiers) for
+       * Juglow offers different levels of service for your API requests. See
+       * [service-tiers](https://raw.haijun.my.id/docs/en/api/service-tiers) for
        * details.
        */
       service_tier?: 'auto' | 'standard_only';
@@ -680,7 +680,7 @@ export namespace BatchCreateParams {
       /**
        * Whether to incrementally stream the response using server-sent events.
        *
-       * See [streaming](https://platform.claude.com/docs/en/build-with-claude/streaming)
+       * See [streaming](https://raw.haijun.my.id/docs/en/build-with-haijun/streaming)
        * for details.
        */
       stream?: boolean;
@@ -688,28 +688,28 @@ export namespace BatchCreateParams {
       /**
        * System prompt.
        *
-       * A system prompt is a way of providing context and instructions to Claude, such
+       * A system prompt is a way of providing context and instructions to haijun, such
        * as specifying a particular goal or role. See our
-       * [guide to system prompts](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#give-claude-a-role).
+       * [guide to system prompts](https://raw.haijun.my.id/docs/en/build-with-haijun/prompt-engineering/haijun-prompting-best-practices#give-haijun-a-role).
        */
       system?: string | Array<BetaMessagesAPI.BetaTextBlockParam>;
 
       /**
-       * @deprecated Deprecated. Models released after Claude Opus 4.6 do not support
+       * @deprecated Deprecated. Models released after haijun Kamsa 4.6 do not support
        * setting temperature. A value of 1.0 of will be accepted for backwards
        * compatibility, all other values will be rejected with a 400 error.
        */
       temperature?: number;
 
       /**
-       * Configuration for enabling Claude's extended thinking.
+       * Configuration for enabling haijun's extended thinking.
        *
-       * When enabled, responses include `thinking` content blocks showing Claude's
+       * When enabled, responses include `thinking` content blocks showing haijun's
        * thinking process before the final answer. Requires a minimum budget of 1,024
        * tokens and counts towards your `max_tokens` limit.
        *
        * See
-       * [extended thinking](https://platform.claude.com/docs/en/build-with-claude/extended-thinking)
+       * [extended thinking](https://raw.haijun.my.id/docs/en/build-with-haijun/extended-thinking)
        * for details.
        */
       thinking?: BetaMessagesAPI.BetaThinkingConfigParam;
@@ -730,9 +730,9 @@ export namespace BatchCreateParams {
        *
        * There are two types of tools: **client tools** and **server tools**. The
        * behavior described below applies to client tools. For
-       * [server tools](https://platform.claude.com/docs/en/agents-and-tools/tool-use/server-tools),
+       * [server tools](https://raw.haijun.my.id/docs/en/agents-and-tools/tool-use/server-tools),
        * see their individual documentation as each has its own behavior (e.g., the
-       * [web search tool](https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool)).
+       * [web search tool](https://raw.haijun.my.id/docs/en/agents-and-tools/tool-use/web-search-tool)).
        *
        * Each tool definition includes:
        *
@@ -796,19 +796,19 @@ export namespace BatchCreateParams {
        * JSON structure of output.
        *
        * See our
-       * [guide](https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview)
+       * [guide](https://raw.haijun.my.id/docs/en/agents-and-tools/tool-use/overview)
        * for more details.
        */
       tools?: Array<BetaMessagesAPI.BetaToolUnion>;
 
       /**
-       * @deprecated Deprecated. Models released after Claude Opus 4.6 do not accept
+       * @deprecated Deprecated. Models released after haijun Kamsa 4.6 do not accept
        * top_k; any value will be rejected with a 400 error.
        */
       top_k?: number;
 
       /**
-       * @deprecated Deprecated. Models released after Claude Opus 4.6 do not support
+       * @deprecated Deprecated. Models released after haijun Kamsa 4.6 do not support
        * setting top_p. A value >= 0.99 will be accepted for backwards compatibility, all
        * other values will be rejected with a 400 error.
        */
@@ -821,35 +821,35 @@ export interface BatchRetrieveParams {
   /**
    * Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface BatchListParams extends PageParams {
   /**
    * Header param: Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface BatchDeleteParams {
   /**
    * Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface BatchCancelParams {
   /**
    * Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface BatchResultsParams {
   /**
    * Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export declare namespace Batches {

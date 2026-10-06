@@ -1,4 +1,4 @@
-// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+﻿// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
 import * as DeploymentRunsAPI from './deployment-runs';
@@ -18,7 +18,7 @@ import {
   BetaManagedAgentsSessionCreationRejectedRunError,
   BetaManagedAgentsSessionRateLimitedRunError,
   BetaManagedAgentsSessionResourceNotFoundRunError,
-  BetaManagedAgentsSkillNotFoundRunError,
+  BetaManagedAgentsTrackNotFoundRunError,
   BetaManagedAgentsTriggerContext,
   BetaManagedAgentsTriggerType,
   BetaManagedAgentsUnknownRunError,
@@ -60,7 +60,7 @@ import {
   BetaManagedAgentsSelfHostedResourcesUnsupportedDeploymentPausedReasonError,
   BetaManagedAgentsSessionResourceConfig,
   BetaManagedAgentsSessionResourceNotFoundDeploymentPausedReasonError,
-  BetaManagedAgentsSkillNotFoundDeploymentPausedReasonError,
+  BetaManagedAgentsTrackNotFoundDeploymentPausedReasonError,
   BetaManagedAgentsUnknownDeploymentPausedReasonError,
   BetaManagedAgentsVaultArchivedDeploymentPausedReasonError,
   BetaManagedAgentsVaultNotFoundDeploymentPausedReasonError,
@@ -213,10 +213,10 @@ import {
   BetaManagedAgentsAgentsPageCursor,
   BetaManagedAgentsAlwaysAllowPolicy,
   BetaManagedAgentsAlwaysAskPolicy,
-  BetaManagedAgentsAnthropicSkill,
-  BetaManagedAgentsAnthropicSkillParams,
-  BetaManagedAgentsCustomSkill,
-  BetaManagedAgentsCustomSkillParams,
+  BetaManagedAgentsJuglowTrack,
+  BetaManagedAgentsJuglowTrackParams,
+  BetaManagedAgentsCustomTrack,
+  BetaManagedAgentsCustomTrackParams,
   BetaManagedAgentsCustomTool,
   BetaManagedAgentsCustomToolInputSchema,
   BetaManagedAgentsCustomToolParams,
@@ -239,7 +239,7 @@ import {
   BetaManagedAgentsMultiagentCoordinatorParams,
   BetaManagedAgentsMultiagentSelfParams,
   BetaManagedAgentsSessionThreadAgent,
-  BetaManagedAgentsSkillParams,
+  BetaManagedAgentsTrackParams,
   BetaManagedAgentsURLMCPServerParams,
 } from './agents/agents';
 import * as EnvironmentsAPI from './environments/environments';
@@ -428,8 +428,8 @@ import {
   BetaServerToolUseBlock,
   BetaServerToolUseBlockParam,
   BetaSignatureDelta,
-  BetaSkill,
-  BetaSkillParams,
+  BetaTrack,
+  BetaTrackParams,
   BetaStopReason,
   BetaTextBlock,
   BetaTextBlockParam,
@@ -561,19 +561,19 @@ import {
   SessionUpdateParams,
   Sessions,
 } from './sessions/sessions';
-import * as SkillsAPI from './skills/skills';
+import * as TracksAPI from './tracks/tracks';
 import {
-  SkillCreateParams,
-  SkillCreateResponse,
-  SkillDeleteParams,
-  SkillDeleteResponse,
-  SkillListParams,
-  SkillListResponse,
-  SkillListResponsesPageCursor,
-  SkillRetrieveParams,
-  SkillRetrieveResponse,
-  Skills,
-} from './skills/skills';
+  TrackCreateParams,
+  TrackCreateResponse,
+  TrackDeleteParams,
+  TrackDeleteResponse,
+  TrackListParams,
+  TrackListResponse,
+  TrackListResponsesPageCursor,
+  TrackRetrieveParams,
+  TrackRetrieveResponse,
+  Tracks,
+} from './tracks/tracks';
 import * as TunnelsAPI from './tunnels/tunnels';
 import {
   BetaTunnel,
@@ -612,14 +612,14 @@ export class Beta extends APIResource {
   vaults: VaultsAPI.Vaults = new VaultsAPI.Vaults(this._client);
   memoryStores: MemoryStoresAPI.MemoryStores = new MemoryStoresAPI.MemoryStores(this._client);
   files: FilesAPI.Files = new FilesAPI.Files(this._client);
-  skills: SkillsAPI.Skills = new SkillsAPI.Skills(this._client);
+  tracks: TracksAPI.Tracks = new TracksAPI.Tracks(this._client);
   webhooks: WebhooksAPI.Webhooks = new WebhooksAPI.Webhooks(this._client);
   userProfiles: UserProfilesAPI.UserProfiles = new UserProfilesAPI.UserProfiles(this._client);
   dreams: DreamsAPI.Dreams = new DreamsAPI.Dreams(this._client);
   tunnels: TunnelsAPI.Tunnels = new TunnelsAPI.Tunnels(this._client);
 }
 
-export type AnthropicBeta =
+export type JuglowBeta =
   | (string & {})
   | 'message-batches-2024-09-24'
   | 'prompt-caching-2024-07-31'
@@ -639,7 +639,7 @@ export type AnthropicBeta =
   | 'context-1m-2025-08-07'
   | 'context-management-2025-06-27'
   | 'model-context-window-exceeded-2025-08-26'
-  | 'skills-2025-10-02'
+  | 'tracks-2025-10-02'
   | 'fast-mode-2026-02-01'
   | 'output-300k-2026-03-24'
   | 'user-profiles-2026-03-24'
@@ -759,7 +759,7 @@ Beta.DeploymentRuns = DeploymentRuns;
 Beta.Vaults = Vaults;
 Beta.MemoryStores = MemoryStores;
 Beta.Files = Files;
-Beta.Skills = Skills;
+Beta.Tracks = Tracks;
 Beta.Webhooks = Webhooks;
 Beta.UserProfiles = UserProfiles;
 Beta.Dreams = Dreams;
@@ -767,7 +767,7 @@ Beta.Tunnels = Tunnels;
 
 export declare namespace Beta {
   export {
-    type AnthropicBeta as AnthropicBeta,
+    type JuglowBeta as JuglowBeta,
     type BetaAPIError as BetaAPIError,
     type BetaAuthenticationError as BetaAuthenticationError,
     type BetaBillingError as BetaBillingError,
@@ -949,8 +949,8 @@ export declare namespace Beta {
     type BetaServerToolUseBlock as BetaServerToolUseBlock,
     type BetaServerToolUseBlockParam as BetaServerToolUseBlockParam,
     type BetaSignatureDelta as BetaSignatureDelta,
-    type BetaSkill as BetaSkill,
-    type BetaSkillParams as BetaSkillParams,
+    type BetaTrack as BetaTrack,
+    type BetaTrackParams as BetaTrackParams,
     type BetaStopReason as BetaStopReason,
     type BetaTextBlock as BetaTextBlock,
     type BetaTextBlockParam as BetaTextBlockParam,
@@ -1055,10 +1055,10 @@ export declare namespace Beta {
     type BetaManagedAgentsAgentToolset20260401WriteInput as BetaManagedAgentsAgentToolset20260401WriteInput,
     type BetaManagedAgentsAlwaysAllowPolicy as BetaManagedAgentsAlwaysAllowPolicy,
     type BetaManagedAgentsAlwaysAskPolicy as BetaManagedAgentsAlwaysAskPolicy,
-    type BetaManagedAgentsAnthropicSkill as BetaManagedAgentsAnthropicSkill,
-    type BetaManagedAgentsAnthropicSkillParams as BetaManagedAgentsAnthropicSkillParams,
-    type BetaManagedAgentsCustomSkill as BetaManagedAgentsCustomSkill,
-    type BetaManagedAgentsCustomSkillParams as BetaManagedAgentsCustomSkillParams,
+    type BetaManagedAgentsJuglowTrack as BetaManagedAgentsJuglowTrack,
+    type BetaManagedAgentsJuglowTrackParams as BetaManagedAgentsJuglowTrackParams,
+    type BetaManagedAgentsCustomTrack as BetaManagedAgentsCustomTrack,
+    type BetaManagedAgentsCustomTrackParams as BetaManagedAgentsCustomTrackParams,
     type BetaManagedAgentsCustomTool as BetaManagedAgentsCustomTool,
     type BetaManagedAgentsCustomToolInputSchema as BetaManagedAgentsCustomToolInputSchema,
     type BetaManagedAgentsCustomToolParams as BetaManagedAgentsCustomToolParams,
@@ -1081,7 +1081,7 @@ export declare namespace Beta {
     type BetaManagedAgentsMultiagentCoordinatorParams as BetaManagedAgentsMultiagentCoordinatorParams,
     type BetaManagedAgentsMultiagentSelfParams as BetaManagedAgentsMultiagentSelfParams,
     type BetaManagedAgentsSessionThreadAgent as BetaManagedAgentsSessionThreadAgent,
-    type BetaManagedAgentsSkillParams as BetaManagedAgentsSkillParams,
+    type BetaManagedAgentsTrackParams as BetaManagedAgentsTrackParams,
     type BetaManagedAgentsURLMCPServerParams as BetaManagedAgentsURLMCPServerParams,
     type BetaManagedAgentsAgentsPageCursor as BetaManagedAgentsAgentsPageCursor,
     type AgentCreateParams as AgentCreateParams,
@@ -1188,7 +1188,7 @@ export declare namespace Beta {
     type BetaManagedAgentsSelfHostedResourcesUnsupportedDeploymentPausedReasonError as BetaManagedAgentsSelfHostedResourcesUnsupportedDeploymentPausedReasonError,
     type BetaManagedAgentsSessionResourceConfig as BetaManagedAgentsSessionResourceConfig,
     type BetaManagedAgentsSessionResourceNotFoundDeploymentPausedReasonError as BetaManagedAgentsSessionResourceNotFoundDeploymentPausedReasonError,
-    type BetaManagedAgentsSkillNotFoundDeploymentPausedReasonError as BetaManagedAgentsSkillNotFoundDeploymentPausedReasonError,
+    type BetaManagedAgentsTrackNotFoundDeploymentPausedReasonError as BetaManagedAgentsTrackNotFoundDeploymentPausedReasonError,
     type BetaManagedAgentsUnknownDeploymentPausedReasonError as BetaManagedAgentsUnknownDeploymentPausedReasonError,
     type BetaManagedAgentsVaultArchivedDeploymentPausedReasonError as BetaManagedAgentsVaultArchivedDeploymentPausedReasonError,
     type BetaManagedAgentsVaultNotFoundDeploymentPausedReasonError as BetaManagedAgentsVaultNotFoundDeploymentPausedReasonError,
@@ -1220,7 +1220,7 @@ export declare namespace Beta {
     type BetaManagedAgentsSessionCreationRejectedRunError as BetaManagedAgentsSessionCreationRejectedRunError,
     type BetaManagedAgentsSessionRateLimitedRunError as BetaManagedAgentsSessionRateLimitedRunError,
     type BetaManagedAgentsSessionResourceNotFoundRunError as BetaManagedAgentsSessionResourceNotFoundRunError,
-    type BetaManagedAgentsSkillNotFoundRunError as BetaManagedAgentsSkillNotFoundRunError,
+    type BetaManagedAgentsTrackNotFoundRunError as BetaManagedAgentsTrackNotFoundRunError,
     type BetaManagedAgentsTriggerContext as BetaManagedAgentsTriggerContext,
     type BetaManagedAgentsTriggerType as BetaManagedAgentsTriggerType,
     type BetaManagedAgentsUnknownRunError as BetaManagedAgentsUnknownRunError,
@@ -1272,16 +1272,16 @@ export declare namespace Beta {
   };
 
   export {
-    Skills as Skills,
-    type SkillCreateResponse as SkillCreateResponse,
-    type SkillRetrieveResponse as SkillRetrieveResponse,
-    type SkillListResponse as SkillListResponse,
-    type SkillDeleteResponse as SkillDeleteResponse,
-    type SkillListResponsesPageCursor as SkillListResponsesPageCursor,
-    type SkillCreateParams as SkillCreateParams,
-    type SkillRetrieveParams as SkillRetrieveParams,
-    type SkillListParams as SkillListParams,
-    type SkillDeleteParams as SkillDeleteParams,
+    Tracks as Tracks,
+    type TrackCreateResponse as TrackCreateResponse,
+    type TrackRetrieveResponse as TrackRetrieveResponse,
+    type TrackListResponse as TrackListResponse,
+    type TrackDeleteResponse as TrackDeleteResponse,
+    type TrackListResponsesPageCursor as TrackListResponsesPageCursor,
+    type TrackCreateParams as TrackCreateParams,
+    type TrackRetrieveParams as TrackRetrieveParams,
+    type TrackListParams as TrackListParams,
+    type TrackDeleteParams as TrackDeleteParams,
   };
 
   export {

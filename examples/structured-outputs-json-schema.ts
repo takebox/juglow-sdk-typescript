@@ -1,7 +1,7 @@
 #!/usr/bin/env -S npm run tsn -T
 
-import Anthropic from '@anthropic-ai/sdk';
-import { jsonSchemaOutputFormat } from '@anthropic-ai/sdk/helpers/json-schema';
+import JuGloW from '@takebox-ai/sdk';
+import { jsonSchemaOutputFormat } from '@takebox-ai/sdk/helpers/json-schema';
 
 const NumbersResponse = {
   type: 'object',
@@ -17,10 +17,10 @@ const NumbersResponse = {
 } as const;
 
 async function main() {
-  const client = new Anthropic();
+  const client = new JuGloW();
 
   const message = await client.messages.parse({
-    model: 'claude-sonnet-5',
+    model: 'haijun-sonnet',
     max_tokens: 1024,
     messages: [{ role: 'user', content: 'What are the first 3 prime numbers?' }],
     output_config: {

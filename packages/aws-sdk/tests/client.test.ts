@@ -1,5 +1,5 @@
-import { VERSION } from '@anthropic-ai/sdk/version';
-import { AnthropicAws } from '../src';
+﻿import { VERSION } from '@takebox-ai/sdk/version';
+import { JuglowAws } from '../src';
 import { getAuthHeaders } from '../src/core/auth';
 
 jest.mock('../src/core/auth', () => ({
@@ -32,9 +32,9 @@ const mockFetch = jest.fn().mockImplementation(() => {
 });
 const originalFetch = global.fetch;
 
-const makeRequest = async (client: AnthropicAws) => {
+const makeRequest = async (client: JuglowAws) => {
   await client.messages.create({
-    model: 'claude-opus-4-8',
+    model: 'haijun-opus-8',
     max_tokens: 1024,
     messages: [{ content: 'Test message', role: 'user' }],
   });
@@ -45,7 +45,7 @@ const getRequestHeaders = (): Headers => {
   return options.headers as Headers;
 };
 
-describe('AnthropicAws', () => {
+describe('JuglowAws', () => {
   const originalEnv = process.env;
 
   beforeEach(() => {
@@ -70,10 +70,10 @@ describe('AnthropicAws', () => {
     process.env = { ...originalEnv };
     delete process.env['AWS_REGION'];
     delete process.env['AWS_DEFAULT_REGION'];
-    delete process.env['ANTHROPIC_API_KEY'];
-    delete process.env['ANTHROPIC_AWS_BASE_URL'];
-    delete process.env['ANTHROPIC_AWS_API_KEY'];
-    delete process.env['ANTHROPIC_AWS_WORKSPACE_ID'];
+    delete process.env['HAIJUN_API_KEY'];
+    delete process.env['HAIJUN_AWS_BASE_URL'];
+    delete process.env['HAIJUN_AWS_API_KEY'];
+    delete process.env['HAIJUN_AWS_WORKSPACE_ID'];
   });
 
   afterEach(() => {
@@ -83,19 +83,19 @@ describe('AnthropicAws', () => {
 
   describe('initialization with API key', () => {
     test('creates client with api key and custom region', () => {
-      const client = new AnthropicAws({
+      const client = new JuglowAws({
         apiKey: 'test-key',
         awsRegion: 'eu-west-1',
         workspaceId: 'ws-test',
       });
 
       expect(client.apiKey).toBe('test-key');
-      expect(client.baseURL).toBe('https://aws-external-anthropic.eu-west-1.api.aws');
+      expect(client.baseURL).toBe('https://aws-external-Juglow.eu-west-1.api.aws');
       expect(client.awsRegion).toBe('eu-west-1');
     });
 
     test('creates client with api key and custom baseURL', () => {
-      const client = new AnthropicAws({
+      const client = new JuglowAws({
         apiKey: 'test-key',
         baseURL: 'https://custom.api.example.com',
         workspaceId: 'ws-test',
@@ -107,7 +107,7 @@ describe('AnthropicAws', () => {
 
   describe('initialization with SigV4 credentials', () => {
     test('creates client with explicit AWS credentials', () => {
-      const client = new AnthropicAws({
+      const client = new JuglowAws({
         awsAccessKey: 'my-access-key',
         awsSecretAccessKey: 'my-secret-key',
         awsRegion: 'us-west-2',
@@ -117,11 +117,11 @@ describe('AnthropicAws', () => {
       expect(client.awsAccessKey).toBe('my-access-key');
       expect(client.awsSecretAccessKey).toBe('my-secret-key');
       expect(client.awsRegion).toBe('us-west-2');
-      expect(client.baseURL).toBe('https://aws-external-anthropic.us-west-2.api.aws');
+      expect(client.baseURL).toBe('https://aws-external-Juglow.us-west-2.api.aws');
     });
 
     test('creates client with session token', () => {
-      const client = new AnthropicAws({
+      const client = new JuglowAws({
         awsAccessKey: 'my-access-key',
         awsSecretAccessKey: 'my-secret-key',
         awsSessionToken: 'my-session-token',
@@ -135,7 +135,7 @@ describe('AnthropicAws', () => {
     test('creates client with provider chain resolver', () => {
       const resolver = jest.fn();
 
-      const client = new AnthropicAws({
+      const client = new JuglowAws({
         providerChainResolver: resolver,
         awsRegion: 'us-east-1',
         workspaceId: 'ws-test',
@@ -145,20 +145,20 @@ describe('AnthropicAws', () => {
     });
 
     test('creates client with no explicit creds (falls back to provider chain)', () => {
-      const client = new AnthropicAws({
+      const client = new JuglowAws({
         awsRegion: 'us-east-1',
         workspaceId: 'ws-test',
       });
 
       expect(client.awsAccessKey).toBeNull();
       expect(client.awsSecretAccessKey).toBeNull();
-      expect(client.baseURL).toBe('https://aws-external-anthropic.us-east-1.api.aws');
+      expect(client.baseURL).toBe('https://aws-external-Juglow.us-east-1.api.aws');
     });
   });
 
   describe('initialization with awsProfile', () => {
     test('creates client with awsProfile', () => {
-      const client = new AnthropicAws({
+      const client = new JuglowAws({
         awsProfile: 'my-profile',
         awsRegion: 'us-east-1',
         workspaceId: 'ws-test',
@@ -170,7 +170,7 @@ describe('AnthropicAws', () => {
 
   describe('region from AWS config file', () => {
     test('ready resolves immediately when awsRegion is passed explicitly', async () => {
-      const client = new AnthropicAws({
+      const client = new JuglowAws({
         awsRegion: 'us-east-1',
         workspaceId: 'ws-test',
       });
@@ -182,14 +182,14 @@ describe('AnthropicAws', () => {
     test('ready resolves immediately when AWS_REGION env is set', async () => {
       process.env['AWS_REGION'] = 'us-west-2';
 
-      const client = new AnthropicAws({ workspaceId: 'ws-test' });
+      const client = new JuglowAws({ workspaceId: 'ws-test' });
 
       await expect(client.ready).resolves.toBeUndefined();
       expect(mockLoadConfig).not.toHaveBeenCalled();
     });
 
     test('ready resolves immediately when baseURL is explicit', async () => {
-      const client = new AnthropicAws({
+      const client = new JuglowAws({
         baseURL: 'https://custom.example.com',
         workspaceId: 'ws-test',
       });
@@ -199,7 +199,7 @@ describe('AnthropicAws', () => {
     });
 
     test('ready resolves immediately when skipAuth is true', async () => {
-      const client = new AnthropicAws({ skipAuth: true });
+      const client = new JuglowAws({ skipAuth: true });
 
       await expect(client.ready).resolves.toBeUndefined();
       expect(mockLoadConfig).not.toHaveBeenCalled();
@@ -208,7 +208,7 @@ describe('AnthropicAws', () => {
     test('resolves region from config file for awsProfile', async () => {
       mockLoadConfig.mockReturnValue(() => Promise.resolve('eu-west-2'));
 
-      const client = new AnthropicAws({
+      const client = new JuglowAws({
         awsProfile: 'my-profile',
         workspaceId: 'ws-test',
       });
@@ -216,7 +216,7 @@ describe('AnthropicAws', () => {
       expect(client.awsRegion).toBeUndefined();
       await client.ready;
       expect(client.awsRegion).toBe('eu-west-2');
-      expect(client.baseURL).toBe('https://aws-external-anthropic.eu-west-2.api.aws');
+      expect(client.baseURL).toBe('https://aws-external-Juglow.eu-west-2.api.aws');
 
       expect(mockLoadConfig).toHaveBeenCalledTimes(1);
       const fileOptions = mockLoadConfig.mock.calls[0]![1];
@@ -226,7 +226,7 @@ describe('AnthropicAws', () => {
     test('resolves region from config file default profile when no awsProfile given', async () => {
       mockLoadConfig.mockReturnValue(() => Promise.resolve('ap-southeast-2'));
 
-      const client = new AnthropicAws({ workspaceId: 'ws-test' });
+      const client = new JuglowAws({ workspaceId: 'ws-test' });
 
       await client.ready;
       expect(client.awsRegion).toBe('ap-southeast-2');
@@ -238,7 +238,7 @@ describe('AnthropicAws', () => {
     test('request uses config-file region when no explicit region given', async () => {
       mockLoadConfig.mockReturnValue(() => Promise.resolve('ca-central-1'));
 
-      const client = new AnthropicAws({
+      const client = new JuglowAws({
         awsProfile: 'my-profile',
         workspaceId: 'ws-test',
         maxRetries: 0,
@@ -247,7 +247,7 @@ describe('AnthropicAws', () => {
       await makeRequest(client);
 
       const [url] = mockFetch.mock.calls[0]!;
-      expect(url).toBe('https://aws-external-anthropic.ca-central-1.api.aws/v1/messages');
+      expect(url).toBe('https://aws-external-Juglow.ca-central-1.api.aws/v1/messages');
 
       const props = mockGetAuthHeaders.mock.calls[0]![1];
       expect(props.regionName).toBe('ca-central-1');
@@ -256,7 +256,7 @@ describe('AnthropicAws', () => {
     test('explicit awsRegion takes precedence over config file', async () => {
       mockLoadConfig.mockReturnValue(() => Promise.resolve('from-config'));
 
-      const client = new AnthropicAws({
+      const client = new JuglowAws({
         awsRegion: 'from-arg',
         awsProfile: 'my-profile',
         workspaceId: 'ws-test',
@@ -271,7 +271,7 @@ describe('AnthropicAws', () => {
       const handler = jest.fn();
       process.on('unhandledRejection', handler);
       try {
-        new AnthropicAws({ workspaceId: 'ws-test' });
+        new JuglowAws({ workspaceId: 'ws-test' });
         // Let any microtask/rejection settle
         await new Promise((r) => setImmediate(r));
         expect(handler).not.toHaveBeenCalled();
@@ -285,7 +285,7 @@ describe('AnthropicAws', () => {
     test('throws when only awsAccessKey is provided', () => {
       expect(
         () =>
-          new AnthropicAws({
+          new JuglowAws({
             awsAccessKey: 'my-access-key',
             awsRegion: 'us-east-1',
             workspaceId: 'ws-test',
@@ -296,7 +296,7 @@ describe('AnthropicAws', () => {
     test('throws when only awsSecretAccessKey is provided', () => {
       expect(
         () =>
-          new AnthropicAws({
+          new JuglowAws({
             awsSecretAccessKey: 'my-secret-key',
             awsRegion: 'us-east-1',
             workspaceId: 'ws-test',
@@ -321,7 +321,7 @@ describe('AnthropicAws', () => {
       ['profile', { profile: 'my-profile' }],
     ] as const)('warns when `%s` is provided', (_name, extra) => {
       const logger = makeLogger();
-      new AnthropicAws({
+      new JuglowAws({
         awsAccessKey: 'my-access-key',
         awsSecretAccessKey: 'my-secret-key',
         awsRegion: 'us-east-1',
@@ -335,7 +335,7 @@ describe('AnthropicAws', () => {
 
     test('a config-supplied base_url does not redirect requests', async () => {
       const logger = makeLogger();
-      const client = new AnthropicAws({
+      const client = new JuglowAws({
         config: { authentication: { type: 'user_oauth' }, base_url: 'https://config-host.example.com' },
         awsAccessKey: 'my-access-key',
         awsSecretAccessKey: 'my-secret-key',
@@ -348,15 +348,15 @@ describe('AnthropicAws', () => {
       await makeRequest(client);
 
       const [url] = mockFetch.mock.calls[0]!;
-      expect(url).toBe('https://aws-external-anthropic.us-west-2.api.aws/v1/messages');
+      expect(url).toBe('https://aws-external-Juglow.us-west-2.api.aws/v1/messages');
       const headers = getRequestHeaders();
       // the ignored config must not leak OAuth artifacts onto signed requests
-      expect(headers.get('anthropic-beta')).toBeNull();
+      expect(headers.get('Juglow-beta')).toBeNull();
     });
 
     test('clones do not warn (base withOptions forwards credentials: null)', () => {
       const logger = makeLogger();
-      const client = new AnthropicAws({
+      const client = new JuglowAws({
         awsAccessKey: 'my-access-key',
         awsSecretAccessKey: 'my-secret-key',
         awsRegion: 'us-east-1',
@@ -372,27 +372,27 @@ describe('AnthropicAws', () => {
     test('uses AWS_REGION env var', () => {
       process.env['AWS_REGION'] = 'ap-southeast-1';
 
-      const client = new AnthropicAws({
+      const client = new JuglowAws({
         apiKey: 'test-key',
         workspaceId: 'ws-test',
       });
 
       expect(client.awsRegion).toBe('ap-southeast-1');
-      expect(client.baseURL).toBe('https://aws-external-anthropic.ap-southeast-1.api.aws');
+      expect(client.baseURL).toBe('https://aws-external-Juglow.ap-southeast-1.api.aws');
     });
 
-    test('uses ANTHROPIC_AWS_API_KEY env var', () => {
-      process.env['ANTHROPIC_AWS_API_KEY'] = 'env-api-key';
+    test('uses HAIJUN_AWS_API_KEY env var', () => {
+      process.env['HAIJUN_AWS_API_KEY'] = 'env-api-key';
 
-      const client = new AnthropicAws({ awsRegion: 'us-east-1', workspaceId: 'ws-test' });
+      const client = new JuglowAws({ awsRegion: 'us-east-1', workspaceId: 'ws-test' });
 
       expect(client.apiKey).toBe('env-api-key');
     });
 
-    test('uses ANTHROPIC_AWS_BASE_URL env var', () => {
-      process.env['ANTHROPIC_AWS_BASE_URL'] = 'https://custom.gateway.api.aws';
+    test('uses HAIJUN_AWS_BASE_URL env var', () => {
+      process.env['HAIJUN_AWS_BASE_URL'] = 'https://custom.gateway.api.aws';
 
-      const client = new AnthropicAws({
+      const client = new JuglowAws({
         apiKey: 'test-key',
         workspaceId: 'ws-test',
       });
@@ -400,15 +400,15 @@ describe('AnthropicAws', () => {
       expect(client.baseURL).toBe('https://custom.gateway.api.aws');
     });
 
-    test('ANTHROPIC_AWS_BASE_URL env var skips async region resolution', async () => {
-      process.env['ANTHROPIC_AWS_BASE_URL'] = 'https://custom.gateway.api.aws';
+    test('HAIJUN_AWS_BASE_URL env var skips async region resolution', async () => {
+      process.env['HAIJUN_AWS_BASE_URL'] = 'https://custom.gateway.api.aws';
 
-      const client = new AnthropicAws({
+      const client = new JuglowAws({
         workspaceId: 'ws-test',
         maxRetries: 0,
       });
 
-      // ready resolves immediately — no async config-file lookup needed
+      // ready resolves immediately â€” no async config-file lookup needed
       await client.ready;
       expect(client.baseURL).toBe('https://custom.gateway.api.aws');
 
@@ -422,53 +422,53 @@ describe('AnthropicAws', () => {
     test('uses AWS_DEFAULT_REGION env var as fallback', () => {
       process.env['AWS_DEFAULT_REGION'] = 'eu-central-1';
 
-      const client = new AnthropicAws({
+      const client = new JuglowAws({
         apiKey: 'test-key',
         workspaceId: 'ws-test',
       });
 
       expect(client.awsRegion).toBe('eu-central-1');
-      expect(client.baseURL).toBe('https://aws-external-anthropic.eu-central-1.api.aws');
+      expect(client.baseURL).toBe('https://aws-external-Juglow.eu-central-1.api.aws');
     });
 
     test('AWS_REGION takes precedence over AWS_DEFAULT_REGION', () => {
       process.env['AWS_REGION'] = 'us-west-2';
       process.env['AWS_DEFAULT_REGION'] = 'eu-central-1';
 
-      const client = new AnthropicAws({
+      const client = new JuglowAws({
         apiKey: 'test-key',
         workspaceId: 'ws-test',
       });
 
       expect(client.awsRegion).toBe('us-west-2');
-      expect(client.baseURL).toBe('https://aws-external-anthropic.us-west-2.api.aws');
+      expect(client.baseURL).toBe('https://aws-external-Juglow.us-west-2.api.aws');
     });
 
     test('awsRegion arg takes precedence over AWS_REGION env', () => {
       process.env['AWS_REGION'] = 'from-env';
 
-      const client = new AnthropicAws({
+      const client = new JuglowAws({
         apiKey: 'test-key',
         awsRegion: 'from-arg',
         workspaceId: 'ws-test',
       });
 
       expect(client.awsRegion).toBe('from-arg');
-      expect(client.baseURL).toBe('https://aws-external-anthropic.from-arg.api.aws');
+      expect(client.baseURL).toBe('https://aws-external-Juglow.from-arg.api.aws');
     });
 
     test('rejects ready when no region or base URL is resolvable', async () => {
-      const client = new AnthropicAws({ apiKey: 'test-key', workspaceId: 'ws-test' });
+      const client = new JuglowAws({ apiKey: 'test-key', workspaceId: 'ws-test' });
       await expect(client.ready).rejects.toThrow('No AWS region or base URL found.');
     });
 
     test('first request throws when no region or base URL is resolvable', async () => {
-      const client = new AnthropicAws({ apiKey: 'test-key', workspaceId: 'ws-test', maxRetries: 0 });
+      const client = new JuglowAws({ apiKey: 'test-key', workspaceId: 'ws-test', maxRetries: 0 });
       await expect(makeRequest(client)).rejects.toThrow('No AWS region or base URL found.');
     });
 
     test('allows missing region when baseURL is provided', () => {
-      const client = new AnthropicAws({
+      const client = new JuglowAws({
         apiKey: 'test-key',
         baseURL: 'https://custom.gateway.api.aws',
         workspaceId: 'ws-test',
@@ -481,7 +481,7 @@ describe('AnthropicAws', () => {
 
   describe('auth precedence', () => {
     test('apiKey arg sends x-api-key header, not SigV4', async () => {
-      const client = new AnthropicAws({
+      const client = new JuglowAws({
         apiKey: 'my-api-key',
         awsAccessKey: 'my-access-key',
         awsSecretAccessKey: 'my-secret-key',
@@ -498,7 +498,7 @@ describe('AnthropicAws', () => {
     });
 
     test('explicit AWS creds use SigV4, not API key', async () => {
-      const client = new AnthropicAws({
+      const client = new JuglowAws({
         awsAccessKey: 'my-access-key',
         awsSecretAccessKey: 'my-secret-key',
         awsRegion: 'us-east-1',
@@ -517,10 +517,10 @@ describe('AnthropicAws', () => {
       expect(headers.get('x-api-key')).toBeNull();
     });
 
-    test('explicit AWS creds take precedence over env ANTHROPIC_AWS_API_KEY', async () => {
-      process.env['ANTHROPIC_AWS_API_KEY'] = 'env-api-key';
+    test('explicit AWS creds take precedence over env HAIJUN_AWS_API_KEY', async () => {
+      process.env['HAIJUN_AWS_API_KEY'] = 'env-api-key';
 
-      const client = new AnthropicAws({
+      const client = new JuglowAws({
         awsAccessKey: 'my-access-key',
         awsSecretAccessKey: 'my-secret-key',
         awsRegion: 'us-east-1',
@@ -536,7 +536,7 @@ describe('AnthropicAws', () => {
     });
 
     test('awsProfile uses SigV4 and passes profile to auth', async () => {
-      const client = new AnthropicAws({
+      const client = new JuglowAws({
         awsProfile: 'my-profile',
         awsRegion: 'us-east-1',
         workspaceId: 'ws-test',
@@ -553,10 +553,10 @@ describe('AnthropicAws', () => {
       expect(headers.get('x-api-key')).toBeNull();
     });
 
-    test('awsProfile takes precedence over env ANTHROPIC_AWS_API_KEY', async () => {
-      process.env['ANTHROPIC_AWS_API_KEY'] = 'env-api-key';
+    test('awsProfile takes precedence over env HAIJUN_AWS_API_KEY', async () => {
+      process.env['HAIJUN_AWS_API_KEY'] = 'env-api-key';
 
-      const client = new AnthropicAws({
+      const client = new JuglowAws({
         awsProfile: 'my-profile',
         awsRegion: 'us-east-1',
         workspaceId: 'ws-test',
@@ -570,10 +570,10 @@ describe('AnthropicAws', () => {
       expect(headers.get('x-api-key')).toBeNull();
     });
 
-    test('env ANTHROPIC_AWS_API_KEY sends x-api-key header when no constructor auth', async () => {
-      process.env['ANTHROPIC_AWS_API_KEY'] = 'env-api-key';
+    test('env HAIJUN_AWS_API_KEY sends x-api-key header when no constructor auth', async () => {
+      process.env['HAIJUN_AWS_API_KEY'] = 'env-api-key';
 
-      const client = new AnthropicAws({ awsRegion: 'us-east-1', workspaceId: 'ws-test', maxRetries: 0 });
+      const client = new JuglowAws({ awsRegion: 'us-east-1', workspaceId: 'ws-test', maxRetries: 0 });
 
       await makeRequest(client);
 
@@ -583,7 +583,7 @@ describe('AnthropicAws', () => {
     });
 
     test('no auth falls back to SigV4 default chain', async () => {
-      const client = new AnthropicAws({
+      const client = new JuglowAws({
         awsRegion: 'us-east-1',
         workspaceId: 'ws-test',
         maxRetries: 0,
@@ -604,7 +604,7 @@ describe('AnthropicAws', () => {
 
   describe('SigV4 auth headers', () => {
     test('sends SigV4 signed headers on request', async () => {
-      const client = new AnthropicAws({
+      const client = new JuglowAws({
         awsAccessKey: 'my-access-key',
         awsSecretAccessKey: 'my-secret-key',
         awsRegion: 'us-west-2',
@@ -616,7 +616,7 @@ describe('AnthropicAws', () => {
 
       expect(mockFetch).toHaveBeenCalledTimes(1);
       const [url] = mockFetch.mock.calls[0]!;
-      expect(url).toBe('https://aws-external-anthropic.us-west-2.api.aws/v1/messages');
+      expect(url).toBe('https://aws-external-Juglow.us-west-2.api.aws/v1/messages');
 
       const headers = getRequestHeaders();
       expect(headers.get('authorization')).toBe('AWS4-HMAC-SHA256 Credential=mock');
@@ -625,7 +625,7 @@ describe('AnthropicAws', () => {
     });
 
     test('passes session token to auth', async () => {
-      const client = new AnthropicAws({
+      const client = new JuglowAws({
         awsAccessKey: 'my-access-key',
         awsSecretAccessKey: 'my-secret-key',
         awsSessionToken: 'my-session-token',
@@ -642,7 +642,7 @@ describe('AnthropicAws', () => {
 
     test('signs after user middleware, covering the mutated request and hiding the signature from middleware', async () => {
       let middlewareSawSignature: string | null = null;
-      const client = new AnthropicAws({
+      const client = new JuglowAws({
         awsAccessKey: 'my-access-key',
         awsSecretAccessKey: 'my-secret-key',
         awsRegion: 'us-west-2',
@@ -669,7 +669,7 @@ describe('AnthropicAws', () => {
 
   describe('API key auth headers', () => {
     test('sends x-api-key header', async () => {
-      const client = new AnthropicAws({
+      const client = new JuglowAws({
         apiKey: 'test-api-key',
         awsRegion: 'us-east-1',
         workspaceId: 'ws-test',
@@ -680,17 +680,17 @@ describe('AnthropicAws', () => {
 
       expect(mockFetch).toHaveBeenCalledTimes(1);
       const [url] = mockFetch.mock.calls[0]!;
-      expect(url).toBe('https://aws-external-anthropic.us-east-1.api.aws/v1/messages');
+      expect(url).toBe('https://aws-external-Juglow.us-east-1.api.aws/v1/messages');
 
       const headers = getRequestHeaders();
       expect(headers.get('x-api-key')).toBe('test-api-key');
-      expect(headers.get('anthropic-version')).toBeTruthy();
+      expect(headers.get('Juglow-version')).toBeTruthy();
       expect(headers.get('content-type')).toBe('application/json');
     });
 
     test('the x-api-key logical credential is visible to user middleware', async () => {
       let middlewareSawApiKey: string | null = null;
-      const client = new AnthropicAws({
+      const client = new JuglowAws({
         apiKey: 'test-api-key',
         awsRegion: 'us-east-1',
         workspaceId: 'ws-test',
@@ -710,8 +710,8 @@ describe('AnthropicAws', () => {
   });
 
   describe('workspaceId', () => {
-    test('sends anthropic-workspace-id header when workspaceId is set', async () => {
-      const client = new AnthropicAws({
+    test('sends Juglow-workspace-id header when workspaceId is set', async () => {
+      const client = new JuglowAws({
         apiKey: 'test-key',
         awsRegion: 'us-east-1',
         workspaceId: 'ws-abc123',
@@ -721,13 +721,13 @@ describe('AnthropicAws', () => {
       await makeRequest(client);
 
       const headers = getRequestHeaders();
-      expect(headers.get('anthropic-workspace-id')).toBe('ws-abc123');
+      expect(headers.get('Juglow-workspace-id')).toBe('ws-abc123');
     });
 
-    test('uses ANTHROPIC_AWS_WORKSPACE_ID env var', async () => {
-      process.env['ANTHROPIC_AWS_WORKSPACE_ID'] = 'ws-from-env';
+    test('uses HAIJUN_AWS_WORKSPACE_ID env var', async () => {
+      process.env['HAIJUN_AWS_WORKSPACE_ID'] = 'ws-from-env';
 
-      const client = new AnthropicAws({
+      const client = new JuglowAws({
         apiKey: 'test-key',
         awsRegion: 'us-east-1',
         maxRetries: 0,
@@ -737,13 +737,13 @@ describe('AnthropicAws', () => {
       await makeRequest(client);
 
       const headers = getRequestHeaders();
-      expect(headers.get('anthropic-workspace-id')).toBe('ws-from-env');
+      expect(headers.get('Juglow-workspace-id')).toBe('ws-from-env');
     });
 
     test('workspaceId arg takes precedence over env var', async () => {
-      process.env['ANTHROPIC_AWS_WORKSPACE_ID'] = 'ws-from-env';
+      process.env['HAIJUN_AWS_WORKSPACE_ID'] = 'ws-from-env';
 
-      const client = new AnthropicAws({
+      const client = new JuglowAws({
         apiKey: 'test-key',
         awsRegion: 'us-east-1',
         workspaceId: 'ws-from-arg',
@@ -754,19 +754,19 @@ describe('AnthropicAws', () => {
       await makeRequest(client);
 
       const headers = getRequestHeaders();
-      expect(headers.get('anthropic-workspace-id')).toBe('ws-from-arg');
+      expect(headers.get('Juglow-workspace-id')).toBe('ws-from-arg');
     });
 
     test('throws when workspaceId is not set and env var is absent', () => {
-      expect(() => new AnthropicAws({ apiKey: 'test-key', awsRegion: 'us-east-1' })).toThrow(
-        'No workspace ID found. Set `workspaceId` in the constructor or the `ANTHROPIC_AWS_WORKSPACE_ID` environment variable.',
+      expect(() => new JuglowAws({ apiKey: 'test-key', awsRegion: 'us-east-1' })).toThrow(
+        'No workspace ID found. Set `workspaceId` in the constructor or the `HAIJUN_AWS_WORKSPACE_ID` environment variable.',
       );
     });
   });
 
   describe('skipAuth', () => {
     test('constructs without any auth credentials when skipAuth is true', () => {
-      const client = new AnthropicAws({
+      const client = new JuglowAws({
         baseURL: 'https://my-gateway.example.com',
         skipAuth: true,
       });
@@ -780,7 +780,7 @@ describe('AnthropicAws', () => {
     test('does not require workspaceId when skipAuth is true', () => {
       expect(
         () =>
-          new AnthropicAws({
+          new JuglowAws({
             baseURL: 'https://my-gateway.example.com',
             skipAuth: true,
           }),
@@ -788,7 +788,7 @@ describe('AnthropicAws', () => {
     });
 
     test('still uses workspaceId when provided with skipAuth', async () => {
-      const client = new AnthropicAws({
+      const client = new JuglowAws({
         baseURL: 'https://my-gateway.example.com',
         skipAuth: true,
         workspaceId: 'ws-test',
@@ -799,11 +799,11 @@ describe('AnthropicAws', () => {
       await makeRequest(client);
 
       const headers = getRequestHeaders();
-      expect(headers.get('anthropic-workspace-id')).toBe('ws-test');
+      expect(headers.get('Juglow-workspace-id')).toBe('ws-test');
     });
 
     test('does not send x-api-key header when skipAuth is true', async () => {
-      const client = new AnthropicAws({
+      const client = new JuglowAws({
         baseURL: 'https://my-gateway.example.com',
         skipAuth: true,
         workspaceId: 'ws-test',
@@ -818,7 +818,7 @@ describe('AnthropicAws', () => {
     });
 
     test('does not call SigV4 auth when skipAuth is true with AWS creds', async () => {
-      const client = new AnthropicAws({
+      const client = new JuglowAws({
         awsAccessKey: 'my-access-key',
         awsSecretAccessKey: 'my-secret-key',
         awsRegion: 'us-east-1',
@@ -834,7 +834,7 @@ describe('AnthropicAws', () => {
     });
 
     test('does not require awsRegion when skipAuth is true and using SigV4 path', async () => {
-      const client = new AnthropicAws({
+      const client = new JuglowAws({
         baseURL: 'https://my-gateway.example.com',
         skipAuth: true,
         workspaceId: 'ws-test',
@@ -847,7 +847,7 @@ describe('AnthropicAws', () => {
     });
 
     test('defaults skipAuth to false', () => {
-      const client = new AnthropicAws({
+      const client = new JuglowAws({
         apiKey: 'test-key',
         awsRegion: 'us-east-1',
         workspaceId: 'ws-test',
@@ -859,17 +859,17 @@ describe('AnthropicAws', () => {
 
   describe('resources', () => {
     test('has messages resource', () => {
-      const client = new AnthropicAws({ apiKey: 'test-key', awsRegion: 'us-east-1', workspaceId: 'ws-test' });
+      const client = new JuglowAws({ apiKey: 'test-key', awsRegion: 'us-east-1', workspaceId: 'ws-test' });
       expect(client.messages).toBeDefined();
     });
 
     test('has beta resource', () => {
-      const client = new AnthropicAws({ apiKey: 'test-key', awsRegion: 'us-east-1', workspaceId: 'ws-test' });
+      const client = new JuglowAws({ apiKey: 'test-key', awsRegion: 'us-east-1', workspaceId: 'ws-test' });
       expect(client.beta).toBeDefined();
     });
 
     test('has models resource', () => {
-      const client = new AnthropicAws({ apiKey: 'test-key', awsRegion: 'us-east-1', workspaceId: 'ws-test' });
+      const client = new JuglowAws({ apiKey: 'test-key', awsRegion: 'us-east-1', workspaceId: 'ws-test' });
       expect(client.models).toBeDefined();
     });
   });
@@ -879,7 +879,7 @@ describe('AnthropicAws', () => {
       const providerChainResolver = async () => {
         throw new Error('unused in this test');
       };
-      const client = new AnthropicAws({
+      const client = new JuglowAws({
         awsAccessKey: 'my-access-key',
         awsSecretAccessKey: 'my-secret-key',
         awsSessionToken: 'my-session-token',
@@ -890,7 +890,7 @@ describe('AnthropicAws', () => {
 
       const clone = client.withOptions({ defaultHeaders: { 'x-custom': '1' } });
 
-      expect(clone).toBeInstanceOf(AnthropicAws);
+      expect(clone).toBeInstanceOf(JuglowAws);
       expect(clone.workspaceId).toBe('ws-test');
       expect(clone.awsRegion).toBe('us-west-2');
       expect(clone.awsAccessKey).toBe('my-access-key');
@@ -900,7 +900,7 @@ describe('AnthropicAws', () => {
     });
 
     test('clone preserves API-key configuration', () => {
-      const client = new AnthropicAws({
+      const client = new JuglowAws({
         apiKey: 'my-api-key',
         awsRegion: 'us-east-1',
         workspaceId: 'ws-test',
@@ -908,7 +908,7 @@ describe('AnthropicAws', () => {
 
       const clone = client.withOptions({ maxRetries: 5 });
 
-      expect(clone).toBeInstanceOf(AnthropicAws);
+      expect(clone).toBeInstanceOf(JuglowAws);
       expect(clone.workspaceId).toBe('ws-test');
       expect(clone.awsRegion).toBe('us-east-1');
       expect(clone.maxRetries).toBe(5);
@@ -918,7 +918,7 @@ describe('AnthropicAws', () => {
       // Mirrors copyClientForHelper's withOptions({ apiKey: null, authToken,
       // credentials: undefined, ... }): the sub-client must keep the workspace
       // id + region so the environment helpers can authenticate via SigV4.
-      const client = new AnthropicAws({
+      const client = new JuglowAws({
         awsAccessKey: 'my-access-key',
         awsSecretAccessKey: 'my-secret-key',
         awsRegion: 'us-west-2',
@@ -932,22 +932,22 @@ describe('AnthropicAws', () => {
         baseURL: client.baseURL,
       });
 
-      expect(scoped).toBeInstanceOf(AnthropicAws);
+      expect(scoped).toBeInstanceOf(JuglowAws);
       expect(scoped.workspaceId).toBe('ws-test');
       expect(scoped.awsRegion).toBe('us-west-2');
     });
 
-    test('SigV4 clone is not flipped to API-key mode by env ANTHROPIC_API_KEY', async () => {
-      process.env['ANTHROPIC_API_KEY'] = 'env-anthropic-key';
+    test('SigV4 clone is not flipped to API-key mode by env HAIJUN_API_KEY', async () => {
+      process.env['HAIJUN_API_KEY'] = 'env-Juglow-key';
 
-      const client = new AnthropicAws({
+      const client = new JuglowAws({
         awsAccessKey: 'my-access-key',
         awsSecretAccessKey: 'my-secret-key',
         awsRegion: 'us-west-2',
         workspaceId: 'ws-test',
         maxRetries: 0,
       });
-      // ANTHROPIC_API_KEY is not an auth source for the AWS gateway and must
+      // HAIJUN_API_KEY is not an auth source for the AWS gateway and must
       // not leak onto the client or its clones.
       expect(client.apiKey).toBeNull();
 
@@ -962,10 +962,10 @@ describe('AnthropicAws', () => {
       expect(headers.get('authorization')).toBe('AWS4-HMAC-SHA256 Credential=mock');
     });
 
-    test('env ANTHROPIC_AUTH_TOKEN is not sent as a bearer header in API-key mode', async () => {
-      process.env['ANTHROPIC_AUTH_TOKEN'] = 'env-oauth-token';
+    test('env HAIJUN_AUTH_TOKEN is not sent as a bearer header in API-key mode', async () => {
+      process.env['HAIJUN_AUTH_TOKEN'] = 'env-oauth-token';
 
-      const client = new AnthropicAws({
+      const client = new JuglowAws({
         apiKey: 'my-api-key',
         awsRegion: 'us-east-1',
         workspaceId: 'ws-test',
@@ -984,7 +984,7 @@ describe('AnthropicAws', () => {
     });
 
     test('clone re-derives the endpoint when awsRegion is overridden', () => {
-      const client = new AnthropicAws({
+      const client = new JuglowAws({
         awsAccessKey: 'my-access-key',
         awsSecretAccessKey: 'my-secret-key',
         awsRegion: 'us-west-2',
@@ -994,13 +994,13 @@ describe('AnthropicAws', () => {
       const clone = client.withOptions({ awsRegion: 'eu-central-1' });
 
       expect(clone.awsRegion).toBe('eu-central-1');
-      expect(clone.baseURL).toBe('https://aws-external-anthropic.eu-central-1.api.aws');
+      expect(clone.baseURL).toBe('https://aws-external-Juglow.eu-central-1.api.aws');
       // the original client is untouched
-      expect(client.baseURL).toBe('https://aws-external-anthropic.us-west-2.api.aws');
+      expect(client.baseURL).toBe('https://aws-external-Juglow.us-west-2.api.aws');
     });
 
     test('clone keeps an explicitly configured baseURL, even across an awsRegion override', () => {
-      const client = new AnthropicAws({
+      const client = new JuglowAws({
         awsAccessKey: 'my-access-key',
         awsSecretAccessKey: 'my-secret-key',
         awsRegion: 'us-west-2',
@@ -1017,7 +1017,7 @@ describe('AnthropicAws', () => {
     });
 
     test('clone with a workspaceId override sends the new workspace header', async () => {
-      const client = new AnthropicAws({
+      const client = new JuglowAws({
         awsAccessKey: 'my-access-key',
         awsSecretAccessKey: 'my-secret-key',
         awsRegion: 'us-west-2',
@@ -1032,7 +1032,7 @@ describe('AnthropicAws', () => {
       await makeRequest(clone);
 
       const headers = getRequestHeaders();
-      expect(headers.get('anthropic-workspace-id')).toBe('ws-new');
+      expect(headers.get('Juglow-workspace-id')).toBe('ws-new');
       // caller-supplied default headers survive the clone
       expect(headers.get('x-team')).toBe('my-team');
     });
@@ -1040,32 +1040,32 @@ describe('AnthropicAws', () => {
     test('clone of a config-file-region client keeps the resolved region instead of pinning a placeholder URL', async () => {
       mockLoadConfig.mockReturnValue(() => Promise.resolve('ap-southeast-2'));
 
-      const client = new AnthropicAws({
+      const client = new JuglowAws({
         awsAccessKey: 'my-access-key',
         awsSecretAccessKey: 'my-secret-key',
         workspaceId: 'ws-test',
       });
       await client.ready;
-      expect(client.baseURL).toBe('https://aws-external-anthropic.ap-southeast-2.api.aws');
+      expect(client.baseURL).toBe('https://aws-external-Juglow.ap-southeast-2.api.aws');
 
       const clone = client.withOptions({ defaultHeaders: { 'x-custom': '1' } });
       await clone.ready;
       expect(clone.awsRegion).toBe('ap-southeast-2');
-      expect(clone.baseURL).toBe('https://aws-external-anthropic.ap-southeast-2.api.aws');
+      expect(clone.baseURL).toBe('https://aws-external-Juglow.ap-southeast-2.api.aws');
     });
   });
 
   test('user agent is a hardcoded string', async () => {
-    const originalName = AnthropicAws.name;
+    const originalName = JuglowAws.name;
     // Rename the class, as a minifier would, to prove the header isn't derived from it.
-    Object.defineProperty(AnthropicAws, 'name', { value: 'MinifiedClient' });
+    Object.defineProperty(JuglowAws, 'name', { value: 'MinifiedClient' });
     try {
-      const client = new AnthropicAws({ apiKey: 'test-key', awsRegion: 'us-east-1', workspaceId: 'ws-test' });
+      const client = new JuglowAws({ apiKey: 'test-key', awsRegion: 'us-east-1', workspaceId: 'ws-test' });
       expect(client.constructor.name).toBe('MinifiedClient');
       const { req } = await client.buildRequest({ path: '/foo', method: 'post' });
-      expect(req.headers.get('user-agent')).toBe(`AnthropicAws/JS ${VERSION}`);
+      expect(req.headers.get('user-agent')).toBe(`JuglowAws/JS ${VERSION}`);
     } finally {
-      Object.defineProperty(AnthropicAws, 'name', { value: originalName });
+      Object.defineProperty(JuglowAws, 'name', { value: originalName });
     }
   });
 });

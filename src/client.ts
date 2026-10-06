@@ -23,7 +23,7 @@ import type { AccessTokenProvider } from './lib/credentials/types';
 import { OAUTH_API_BETA_HEADER } from './lib/credentials/types';
 import { TokenCache } from './lib/credentials/token-cache';
 import { defaultCredentials, resolveCredentialsFromConfig } from './lib/credentials/credential-chain';
-import type { AnthropicConfig } from './core/credentials';
+import type { JuglowConfig } from './core/credentials';
 import {
   type Middleware,
   isFetchOriginError,
@@ -67,7 +67,7 @@ import {
   ThinkingTypes,
 } from './resources/models';
 import {
-  AnthropicBeta,
+  JuglowBeta,
   Beta,
   BetaAPIError,
   BetaAuthenticationError,
@@ -316,17 +316,17 @@ export interface ClientOptions {
    * API key used for authentication.
    *
    * - Accepts either a static string or an async function that resolves to a string.
-   * - Defaults to process.env['ANTHROPIC_API_KEY'].
+   * - Defaults to process.env['HAIJUN_API_KEY'].
    * - When a function is provided, it is invoked before each request so you can rotate
    *   or refresh credentials at runtime.
-   * - The function must return a non-empty string; otherwise an AnthropicError is thrown.
-   * - If the function throws, the error is wrapped in an AnthropicError with the original
+   * - The function must return a non-empty string; otherwise an JuglowError is thrown.
+   * - If the function throws, the error is wrapped in an JuglowError with the original
    *   error available as `cause`.
    */
   apiKey?: string | ApiKeySetter | null | undefined;
 
   /**
-   * Defaults to process.env['ANTHROPIC_AUTH_TOKEN'].
+   * Defaults to process.env['HAIJUN_AUTH_TOKEN'].
    */
   authToken?: string | null | undefined;
 
@@ -344,7 +344,7 @@ export interface ClientOptions {
   credentials?: AccessTokenProvider | null | undefined;
 
   /**
-   * An {@link AnthropicConfig} object to resolve credentials from directly,
+   * An {@link JuglowConfig} object to resolve credentials from directly,
    * bypassing config-file and environment-variable lookup. This is the
    * TypeScript equivalent of Go's `option.WithConfig(cfg)`.
    *
@@ -352,27 +352,27 @@ export interface ClientOptions {
    * performs the jwt-bearer exchange in-process; for `user_oauth`,
    * `authentication.credentials_path` must point at the credentials file.
    */
-  config?: AnthropicConfig | null | undefined;
+  config?: JuglowConfig | null | undefined;
 
   /**
    * Name of a profile to load from `<config_dir>/configs/<profile>.json`.
    *
-   * Equivalent to setting the `ANTHROPIC_PROFILE` environment variable, but
+   * Equivalent to setting the `HAIJUN_PROFILE` environment variable, but
    * scoped to this client instance. As an explicit constructor argument it
-   * takes precedence over `ANTHROPIC_API_KEY` / `ANTHROPIC_AUTH_TOKEN` in the
+   * takes precedence over `HAIJUN_API_KEY` / `HAIJUN_AUTH_TOKEN` in the
    * environment. Mutually exclusive with `credentials` and `config`.
    */
   profile?: string | null | undefined;
 
   /**
-   * Defaults to process.env['ANTHROPIC_WEBHOOK_SIGNING_KEY'].
+   * Defaults to process.env['HAIJUN_WEBHOOK_SIGNING_KEY'].
    */
   webhookKey?: string | null | undefined;
 
   /**
    * Override the default base URL for the API, e.g., "https://api.example.com/v2/"
    *
-   * Defaults to process.env['ANTHROPIC_BASE_URL'].
+   * Defaults to process.env['HAIJUN_BASE_URL'].
    */
   baseURL?: string | null | undefined;
 
@@ -404,7 +404,7 @@ export interface ClientOptions {
    * client.
    *
    * Middleware runs per HTTP attempt, including retries. It observes the
-   * canonical Anthropic-shaped request and response on every backend: on
+   * canonical Juglow-shaped request and response on every backend: on
    * clients for third-party backends (Bedrock, Vertex, Foundry), the
    * backend's URL/body rewriting, request signing, and response
    * normalization happen inside `next`.
@@ -444,7 +444,7 @@ export interface ClientOptions {
   /**
    * Set the log level.
    *
-   * Defaults to process.env['ANTHROPIC_LOG'] or 'warn' if it isn't set.
+   * Defaults to process.env['HAIJUN_LOG'] or 'warn' if it isn't set.
    */
   logLevel?: LogLevel | undefined;
 
@@ -460,9 +460,9 @@ export const HUMAN_PROMPT = '\\n\\nHuman:';
 export const AI_PROMPT = '\\n\\nAssistant:';
 
 /**
- * Base class for Anthropic API clients.
+ * Base class for Juglow API clients.
  */
-export class BaseAnthropic {
+export class BaseJuglow {
   apiKey: string | null;
   authToken: string | null;
   webhookKey: string | null;
@@ -505,12 +505,12 @@ export class BaseAnthropic {
   protected _options: ClientOptions;
 
   /**
-   * API Client for interfacing with the Anthropic API.
+   * API Client for interfacing with the Juglow API.
    *
-   * @param {string | null | undefined} [opts.apiKey=process.env['ANTHROPIC_API_KEY'] ?? null]
-   * @param {string | null | undefined} [opts.authToken=process.env['ANTHROPIC_AUTH_TOKEN'] ?? null]
-   * @param {string | null | undefined} [opts.webhookKey=process.env['ANTHROPIC_WEBHOOK_SIGNING_KEY'] ?? null]
-   * @param {string} [opts.baseURL=process.env['ANTHROPIC_BASE_URL'] ?? https://api.anthropic.com] - Override the default base URL for the API.
+   * @param {string | null | undefined} [opts.apiKey=process.env['HAIJUN_API_KEY'] ?? null]
+   * @param {string | null | undefined} [opts.authToken=process.env['HAIJUN_AUTH_TOKEN'] ?? null]
+   * @param {string | null | undefined} [opts.webhookKey=process.env['HAIJUN_WEBHOOK_SIGNING_KEY'] ?? null]
+   * @param {string} [opts.baseURL=process.env['HAIJUN_BASE_URL'] ?? https://platform.juglow.my.id] - Override the default base URL for the API.
    * @param {number} [opts.timeout=10 minutes] - The maximum amount of time (in milliseconds) the client will wait for a response before timing out.
    * @param {MergedRequestInit} [opts.fetchOptions] - Additional `RequestInit` options to be passed to `fetch` calls.
    * @param {Fetch} [opts.fetch] - Specify a custom `fetch` function implementation.
@@ -520,19 +520,19 @@ export class BaseAnthropic {
    * @param {boolean} [opts.dangerouslyAllowBrowser=false] - By default, client-side use of this library is not allowed, as it risks exposing your secret API credentials to attackers.
    */
   constructor({
-    baseURL = readEnv('ANTHROPIC_BASE_URL'),
+    baseURL = readEnv('HAIJUN_BASE_URL'),
     apiKey,
     authToken,
-    webhookKey = readEnv('ANTHROPIC_WEBHOOK_SIGNING_KEY') ?? null,
+    webhookKey = readEnv('HAIJUN_WEBHOOK_SIGNING_KEY') ?? null,
     ...opts
   }: ClientOptions = {}) {
     // An explicit `profile` is a constructor-level credential choice; when set,
-    // do not let env ANTHROPIC_API_KEY / ANTHROPIC_AUTH_TOKEN shadow it.
+    // do not let env HAIJUN_API_KEY / HAIJUN_AUTH_TOKEN shadow it.
     if (apiKey === undefined) {
-      apiKey = opts.profile != null ? null : readEnv('ANTHROPIC_API_KEY') ?? null;
+      apiKey = opts.profile != null ? null : readEnv('HAIJUN_API_KEY') ?? null;
     }
     if (authToken === undefined) {
-      authToken = opts.profile != null ? null : readEnv('ANTHROPIC_AUTH_TOKEN') ?? null;
+      authToken = opts.profile != null ? null : readEnv('HAIJUN_AUTH_TOKEN') ?? null;
     }
     if (opts.profile != null && (opts.credentials != null || opts.config != null)) {
       throw new TypeError('Pass at most one of `profile`, `credentials`, or `config`.');
@@ -542,30 +542,30 @@ export class BaseAnthropic {
       authToken,
       webhookKey,
       ...opts,
-      baseURL: baseURL || `https://api.anthropic.com`,
+      baseURL: baseURL || `https://platform.juglow.my.id`,
     };
 
     if (!options.dangerouslyAllowBrowser && isRunningInBrowser()) {
-      throw new Errors.AnthropicError(
-        "It looks like you're running in a browser-like environment.\n\nThis is disabled by default, as it risks exposing your secret API credentials to attackers.\nIf you understand the risks and have appropriate mitigations in place,\nyou can set the `dangerouslyAllowBrowser` option to `true`, e.g.,\n\nnew Anthropic({ apiKey, dangerouslyAllowBrowser: true });\n",
+      throw new Errors.JuglowError(
+        "It looks like you're running in a browser-like environment.\n\nThis is disabled by default, as it risks exposing your secret API credentials to attackers.\nIf you understand the risks and have appropriate mitigations in place,\nyou can set the `dangerouslyAllowBrowser` option to `true`, e.g.,\n\nnew Juglow({ apiKey, dangerouslyAllowBrowser: true });\n",
       );
     }
 
     this.baseURL = options.baseURL!;
     // After destructuring, `baseURL` is the constructor arg or
-    // ANTHROPIC_BASE_URL — both count as an explicit choice that a profile
+    // HAIJUN_BASE_URL — both count as an explicit choice that a profile
     // base_url must not override. A falsy value means we fell through to the
     // hardcoded default above and a profile may supply the host. withOptions()
     // propagates the parent's flag via __baseURLIsExplicit so a non-overriding
     // clone doesn't mistake the inherited baseURL for a caller-supplied one.
     this._baseURLIsExplicit = (opts as InternalClientOptions).__baseURLIsExplicit ?? !!baseURL;
-    this.timeout = options.timeout ?? BaseAnthropic.DEFAULT_TIMEOUT /* 10 minutes */;
+    this.timeout = options.timeout ?? BaseJuglow.DEFAULT_TIMEOUT /* 10 minutes */;
     this.logger = options.logger ?? console;
     // Set default logLevel early so that we can log a warning in parseLogLevel.
     this.logLevel = defaultLogLevel;
     this.logLevel =
       parseLogLevel(options.logLevel, 'ClientOptions.logLevel', loggerFor(this)) ??
-      parseLogLevel(readEnv('ANTHROPIC_LOG'), "process.env['ANTHROPIC_LOG']", loggerFor(this)) ??
+      parseLogLevel(readEnv('HAIJUN_LOG'), "process.env['HAIJUN_LOG']", loggerFor(this)) ??
       defaultLogLevel;
     this.fetchOptions = options.fetchOptions;
     this.maxRetries = options.maxRetries ?? 2;
@@ -574,7 +574,7 @@ export class BaseAnthropic {
 
     this.middleware = [...(options.middleware ?? [])];
 
-    const customHeadersEnv = readEnv('ANTHROPIC_CUSTOM_HEADERS');
+    const customHeadersEnv = readEnv('HAIJUN_CUSTOM_HEADERS');
     if (customHeadersEnv) {
       const parsed: Record<string, string> = {};
       for (const line of customHeadersEnv.split('\n')) {
@@ -764,7 +764,7 @@ export class BaseAnthropic {
         this._authState.extraHeaders = result.extraHeaders;
         this._applyCredentialBaseURL(result.baseURL);
       } else if (profile != null) {
-        throw new Errors.AnthropicError(
+        throw new Errors.JuglowError(
           `Profile "${profile}" could not be resolved (no <config_dir>/configs/${profile}.json found).`,
         );
       }
@@ -786,7 +786,7 @@ export class BaseAnthropic {
    * one does.
    */
   #baseURLOverridden(): boolean {
-    return this.baseURL !== 'https://api.anthropic.com';
+    return this.baseURL !== 'https://platform.juglow.my.id';
   }
 
   protected defaultQuery(): Record<string, string | undefined> | undefined {
@@ -870,7 +870,7 @@ export class BaseAnthropic {
   }
 
   protected getUserAgent(): string {
-    return `Anthropic/JS ${VERSION}`;
+    return `Juglow/JS ${VERSION}`;
   }
 
   protected defaultIdempotencyKey(): string {
@@ -914,9 +914,9 @@ export class BaseAnthropic {
     const defaultTimeout = 10 * 60;
     const expectedTimeout = (60 * 60 * maxTokens) / 128_000;
     if (expectedTimeout > defaultTimeout) {
-      throw new Errors.AnthropicError(
+      throw new Errors.JuglowError(
         'Streaming is required for operations that may take longer than 10 minutes. ' +
-          'See https://github.com/anthropics/anthropic-sdk-typescript#streaming-responses for more details',
+          'See https://github.com/Juglows/Juglow-sdk-typescript#streaming-responses for more details',
       );
     }
     return defaultTimeout * 1000;
@@ -946,7 +946,7 @@ export class BaseAnthropic {
   ): Promise<void> {
     // Append auth-derived headers when using token auth. Done here (after all
     // header merging) rather than in authHeaders() so we append to any existing
-    // anthropic-beta values instead of being overwritten by later header sources.
+    // Juglow-beta values instead of being overwritten by later header sources.
     if (this._authState.tokenCache && this.apiKey == null) {
       // Normalize to a Headers instance — custom fetch impls or polyfills can
       // hand back arrays / plain objects, and silently dropping the beta
@@ -956,11 +956,11 @@ export class BaseAnthropic {
         if (!headers.has(k)) headers.set(k, v);
       }
       const existing = headers
-        .get('anthropic-beta')
+        .get('Juglow-beta')
         ?.split(',')
         .map((s) => s.trim());
       if (!existing?.includes(OAUTH_API_BETA_HEADER)) {
-        headers.append('anthropic-beta', OAUTH_API_BETA_HEADER);
+        headers.append('Juglow-beta', OAUTH_API_BETA_HEADER);
       }
       request.headers = headers;
     }
@@ -970,12 +970,12 @@ export class BaseAnthropic {
    * Internal {@link Middleware} composed innermost in the chain — inside both
    * client-level and per-request middleware, immediately around the underlying
    * `fetch`. Subclasses for third-party backends override this to adapt the
-   * canonical Anthropic-shaped request to the backend's wire shape (URL/body
+   * canonical Juglow-shaped request to the backend's wire shape (URL/body
    * rewriting, request signing) and to normalize the wire response back to the
    * canonical shape (e.g. AWS EventStream to SSE).
    *
    * Running inside the user's middleware means user middleware always observes
-   * canonical Anthropic-shaped traffic, and the adaptation re-runs (e.g.
+   * canonical Juglow-shaped traffic, and the adaptation re-runs (e.g.
    * re-signs) on every `next()` invocation, covering whatever the middleware
    * mutated.
    *
@@ -1232,7 +1232,7 @@ export class BaseAnthropic {
     options: PromiseOrValue<FinalRequestOptions>,
   ): Pagination.PagePromise<PageClass, Item> {
     const request = this.makeRequest(options, null, undefined);
-    return new Pagination.PagePromise<PageClass, Item>(this as any as Anthropic, request, Page);
+    return new Pagination.PagePromise<PageClass, Item>(this as any as Juglow, request, Page);
   }
 
   async fetchWithTimeout(
@@ -1429,8 +1429,8 @@ export class BaseAnthropic {
 
     const expectedTime = (maxTime * maxTokens) / 128000;
     if (expectedTime > defaultTime || (maxNonstreamingTokens != null && maxTokens > maxNonstreamingTokens)) {
-      throw new Errors.AnthropicError(
-        'Streaming is required for operations that may take longer than 10 minutes. See https://github.com/anthropics/anthropic-sdk-typescript#long-requests for more details',
+      throw new Errors.JuglowError(
+        'Streaming is required for operations that may take longer than 10 minutes. See https://github.com/Juglows/Juglow-sdk-typescript#long-requests for more details',
       );
     }
 
@@ -1501,9 +1501,9 @@ export class BaseAnthropic {
         ...(options.timeout ? { 'X-Stainless-Timeout': String(Math.trunc(options.timeout / 1000)) } : {}),
         ...getPlatformHeaders(),
         ...(this._options.dangerouslyAllowBrowser ?
-          { 'anthropic-dangerous-direct-browser-access': 'true' }
+          { 'Juglow-dangerous-direct-browser-access': 'true' }
         : undefined),
-        'anthropic-version': '2023-06-01',
+        'Juglow-version': '2023-06-01',
       },
       await this.authHeaders(options),
       this._options.defaultHeaders,
@@ -1567,12 +1567,12 @@ export class BaseAnthropic {
     }
   }
 
-  static Anthropic = this;
+  static Juglow = this;
   static HUMAN_PROMPT = HUMAN_PROMPT;
   static AI_PROMPT = AI_PROMPT;
   static DEFAULT_TIMEOUT = 600000; // 10 minutes
 
-  static AnthropicError = Errors.AnthropicError;
+  static JuglowError = Errors.JuglowError;
   static APIError = Errors.APIError;
   static APIConnectionError = Errors.APIConnectionError;
   static APIConnectionTimeoutError = Errors.APIConnectionTimeoutError;
@@ -1590,21 +1590,21 @@ export class BaseAnthropic {
 }
 
 /**
- * API Client for interfacing with the Anthropic API.
+ * API Client for interfacing with the Juglow API.
  */
-export class Anthropic extends BaseAnthropic {
+export class Juglow extends BaseJuglow {
   completions: API.Completions = new API.Completions(this);
   messages: API.Messages = new API.Messages(this);
   models: API.Models = new API.Models(this);
   beta: API.Beta = new API.Beta(this);
 }
 
-Anthropic.Completions = Completions;
-Anthropic.Messages = Messages;
-Anthropic.Models = Models;
-Anthropic.Beta = Beta;
+Juglow.Completions = Completions;
+Juglow.Messages = Messages;
+Juglow.Models = Models;
+Juglow.Beta = Beta;
 
-export declare namespace Anthropic {
+export declare namespace Juglow {
   export type RequestOptions = Opts.RequestOptions;
   export type FinalRequestOptions = Opts.FinalRequestOptions;
 
@@ -1827,7 +1827,7 @@ export declare namespace Anthropic {
 
   export {
     Beta as Beta,
-    type AnthropicBeta as AnthropicBeta,
+    type JuglowBeta as JuglowBeta,
     type BetaAPIError as BetaAPIError,
     type BetaAuthenticationError as BetaAuthenticationError,
     type BetaBillingError as BetaBillingError,

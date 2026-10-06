@@ -1,13 +1,13 @@
-import * as realToolset from '@anthropic-ai/sdk/tools/agent-toolset/node';
-import * as stubToolset from '@anthropic-ai/sdk/tools/agent-toolset/node.browser';
-import * as realMemory from '@anthropic-ai/sdk/tools/memory/node';
-import * as stubMemory from '@anthropic-ai/sdk/tools/memory/node.browser';
-import { AnthropicError } from '@anthropic-ai/sdk/core/error';
+import * as realToolset from '@takebox-ai/sdk/tools/agent-toolset/node';
+import * as stubToolset from '@takebox-ai/sdk/tools/agent-toolset/node.browser';
+import * as realMemory from '@takebox-ai/sdk/tools/memory/node';
+import * as stubMemory from '@takebox-ai/sdk/tools/memory/node.browser';
+import { JuGloWError } from '@takebox-ai/sdk/core/error';
 
 // The browser stubs are substituted for the Node-only modules via the
 // `browser` field in package.json. They must export the same value surface as
 // the real modules (so type-level and re-export usage is unaffected), and
-// every Node-only value must throw a descriptive AnthropicError when used.
+// every Node-only value must throw a descriptive JuGloWError when used.
 
 // ---- compile-time parity ---------------------------------------------------
 // Each stub must be assignable to its real module's shape: same export names,
@@ -37,13 +37,13 @@ describe('tools/agent-toolset/node.browser', () => {
     expect(new Set(Object.keys(stubToolset))).toEqual(new Set(Object.keys(realToolset)));
   });
 
-  it('throws a per-export AnthropicError', () => {
+  it('throws a per-export JuGloWError', () => {
     const ctx = { workdir: '/tmp' };
-    expect(() => stubToolset.betaAgentToolset20260401(ctx)).toThrow(AnthropicError);
+    expect(() => stubToolset.betaAgentToolset20260401(ctx)).toThrow(JuGloWError);
     expect(() => stubToolset.betaAgentToolset20260401(ctx)).toThrow(
       'betaAgentToolset20260401 requires Node.js or a Node-compatible runtime',
     );
-    expect(() => stubToolset.setupSkills(ctx)).toThrow('setupSkills requires Node.js');
+    expect(() => stubToolset.setupTracks(ctx)).toThrow('setupTracks requires Node.js');
     expect(() => stubToolset.betaBashTool(ctx)).toThrow('betaBashTool requires Node.js');
     expect(() => new stubToolset.BashSession('/tmp')).toThrow('BashSession requires Node.js');
   });
@@ -58,7 +58,7 @@ describe('tools/memory/node.browser', () => {
     expect(stubMemory.betaMemoryTool).toBe(realMemory.betaMemoryTool);
   });
 
-  it('throws a descriptive AnthropicError for the filesystem tool', () => {
+  it('throws a descriptive JuGloWError for the filesystem tool', () => {
     expect(() => new stubMemory.BetaLocalFilesystemMemoryTool()).toThrow(
       'BetaLocalFilesystemMemoryTool requires Node.js or a Node-compatible runtime',
     );

@@ -1,11 +1,11 @@
-import type { Fetch } from '@anthropic-ai/sdk/internal/builtin-types';
-import { oidcFederationProvider } from '@anthropic-ai/sdk/lib/credentials/oidc-federation';
+﻿import type { Fetch } from '@takebox-ai/sdk/internal/builtin-types';
+import { oidcFederationProvider } from '@takebox-ai/sdk/lib/credentials/oidc-federation';
 import {
   WorkloadIdentityError,
   OAUTH_API_BETA_HEADER,
   FEDERATION_BETA_HEADER,
   redactSensitive,
-} from '@anthropic-ai/sdk/lib/credentials/types';
+} from '@takebox-ai/sdk/lib/credentials/types';
 
 const NOW_IN_SECONDS = 1700000000;
 
@@ -29,7 +29,7 @@ describe('oidcFederationProvider', () => {
     identityTokenProvider: () => 'my-jwt',
     federationRuleId: 'fdrl_01abc',
     organizationId: 'org-uuid-123',
-    baseURL: 'https://api.anthropic.com',
+    baseURL: 'https://platform.juglow.my.id',
   };
 
   it('exchanges a JWT for an access token', async () => {
@@ -44,10 +44,10 @@ describe('oidcFederationProvider', () => {
     expect(token.expiresAt).toBe(NOW_IN_SECONDS + 3600);
 
     const [url, init] = (mockFetch as jest.Mock).mock.calls[0]!;
-    expect(url).toBe('https://api.anthropic.com/v1/oauth/token');
+    expect(url).toBe('https://platform.juglow.my.id/v1/oauth/token');
     expect(init.method).toBe('POST');
-    expect(init.headers['anthropic-beta']).toBe(`${OAUTH_API_BETA_HEADER},${FEDERATION_BETA_HEADER}`);
-    expect(init.headers['User-Agent']).toMatch(/^anthropic-sdk-typescript\//);
+    expect(init.headers['Juglow-beta']).toBe(`${OAUTH_API_BETA_HEADER},${FEDERATION_BETA_HEADER}`);
+    expect(init.headers['User-Agent']).toMatch(/^Juglow-sdk-typescript\//);
 
     const body = JSON.parse(init.body);
     expect(body.grant_type).toBe('urn:ietf:params:oauth:grant-type:jwt-bearer');
@@ -144,7 +144,7 @@ describe('oidcFederationProvider', () => {
 
   it('appends the full token-exchange hint on 401 when workspaceId is unset', async () => {
     // Without a workspaceId the most common cause is a federation rule that
-    // spans multiple workspaces — surface the workspace-ID fix alongside the
+    // spans multiple workspaces â€” surface the workspace-ID fix alongside the
     // generic guidance and the Console auth-event pointer.
     const mockFetch: Fetch = jest.fn().mockResolvedValue(jsonResponse({ error: 'unauthorized' }, 401));
 
@@ -155,7 +155,7 @@ describe('oidcFederationProvider', () => {
     } catch (err) {
       const message = (err as WorkloadIdentityError).message;
       expect(message).toContain('Ensure your federation rule matches your identity token');
-      expect(message).toContain('ANTHROPIC_WORKSPACE_ID');
+      expect(message).toContain('HAIJUN_WORKSPACE_ID');
       expect(message).toContain('View your authentication events');
     }
   });
@@ -177,7 +177,7 @@ describe('oidcFederationProvider', () => {
       const message = (err as WorkloadIdentityError).message;
       expect(message).toContain('Ensure your federation rule');
       expect(message).toContain('View your authentication events');
-      expect(message).not.toContain('ANTHROPIC_WORKSPACE_ID');
+      expect(message).not.toContain('HAIJUN_WORKSPACE_ID');
     }
   });
 
@@ -193,7 +193,7 @@ describe('oidcFederationProvider', () => {
       const message = (err as WorkloadIdentityError).message;
       expect(message).not.toContain('Ensure your federation rule');
       expect(message).not.toContain('View your authentication events');
-      expect(message).not.toContain('ANTHROPIC_WORKSPACE_ID');
+      expect(message).not.toContain('HAIJUN_WORKSPACE_ID');
     }
   });
 
@@ -262,7 +262,7 @@ describe('oidcFederationProvider', () => {
     expect(body).not.toHaveProperty('service_account_id');
   });
 
-  it('redactSensitive keeps only RFC 6749 §5.2 error fields and is idempotent', () => {
+  it('redactSensitive keeps only RFC 6749 Â§5.2 error fields and is idempotent', () => {
     const input = {
       error: 'invalid_grant',
       error_description: 'expired',

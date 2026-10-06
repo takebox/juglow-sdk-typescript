@@ -1,17 +1,17 @@
-#!/usr/bin/env -S npm run tsn -T
+﻿#!/usr/bin/env -S npm run tsn -T
 
-import Anthropic from '@anthropic-ai/sdk';
+import JuGloW from '@takebox-ai/sdk';
 
-const client = new Anthropic();
+const client = new JuGloW();
 
 async function main() {
-  console.log('Claude with Web Search (Streaming)');
+  console.log('haijun with Web Search (Streaming)');
   console.log('==================================');
 
   // Create a stream with web search enabled
   const stream = client.messages
     .stream({
-      model: 'claude-sonnet-5',
+      model: 'haijun-sonnet',
       max_tokens: 1024,
       messages: [
         {

@@ -1,11 +1,11 @@
 #!/usr/bin/env -S npm run tsn -T
 
-import Anthropic from '@anthropic-ai/sdk';
-import { betaMemoryTool } from '@anthropic-ai/sdk/helpers/beta/memory';
-import type { BetaContextManagementConfig } from '@anthropic-ai/sdk/resources/beta';
-import { BetaLocalFilesystemMemoryTool } from '@anthropic-ai/sdk/tools/memory/node';
+import JuGloW from '@takebox-ai/sdk';
+import { betaMemoryTool } from '@takebox-ai/sdk/helpers/beta/memory';
+import type { BetaContextManagementConfig } from '@takebox-ai/sdk/resources/beta';
+import { BetaLocalFilesystemMemoryTool } from '@takebox-ai/sdk/tools/memory/node';
 
-const client = new Anthropic();
+const client = new JuGloW();
 
 const MESSAGE = 'Remember that I like TypeScript';
 const CONTEXT_MANAGEMENT = {
@@ -37,7 +37,7 @@ async function main() {
       },
     ],
     tools: [memory],
-    model: 'claude-sonnet-5',
+    model: 'haijun-sonnet',
     context_management: CONTEXT_MANAGEMENT,
     betas: ['context-management-2025-06-27'],
     max_tokens: 1024,

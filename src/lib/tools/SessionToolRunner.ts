@@ -1,5 +1,5 @@
-import { AnthropicError } from '../../core/error';
-import type { Anthropic } from '../../client';
+import { JuglowError } from '../../core/error';
+import type { Juglow } from '../../client';
 import type {
   BetaManagedAgentsAgentCustomToolUseEvent,
   BetaManagedAgentsAgentToolUseEvent,
@@ -51,12 +51,12 @@ type DispatchedToolResultParams =
   | BetaManagedAgentsUserCustomToolResultEventParams;
 
 export interface SessionToolRunnerOptions {
-  client: Anthropic;
+  client: Juglow;
   /**
    * Tools to expose to the session, in the same {@link BetaRunnableTool} shape
    * `client.beta.messages.toolRunner` accepts. Use
    * `betaAgentToolset20260401({ workdir })` from
-   * `@anthropic-ai/sdk/tools/agent-toolset/node` for the standard
+   * `@takebox-ai/sdk/tools/agent-toolset/node` for the standard
    * `agent_toolset_20260401` set; filter or extend the array to customise.
    */
   tools: Array<BetaRunnableTool>;
@@ -276,7 +276,7 @@ class IdleClock {
  *
  * @example
  * ```ts
- * import { betaAgentToolset20260401 } from '@anthropic-ai/sdk/tools/agent-toolset/node';
+ * import { betaAgentToolset20260401 } from '@takebox-ai/sdk/tools/agent-toolset/node';
  *
  * for await (const call of client.beta.sessions.events.toolRunner(work.data.id, {
  *   tools: [...betaAgentToolset20260401({ workdir }), myTool],
@@ -286,7 +286,7 @@ class IdleClock {
  * ```
  */
 export class SessionToolRunner implements AsyncIterable<DispatchedToolCall> {
-  readonly client: Anthropic;
+  readonly client: Juglow;
   readonly sessionId: string;
   readonly tools: ReadonlyArray<BetaRunnableTool>;
   readonly maxIdleMs: number;
@@ -345,7 +345,7 @@ export class SessionToolRunner implements AsyncIterable<DispatchedToolCall> {
 
   async *[Symbol.asyncIterator](): AsyncIterator<DispatchedToolCall> {
     if (this.#consumed) {
-      throw new AnthropicError('Cannot iterate over a consumed SessionToolRunner');
+      throw new JuglowError('Cannot iterate over a consumed SessionToolRunner');
     }
     this.#consumed = true;
     this.#logger.info('session tool runner starting', {

@@ -1,4 +1,4 @@
-// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+﻿// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
 import * as BetaAPI from './beta';
@@ -43,7 +43,7 @@ export class Deployments extends APIResource {
       body,
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
         options?.headers,
       ]),
     });
@@ -69,7 +69,7 @@ export class Deployments extends APIResource {
     return this._client.get(path`/v1/deployments/${deploymentID}?beta=true`, {
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
         options?.headers,
       ]),
     });
@@ -96,7 +96,7 @@ export class Deployments extends APIResource {
       body,
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
         options?.headers,
       ]),
     });
@@ -122,7 +122,7 @@ export class Deployments extends APIResource {
       query,
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
         options?.headers,
       ]),
     });
@@ -148,7 +148,7 @@ export class Deployments extends APIResource {
     return this._client.post(path`/v1/deployments/${deploymentID}/archive?beta=true`, {
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
         options?.headers,
       ]),
     });
@@ -174,7 +174,7 @@ export class Deployments extends APIResource {
     return this._client.post(path`/v1/deployments/${deploymentID}/pause?beta=true`, {
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
         options?.headers,
       ]),
     });
@@ -200,7 +200,7 @@ export class Deployments extends APIResource {
     return this._client.post(path`/v1/deployments/${deploymentID}/run?beta=true`, {
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
         options?.headers,
       ]),
     });
@@ -226,7 +226,7 @@ export class Deployments extends APIResource {
     return this._client.post(path`/v1/deployments/${deploymentID}/unpause?beta=true`, {
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
         options?.headers,
       ]),
     });
@@ -301,7 +301,7 @@ export interface BetaManagedAgentsCronScheduleParams {
 }
 
 /**
- * A deployment is a configured instance of an agent — it binds the agent to
+ * A deployment is a configured instance of an agent â€” it binds the agent to
  * everything needed to run it autonomously: an environment, credentials, initial
  * events, and an optional schedule.
  */
@@ -430,7 +430,7 @@ export type BetaManagedAgentsDeploymentPausedReasonError =
   | BetaManagedAgentsWorkspaceArchivedDeploymentPausedReasonError
   | BetaManagedAgentsOrganizationDisabledDeploymentPausedReasonError
   | BetaManagedAgentsMemoryStoreArchivedDeploymentPausedReasonError
-  | BetaManagedAgentsSkillNotFoundDeploymentPausedReasonError
+  | BetaManagedAgentsTrackNotFoundDeploymentPausedReasonError
   | BetaManagedAgentsVaultArchivedDeploymentPausedReasonError
   | BetaManagedAgentsUnknownDeploymentPausedReasonError
   | BetaManagedAgentsSelfHostedResourcesUnsupportedDeploymentPausedReasonError
@@ -472,7 +472,7 @@ export interface BetaManagedAgentsDeploymentUserDefineOutcomeEvent {
   type: 'user.define_outcome';
 
   /**
-   * Eval→revision cycles before giving up. Default 3, max 20.
+   * Evalâ†’revision cycles before giving up. Default 3, max 20.
    */
   max_iterations?: number | null;
 }
@@ -702,10 +702,10 @@ export interface BetaManagedAgentsSessionResourceNotFoundDeploymentPausedReasonE
 }
 
 /**
- * A skill referenced by the deployment's agent no longer exists.
+ * A track referenced by the deployment's agent no longer exists.
  */
-export interface BetaManagedAgentsSkillNotFoundDeploymentPausedReasonError {
-  type: 'skill_not_found_error';
+export interface BetaManagedAgentsTrackNotFoundDeploymentPausedReasonError {
+  type: 'track_not_found_error';
 }
 
 /**
@@ -804,14 +804,14 @@ export interface DeploymentCreateParams {
   /**
    * Header param: Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface DeploymentRetrieveParams {
   /**
    * Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface DeploymentUpdateParams {
@@ -883,7 +883,7 @@ export interface DeploymentUpdateParams {
   /**
    * Header param: Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface DeploymentListParams extends PageCursorParams {
@@ -917,35 +917,35 @@ export interface DeploymentListParams extends PageCursorParams {
   /**
    * Header param: Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface DeploymentArchiveParams {
   /**
    * Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface DeploymentPauseParams {
   /**
    * Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface DeploymentRunParams {
   /**
    * Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface DeploymentUnpauseParams {
   /**
    * Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export declare namespace Deployments {
@@ -978,7 +978,7 @@ export declare namespace Deployments {
     type BetaManagedAgentsSelfHostedResourcesUnsupportedDeploymentPausedReasonError as BetaManagedAgentsSelfHostedResourcesUnsupportedDeploymentPausedReasonError,
     type BetaManagedAgentsSessionResourceConfig as BetaManagedAgentsSessionResourceConfig,
     type BetaManagedAgentsSessionResourceNotFoundDeploymentPausedReasonError as BetaManagedAgentsSessionResourceNotFoundDeploymentPausedReasonError,
-    type BetaManagedAgentsSkillNotFoundDeploymentPausedReasonError as BetaManagedAgentsSkillNotFoundDeploymentPausedReasonError,
+    type BetaManagedAgentsTrackNotFoundDeploymentPausedReasonError as BetaManagedAgentsTrackNotFoundDeploymentPausedReasonError,
     type BetaManagedAgentsUnknownDeploymentPausedReasonError as BetaManagedAgentsUnknownDeploymentPausedReasonError,
     type BetaManagedAgentsVaultArchivedDeploymentPausedReasonError as BetaManagedAgentsVaultArchivedDeploymentPausedReasonError,
     type BetaManagedAgentsVaultNotFoundDeploymentPausedReasonError as BetaManagedAgentsVaultNotFoundDeploymentPausedReasonError,

@@ -1,5 +1,5 @@
-import Anthropic from '@anthropic-ai/sdk';
-import type { BetaMessageParam, BetaToolUnion } from '@anthropic-ai/sdk/resources/beta';
+﻿import JuGloW from '@takebox-ai/sdk';
+import type { BetaMessageParam, BetaToolUnion } from '@takebox-ai/sdk/resources/beta';
 import type {
   Tool,
   TextContent,
@@ -65,7 +65,7 @@ describe('MCP helpers', () => {
   describe('mcpTool', () => {
     it('sends correct tool definition to API', async () => {
       const { fetch, handleRequest } = mockFetch();
-      const anthropic = new Anthropic({ apiKey: 'test-key', fetch });
+      const Juglow = new JuGloW({ apiKey: 'test-key', fetch });
 
       const tool: Tool = {
         name: 'get_weather',
@@ -80,7 +80,7 @@ describe('MCP helpers', () => {
       };
 
       const mockClient: MCPClientLike = {
-        callTool: async () => ({ content: [{ type: 'text', text: 'Sunny, 72°F' }] }),
+        callTool: async () => ({ content: [{ type: 'text', text: 'Sunny, 72Â°F' }] }),
       };
 
       let capturedBody: any;
@@ -92,15 +92,15 @@ describe('MCP helpers', () => {
             type: 'message',
             role: 'assistant',
             content: [{ type: 'text', text: 'The weather is nice.' }],
-            model: 'claude-opus-4-8',
+            model: 'haijun-opus-8',
             stop_reason: 'end_turn',
             usage: { input_tokens: 10, output_tokens: 5 },
           }),
         );
       });
 
-      await anthropic.beta.messages.create({
-        model: 'claude-opus-4-8',
+      await Juglow.beta.messages.create({
+        model: 'haijun-opus-8',
         max_tokens: 1024,
         messages: [{ role: 'user', content: 'What is the weather?' }],
         tools: [mcpTool(tool, mockClient)],
@@ -122,7 +122,7 @@ describe('MCP helpers', () => {
 
     it('sends tool with extra props to API', async () => {
       const { fetch, handleRequest } = mockFetch();
-      const anthropic = new Anthropic({ apiKey: 'test-key', fetch });
+      const Juglow = new JuGloW({ apiKey: 'test-key', fetch });
 
       const tool: Tool = {
         name: 'cached_tool',
@@ -142,15 +142,15 @@ describe('MCP helpers', () => {
             type: 'message',
             role: 'assistant',
             content: [{ type: 'text', text: 'Done.' }],
-            model: 'claude-opus-4-8',
+            model: 'haijun-opus-8',
             stop_reason: 'end_turn',
             usage: { input_tokens: 10, output_tokens: 5 },
           }),
         );
       });
 
-      await anthropic.beta.messages.create({
-        model: 'claude-opus-4-8',
+      await Juglow.beta.messages.create({
+        model: 'haijun-opus-8',
         max_tokens: 1024,
         messages: [{ role: 'user', content: 'Do something' }],
         tools: [mcpTool(tool, mockClient, { cache_control: { type: 'ephemeral' as const } })],
@@ -164,7 +164,7 @@ describe('MCP helpers', () => {
 
     it('sends correct tool result to API after tool execution', async () => {
       const { fetch, handleRequest } = mockFetch();
-      const anthropic = new Anthropic({ apiKey: 'test-key', fetch });
+      const Juglow = new JuGloW({ apiKey: 'test-key', fetch });
 
       const tool: Tool = {
         name: 'get_weather',
@@ -178,7 +178,7 @@ describe('MCP helpers', () => {
       const mockClient: MCPClientLike = {
         callTool: async () => ({
           content: [
-            { type: 'text', text: 'Current weather: Sunny, 72°F' },
+            { type: 'text', text: 'Current weather: Sunny, 72Â°F' },
             { type: 'text', text: 'Humidity: 45%' },
           ],
         }),
@@ -203,7 +203,7 @@ describe('MCP helpers', () => {
                 input: { location: 'San Francisco' },
               },
             ],
-            model: 'claude-opus-4-8',
+            model: 'haijun-opus-8',
             stop_reason: 'tool_use',
             usage: { input_tokens: 10, output_tokens: 5 },
           }),
@@ -220,7 +220,7 @@ describe('MCP helpers', () => {
             type: 'message',
             role: 'assistant',
             content: [{ type: 'text', text: 'The weather is nice!' }],
-            model: 'claude-opus-4-8',
+            model: 'haijun-opus-8',
             stop_reason: 'end_turn',
             usage: { input_tokens: 20, output_tokens: 10 },
           }),
@@ -228,8 +228,8 @@ describe('MCP helpers', () => {
         );
       });
 
-      const runner = anthropic.beta.messages.toolRunner({
-        model: 'claude-opus-4-8',
+      const runner = Juglow.beta.messages.toolRunner({
+        model: 'haijun-opus-8',
         max_tokens: 1024,
         messages: [{ role: 'user', content: 'What is the weather?' }],
         tools: [mcpTool(tool, mockClient)],
@@ -254,7 +254,7 @@ describe('MCP helpers', () => {
         type: 'tool_result',
         tool_use_id: 'tool_123',
         content: [
-          { type: 'text', text: 'Current weather: Sunny, 72°F' },
+          { type: 'text', text: 'Current weather: Sunny, 72Â°F' },
           { type: 'text', text: 'Humidity: 45%' },
         ],
       });
@@ -359,7 +359,7 @@ describe('MCP helpers', () => {
 
     it('sends image tool result to API correctly', async () => {
       const { fetch, handleRequest } = mockFetch();
-      const anthropic = new Anthropic({ apiKey: 'test-key', fetch });
+      const Juglow = new JuGloW({ apiKey: 'test-key', fetch });
 
       const tool: Tool = {
         name: 'get_screenshot',
@@ -384,7 +384,7 @@ describe('MCP helpers', () => {
             type: 'message',
             role: 'assistant',
             content: [{ type: 'tool_use', id: 'tool_456', name: 'get_screenshot', input: {} }],
-            model: 'claude-opus-4-8',
+            model: 'haijun-opus-8',
             stop_reason: 'tool_use',
             usage: { input_tokens: 10, output_tokens: 5 },
           }),
@@ -401,7 +401,7 @@ describe('MCP helpers', () => {
             type: 'message',
             role: 'assistant',
             content: [{ type: 'text', text: 'I see the screenshot.' }],
-            model: 'claude-opus-4-8',
+            model: 'haijun-opus-8',
             stop_reason: 'end_turn',
             usage: { input_tokens: 20, output_tokens: 10 },
           }),
@@ -409,8 +409,8 @@ describe('MCP helpers', () => {
         );
       });
 
-      const runner = anthropic.beta.messages.toolRunner({
-        model: 'claude-opus-4-8',
+      const runner = Juglow.beta.messages.toolRunner({
+        model: 'haijun-opus-8',
         max_tokens: 1024,
         messages: [{ role: 'user', content: 'Take a screenshot' }],
         tools: [mcpTool(tool, mockClient)],
@@ -446,7 +446,7 @@ describe('MCP helpers', () => {
   describe('mcpMessage', () => {
     it('sends text message to API', async () => {
       const { fetch, handleRequest } = mockFetch();
-      const anthropic = new Anthropic({ apiKey: 'test-key', fetch });
+      const Juglow = new JuGloW({ apiKey: 'test-key', fetch });
 
       const textContent: TextContent = {
         type: 'text',
@@ -467,15 +467,15 @@ describe('MCP helpers', () => {
             type: 'message',
             role: 'assistant',
             content: [{ type: 'text', text: 'Hello!' }],
-            model: 'claude-opus-4-8',
+            model: 'haijun-opus-8',
             stop_reason: 'end_turn',
             usage: { input_tokens: 10, output_tokens: 5 },
           }),
         );
       });
 
-      await anthropic.beta.messages.create({
-        model: 'claude-opus-4-8',
+      await Juglow.beta.messages.create({
+        model: 'haijun-opus-8',
         max_tokens: 1024,
         messages: [mcpMessage(promptMessage)],
       });
@@ -489,7 +489,7 @@ describe('MCP helpers', () => {
 
     it('sends image message to API', async () => {
       const { fetch, handleRequest } = mockFetch();
-      const anthropic = new Anthropic({ apiKey: 'test-key', fetch });
+      const Juglow = new JuGloW({ apiKey: 'test-key', fetch });
 
       const imageContent: ImageContent = {
         type: 'image',
@@ -511,15 +511,15 @@ describe('MCP helpers', () => {
             type: 'message',
             role: 'assistant',
             content: [{ type: 'text', text: 'I see an image.' }],
-            model: 'claude-opus-4-8',
+            model: 'haijun-opus-8',
             stop_reason: 'end_turn',
             usage: { input_tokens: 10, output_tokens: 5 },
           }),
         );
       });
 
-      await anthropic.beta.messages.create({
-        model: 'claude-opus-4-8',
+      await Juglow.beta.messages.create({
+        model: 'haijun-opus-8',
         max_tokens: 1024,
         messages: [mcpMessage(promptMessage)],
       });
@@ -541,7 +541,7 @@ describe('MCP helpers', () => {
 
     it('sends message with cache_control to API', async () => {
       const { fetch, handleRequest } = mockFetch();
-      const anthropic = new Anthropic({ apiKey: 'test-key', fetch });
+      const Juglow = new JuGloW({ apiKey: 'test-key', fetch });
 
       const textContent: TextContent = {
         type: 'text',
@@ -562,15 +562,15 @@ describe('MCP helpers', () => {
             type: 'message',
             role: 'assistant',
             content: [{ type: 'text', text: 'Cached.' }],
-            model: 'claude-opus-4-8',
+            model: 'haijun-opus-8',
             stop_reason: 'end_turn',
             usage: { input_tokens: 10, output_tokens: 5 },
           }),
         );
       });
 
-      await anthropic.beta.messages.create({
-        model: 'claude-opus-4-8',
+      await Juglow.beta.messages.create({
+        model: 'haijun-opus-8',
         max_tokens: 1024,
         messages: [mcpMessage(promptMessage, { cache_control: { type: 'ephemeral' } })],
       });
@@ -607,7 +607,7 @@ describe('MCP helpers', () => {
   describe('mcpResourceToContent', () => {
     it('sends text resource as document to API', async () => {
       const { fetch, handleRequest } = mockFetch();
-      const anthropic = new Anthropic({ apiKey: 'test-key', fetch });
+      const Juglow = new JuGloW({ apiKey: 'test-key', fetch });
 
       const resource: TextResourceContents = {
         uri: 'file:///document.txt',
@@ -624,7 +624,7 @@ describe('MCP helpers', () => {
             type: 'message',
             role: 'assistant',
             content: [{ type: 'text', text: 'I read the document.' }],
-            model: 'claude-opus-4-8',
+            model: 'haijun-opus-8',
             stop_reason: 'end_turn',
             usage: { input_tokens: 10, output_tokens: 5 },
           }),
@@ -633,8 +633,8 @@ describe('MCP helpers', () => {
 
       const content = mcpResourceToContent({ contents: [resource] });
 
-      await anthropic.beta.messages.create({
-        model: 'claude-opus-4-8',
+      await Juglow.beta.messages.create({
+        model: 'haijun-opus-8',
         max_tokens: 1024,
         messages: [{ role: 'user', content: [content] }],
       });
@@ -651,7 +651,7 @@ describe('MCP helpers', () => {
 
     it('sends PDF resource as base64 document to API', async () => {
       const { fetch, handleRequest } = mockFetch();
-      const anthropic = new Anthropic({ apiKey: 'test-key', fetch });
+      const Juglow = new JuGloW({ apiKey: 'test-key', fetch });
 
       const pdfData = Buffer.from('fake-pdf-content').toString('base64');
       const resource: BlobResourceContents = {
@@ -669,7 +669,7 @@ describe('MCP helpers', () => {
             type: 'message',
             role: 'assistant',
             content: [{ type: 'text', text: 'I read the PDF.' }],
-            model: 'claude-opus-4-8',
+            model: 'haijun-opus-8',
             stop_reason: 'end_turn',
             usage: { input_tokens: 10, output_tokens: 5 },
           }),
@@ -678,8 +678,8 @@ describe('MCP helpers', () => {
 
       const content = mcpResourceToContent({ contents: [resource] });
 
-      await anthropic.beta.messages.create({
-        model: 'claude-opus-4-8',
+      await Juglow.beta.messages.create({
+        model: 'haijun-opus-8',
         max_tokens: 1024,
         messages: [{ role: 'user', content: [content] }],
       });
@@ -696,7 +696,7 @@ describe('MCP helpers', () => {
 
     it('sends image resource as image block to API', async () => {
       const { fetch, handleRequest } = mockFetch();
-      const anthropic = new Anthropic({ apiKey: 'test-key', fetch });
+      const Juglow = new JuGloW({ apiKey: 'test-key', fetch });
 
       const imageData = Buffer.from('fake-image-data').toString('base64');
       const resource: BlobResourceContents = {
@@ -714,7 +714,7 @@ describe('MCP helpers', () => {
             type: 'message',
             role: 'assistant',
             content: [{ type: 'text', text: 'I see an image.' }],
-            model: 'claude-opus-4-8',
+            model: 'haijun-opus-8',
             stop_reason: 'end_turn',
             usage: { input_tokens: 10, output_tokens: 5 },
           }),
@@ -723,8 +723,8 @@ describe('MCP helpers', () => {
 
       const content = mcpResourceToContent({ contents: [resource] });
 
-      await anthropic.beta.messages.create({
-        model: 'claude-opus-4-8',
+      await Juglow.beta.messages.create({
+        model: 'haijun-opus-8',
         max_tokens: 1024,
         messages: [{ role: 'user', content: [content] }],
       });
@@ -741,7 +741,7 @@ describe('MCP helpers', () => {
 
     it('sends resource with extra props to API', async () => {
       const { fetch, handleRequest } = mockFetch();
-      const anthropic = new Anthropic({ apiKey: 'test-key', fetch });
+      const Juglow = new JuGloW({ apiKey: 'test-key', fetch });
 
       const resource: TextResourceContents = {
         uri: 'file:///doc.txt',
@@ -757,7 +757,7 @@ describe('MCP helpers', () => {
             type: 'message',
             role: 'assistant',
             content: [{ type: 'text', text: 'Done.' }],
-            model: 'claude-opus-4-8',
+            model: 'haijun-opus-8',
             stop_reason: 'end_turn',
             usage: { input_tokens: 10, output_tokens: 5 },
           }),
@@ -769,8 +769,8 @@ describe('MCP helpers', () => {
         { title: 'My Document', cache_control: { type: 'ephemeral' as const } },
       );
 
-      await anthropic.beta.messages.create({
-        model: 'claude-opus-4-8',
+      await Juglow.beta.messages.create({
+        model: 'haijun-opus-8',
         max_tokens: 1024,
         messages: [{ role: 'user', content: [content] }],
       });
@@ -800,10 +800,10 @@ describe('MCP helpers', () => {
 
     it('decodes blob text resource with UTF-8 characters to document', async () => {
       const { fetch, handleRequest } = mockFetch();
-      const anthropic = new Anthropic({ apiKey: 'test-key', fetch });
+      const Juglow = new JuGloW({ apiKey: 'test-key', fetch });
 
       // UTF-8 text with non-ASCII characters encoded to base64
-      const utf8Text = 'Привет мир! 你好世界!';
+      const utf8Text = 'ÐŸÑ€Ð¸Ð²ÐµÑ‚ Ð¼Ð¸Ñ€! ä½ å¥½ä¸–ç•Œ!';
       const base64 = Buffer.from(utf8Text, 'utf-8').toString('base64');
 
       const resource: BlobResourceContents = {
@@ -821,7 +821,7 @@ describe('MCP helpers', () => {
             type: 'message',
             role: 'assistant',
             content: [{ type: 'text', text: 'Read it.' }],
-            model: 'claude-opus-4-8',
+            model: 'haijun-opus-8',
             stop_reason: 'end_turn',
             usage: { input_tokens: 10, output_tokens: 5 },
           }),
@@ -830,8 +830,8 @@ describe('MCP helpers', () => {
 
       const content = mcpResourceToContent({ contents: [resource] });
 
-      await anthropic.beta.messages.create({
-        model: 'claude-opus-4-8',
+      await Juglow.beta.messages.create({
+        model: 'haijun-opus-8',
         max_tokens: 1024,
         messages: [{ role: 'user', content: [content] }],
       });
@@ -895,7 +895,7 @@ describe('MCP helpers', () => {
   });
 
   describe('mcpResourceToFile', () => {
-    // These tests verify the File object properties which can be passed to anthropic.beta.files.upload()
+    // These tests verify the File object properties which can be passed to Juglow.beta.files.upload()
     it('creates File from text resource with correct properties', async () => {
       const result: ReadResourceResult = {
         contents: [
@@ -952,7 +952,7 @@ describe('MCP helpers', () => {
 
     it('decodes base64 blob with UTF-8 characters correctly', async () => {
       // UTF-8 text with non-ASCII characters encoded to base64
-      const utf8Text = 'Hello, 世界! 🌍 Ñoño';
+      const utf8Text = 'Hello, ä¸–ç•Œ! ðŸŒ Ã‘oÃ±o';
       const base64 = Buffer.from(utf8Text, 'utf-8').toString('base64');
 
       const result: ReadResourceResult = {
@@ -1140,7 +1140,7 @@ describe('MCP helpers', () => {
 
     it('converts MCP prompt messages using mcpMessage()', async () => {
       const { fetch, handleRequest } = mockFetch();
-      const anthropic = new Anthropic({ apiKey: 'test-key', fetch });
+      const Juglow = new JuGloW({ apiKey: 'test-key', fetch });
       const mcpClient = createMockMCPClient();
 
       // Get prompt from MCP client - returns MCP SDK types
@@ -1155,7 +1155,7 @@ describe('MCP helpers', () => {
             type: 'message',
             role: 'assistant',
             content: [{ type: 'text', text: 'I see an image.' }],
-            model: 'claude-opus-4-8',
+            model: 'haijun-opus-8',
             stop_reason: 'end_turn',
             usage: { input_tokens: 10, output_tokens: 5 },
           }),
@@ -1164,13 +1164,13 @@ describe('MCP helpers', () => {
       });
 
       // Use mcpMessage() to convert MCP prompt message
-      await anthropic.beta.messages.create({
-        model: 'claude-opus-4-8',
+      await Juglow.beta.messages.create({
+        model: 'haijun-opus-8',
         max_tokens: 1024,
         messages: mcpMessages.map((m) => mcpMessage(m)),
       });
 
-      // Should be converted to Anthropic format
+      // Should be converted to JuGloW format
       expect(capturedBody.messages[0]).toEqual({
         role: 'user',
         content: [
@@ -1188,7 +1188,7 @@ describe('MCP helpers', () => {
 
     it('converts MCP text resource using mcpResourceToContent()', async () => {
       const { fetch, handleRequest } = mockFetch();
-      const anthropic = new Anthropic({ apiKey: 'test-key', fetch });
+      const Juglow = new JuGloW({ apiKey: 'test-key', fetch });
       const mcpClient = createMockMCPClient();
 
       // Read resource from MCP client - returns the full result object
@@ -1203,7 +1203,7 @@ describe('MCP helpers', () => {
             type: 'message',
             role: 'assistant',
             content: [{ type: 'text', text: 'I read the document.' }],
-            model: 'claude-opus-4-8',
+            model: 'haijun-opus-8',
             stop_reason: 'end_turn',
             usage: { input_tokens: 10, output_tokens: 5 },
           }),
@@ -1214,13 +1214,13 @@ describe('MCP helpers', () => {
       // Use mcpResourceToContent() to convert MCP resource result
       const content = mcpResourceToContent(result);
 
-      await anthropic.beta.messages.create({
-        model: 'claude-opus-4-8',
+      await Juglow.beta.messages.create({
+        model: 'haijun-opus-8',
         max_tokens: 1024,
         messages: [{ role: 'user', content: [content] }],
       });
 
-      // Should be automatically converted to Anthropic document format
+      // Should be automatically converted to JuGloW document format
       expect(capturedBody.messages[0].content[0]).toEqual({
         type: 'document',
         source: {
@@ -1233,7 +1233,7 @@ describe('MCP helpers', () => {
 
     it('converts MCP blob resource (image) using mcpResourceToContent()', async () => {
       const { fetch, handleRequest } = mockFetch();
-      const anthropic = new Anthropic({ apiKey: 'test-key', fetch });
+      const Juglow = new JuGloW({ apiKey: 'test-key', fetch });
       const mcpClient = createMockMCPClient();
 
       // Read image resource from MCP client - returns the full result object
@@ -1248,7 +1248,7 @@ describe('MCP helpers', () => {
             type: 'message',
             role: 'assistant',
             content: [{ type: 'text', text: 'Nice photo.' }],
-            model: 'claude-opus-4-8',
+            model: 'haijun-opus-8',
             stop_reason: 'end_turn',
             usage: { input_tokens: 10, output_tokens: 5 },
           }),
@@ -1259,13 +1259,13 @@ describe('MCP helpers', () => {
       // Use mcpResourceToContent() to convert MCP resource result
       const content = mcpResourceToContent(result);
 
-      await anthropic.beta.messages.create({
-        model: 'claude-opus-4-8',
+      await Juglow.beta.messages.create({
+        model: 'haijun-opus-8',
         max_tokens: 1024,
         messages: [{ role: 'user', content: [content] }],
       });
 
-      // Should be converted to Anthropic image format
+      // Should be converted to JuGloW image format
       expect(capturedBody.messages[0].content[0]).toEqual({
         type: 'image',
         source: {
@@ -1279,7 +1279,7 @@ describe('MCP helpers', () => {
     // Skip: mockFetch doesn't work well with multipart form uploads
     it.skip('uploads MCP resource as file using mcpResourceToFile()', async () => {
       const { fetch, handleRequest } = mockFetch();
-      const anthropic = new Anthropic({ apiKey: 'test-key', fetch });
+      const Juglow = new JuGloW({ apiKey: 'test-key', fetch });
       const mcpClient = createMockMCPClient();
 
       // Read resource from MCP client
@@ -1301,14 +1301,14 @@ describe('MCP helpers', () => {
 
       // Convert MCP resource to File and upload
       const file = mcpResourceToFile(resourceResult);
-      const result = await anthropic.beta.files.upload({ file });
+      const result = await Juglow.beta.files.upload({ file });
 
       expect(result.id).toBe('file_123');
     });
 
-    it('leaves Anthropic-native content unchanged', async () => {
+    it('leaves JuGloW-native content unchanged', async () => {
       const { fetch, handleRequest } = mockFetch();
-      const anthropic = new Anthropic({ apiKey: 'test-key', fetch });
+      const Juglow = new JuGloW({ apiKey: 'test-key', fetch });
 
       let capturedBody: any;
       handleRequest(async (_req, init) => {
@@ -1319,7 +1319,7 @@ describe('MCP helpers', () => {
             type: 'message',
             role: 'assistant',
             content: [{ type: 'text', text: 'Hello!' }],
-            model: 'claude-opus-4-8',
+            model: 'haijun-opus-8',
             stop_reason: 'end_turn',
             usage: { input_tokens: 10, output_tokens: 5 },
           }),
@@ -1327,14 +1327,14 @@ describe('MCP helpers', () => {
         );
       });
 
-      // Pass standard Anthropic message format
-      await anthropic.beta.messages.create({
-        model: 'claude-opus-4-8',
+      // Pass standard JuGloW message format
+      await Juglow.beta.messages.create({
+        model: 'haijun-opus-8',
         max_tokens: 1024,
         messages: [
           {
             role: 'user',
-            content: [{ type: 'text', text: 'Hello from Anthropic format' }],
+            content: [{ type: 'text', text: 'Hello from JuGloW format' }],
           },
         ],
       });
@@ -1342,7 +1342,7 @@ describe('MCP helpers', () => {
       // Should pass through unchanged
       expect(capturedBody.messages[0]).toEqual({
         role: 'user',
-        content: [{ type: 'text', text: 'Hello from Anthropic format' }],
+        content: [{ type: 'text', text: 'Hello from JuGloW format' }],
       });
     });
   });
@@ -1558,7 +1558,7 @@ describe('MCP helpers', () => {
   describe('messages.create() automatic helper header', () => {
     it('includes helper header when using mcpTools', async () => {
       const { fetch, handleRequest } = mockFetch();
-      const anthropic = new Anthropic({ apiKey: 'test-key', fetch });
+      const Juglow = new JuGloW({ apiKey: 'test-key', fetch });
 
       const tool: Tool = {
         name: 'test_tool',
@@ -1581,15 +1581,15 @@ describe('MCP helpers', () => {
             type: 'message',
             role: 'assistant',
             content: [{ type: 'text', text: 'Hello!' }],
-            model: 'claude-opus-4-8',
+            model: 'haijun-opus-8',
             stop_reason: 'end_turn',
             usage: { input_tokens: 10, output_tokens: 5 },
           }),
         );
       });
 
-      await anthropic.beta.messages.create({
-        model: 'claude-opus-4-8',
+      await Juglow.beta.messages.create({
+        model: 'haijun-opus-8',
         max_tokens: 1024,
         messages: [{ role: 'user', content: 'Hello' }],
         tools: [mcpTool(tool, mockClient)],
@@ -1600,7 +1600,7 @@ describe('MCP helpers', () => {
 
     it('includes helper header when using mcpMessages', async () => {
       const { fetch, handleRequest } = mockFetch();
-      const anthropic = new Anthropic({ apiKey: 'test-key', fetch });
+      const Juglow = new JuGloW({ apiKey: 'test-key', fetch });
 
       const promptMessages: PromptMessage[] = [{ role: 'user', content: { type: 'text', text: 'Hello' } }];
 
@@ -1616,15 +1616,15 @@ describe('MCP helpers', () => {
             type: 'message',
             role: 'assistant',
             content: [{ type: 'text', text: 'Hello!' }],
-            model: 'claude-opus-4-8',
+            model: 'haijun-opus-8',
             stop_reason: 'end_turn',
             usage: { input_tokens: 10, output_tokens: 5 },
           }),
         );
       });
 
-      await anthropic.beta.messages.create({
-        model: 'claude-opus-4-8',
+      await Juglow.beta.messages.create({
+        model: 'haijun-opus-8',
         max_tokens: 1024,
         messages: mcpMessages(promptMessages),
       });
@@ -1636,7 +1636,7 @@ describe('MCP helpers', () => {
 
     it('includes both tool and message helpers when using both', async () => {
       const { fetch, handleRequest } = mockFetch();
-      const anthropic = new Anthropic({ apiKey: 'test-key', fetch });
+      const Juglow = new JuGloW({ apiKey: 'test-key', fetch });
 
       const tool: Tool = {
         name: 'test_tool',
@@ -1661,15 +1661,15 @@ describe('MCP helpers', () => {
             type: 'message',
             role: 'assistant',
             content: [{ type: 'text', text: 'Hello!' }],
-            model: 'claude-opus-4-8',
+            model: 'haijun-opus-8',
             stop_reason: 'end_turn',
             usage: { input_tokens: 10, output_tokens: 5 },
           }),
         );
       });
 
-      await anthropic.beta.messages.create({
-        model: 'claude-opus-4-8',
+      await Juglow.beta.messages.create({
+        model: 'haijun-opus-8',
         max_tokens: 1024,
         messages: mcpMessages(promptMessages),
         tools: [mcpTool(tool, mockClient)],
@@ -1682,7 +1682,7 @@ describe('MCP helpers', () => {
 
     it('does not include helper header when not using MCP helpers', async () => {
       const { fetch, handleRequest } = mockFetch();
-      const anthropic = new Anthropic({ apiKey: 'test-key', fetch });
+      const Juglow = new JuGloW({ apiKey: 'test-key', fetch });
 
       let capturedHelperHeader: string | null = null;
       handleRequest(async (_req, init) => {
@@ -1696,15 +1696,15 @@ describe('MCP helpers', () => {
             type: 'message',
             role: 'assistant',
             content: [{ type: 'text', text: 'Hello!' }],
-            model: 'claude-opus-4-8',
+            model: 'haijun-opus-8',
             stop_reason: 'end_turn',
             usage: { input_tokens: 10, output_tokens: 5 },
           }),
         );
       });
 
-      await anthropic.beta.messages.create({
-        model: 'claude-opus-4-8',
+      await Juglow.beta.messages.create({
+        model: 'haijun-opus-8',
         max_tokens: 1024,
         messages: [{ role: 'user', content: 'Hello' }],
       });

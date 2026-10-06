@@ -1,17 +1,17 @@
-#!/usr/bin/env -S npm run tsn -T
+﻿#!/usr/bin/env -S npm run tsn -T
 
-import { AnthropicBedrock } from '@anthropic-ai/bedrock-sdk';
+import { JuglowBedrock } from '@takebox-ai/bedrock-sdk';
 
 // Note: this assumes you have configured AWS credentials in a way
 // that the AWS Node SDK will recognise, typicaly a shared `~/.aws/credentials`
 // file or `AWS_ACCESS_KEY_ID` & `AWS_SECRET_ACCESS_KEY` environment variables.
 //
 // https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/setting-credentials-node.html
-const anthropic = new AnthropicBedrock();
+const Juglow = new JuglowBedrock();
 
 async function main() {
-  const message = await anthropic.messages.create({
-    model: 'anthropic.claude-3-5-sonnet-20241022-v2:0',
+  const message = await Juglow.messages.create({
+    model: 'Juglow.haijun-3-5-sonnet-20241022-v2:0',
     messages: [
       {
         role: 'user',

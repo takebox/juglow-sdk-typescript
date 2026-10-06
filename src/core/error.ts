@@ -3,13 +3,13 @@
 import { castToError } from '../internal/errors';
 import type { ErrorType } from '../resources/shared';
 
-export class AnthropicError extends Error {}
+export class JuglowError extends Error {}
 
 export class APIError<
   TStatus extends number | undefined = number | undefined,
   THeaders extends Headers | undefined = Headers | undefined,
   TError extends Object | undefined = Object | undefined,
-> extends AnthropicError {
+> extends JuglowError {
   /** HTTP status for the response that caused the error */
   readonly status: TStatus;
   /** HTTP headers for the response that caused the error */
@@ -134,7 +134,7 @@ export class APIConnectionTimeoutError extends APIConnectionError {
  *
  * Note that the request will only be retried when `maxRetries` has not been exhausted.
  */
-export class RetryableError extends AnthropicError {
+export class RetryableError extends JuglowError {
   constructor(message?: string, { cause }: { cause?: unknown } = {}) {
     super(message ?? 'Retryable error.');
     // in some environments the 'cause' property is already declared

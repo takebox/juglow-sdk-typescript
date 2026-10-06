@@ -1,6 +1,6 @@
 import { STAINLESS_HELPER_METHOD_HEADER } from '../internal/stainless-helper-header';
 import { isAbortError } from '../internal/errors';
-import { AnthropicError, APIUserAbortError } from '../error';
+import { JuglowError, APIUserAbortError } from '../error';
 import {
   type ContentBlock,
   Messages,
@@ -31,7 +31,7 @@ export interface MessageStreamEvents<ParsedT = null> {
   message: (message: ParsedMessage<ParsedT>) => void;
   contentBlock: (content: ContentBlock) => void;
   finalMessage: (message: ParsedMessage<ParsedT>) => void;
-  error: (error: AnthropicError) => void;
+  error: (error: JuglowError) => void;
   abort: (error: APIUserAbortError) => void;
   end: () => void;
 }
@@ -57,11 +57,11 @@ export class MessageStream<ParsedT = null> implements AsyncIterable<MessageStrea
 
   #connectedPromise: Promise<Response | null>;
   #resolveConnectedPromise: (response: Response | null) => void = () => {};
-  #rejectConnectedPromise: (error: AnthropicError) => void = () => {};
+  #rejectConnectedPromise: (error: JuglowError) => void = () => {};
 
   #endPromise: Promise<void>;
   #resolveEndPromise: () => void = () => {};
-  #rejectEndPromise: (error: AnthropicError) => void = () => {};
+  #rejectEndPromise: (error: JuglowError) => void = () => {};
 
   #listeners: {
     [Event in keyof MessageStreamEvents<ParsedT>]?: MessageStreamEventListeners<ParsedT, Event>;
@@ -108,7 +108,7 @@ export class MessageStream<ParsedT = null> implements AsyncIterable<MessageStrea
   /**
    * Returns the `MessageStream` data, the raw `Response` instance and the ID of the request,
    * returned vie the `request-id` header which is useful for debugging requests and resporting
-   * issues to Anthropic.
+   * issues to Juglow.
    *
    * This is the same as the `APIPromise.withResponse()` method.
    *
@@ -328,7 +328,7 @@ export class MessageStream<ParsedT = null> implements AsyncIterable<MessageStrea
 
   #getFinalMessage(): ParsedMessage<ParsedT> {
     if (this.receivedMessages.length === 0) {
-      throw new AnthropicError('stream ended without producing a Message with role=assistant');
+      throw new JuglowError('stream ended without producing a Message with role=assistant');
     }
     return this.receivedMessages.at(-1)!;
   }
@@ -345,14 +345,14 @@ export class MessageStream<ParsedT = null> implements AsyncIterable<MessageStrea
 
   #getFinalText(): string {
     if (this.receivedMessages.length === 0) {
-      throw new AnthropicError('stream ended without producing a Message with role=assistant');
+      throw new JuglowError('stream ended without producing a Message with role=assistant');
     }
     const textBlocks = this.receivedMessages
       .at(-1)!
       .content.filter((block): block is TextBlock => block.type === 'text')
       .map((block) => block.text);
     if (textBlocks.length === 0) {
-      throw new AnthropicError('stream ended without producing a content block with type=text');
+      throw new JuglowError('stream ended without producing a content block with type=text');
     }
     return textBlocks.join(' ');
   }
@@ -376,16 +376,16 @@ export class MessageStream<ParsedT = null> implements AsyncIterable<MessageStrea
       this.#aborted = true;
       return this._emit('abort', error);
     }
-    if (error instanceof AnthropicError) {
+    if (error instanceof JuglowError) {
       return this._emit('error', error);
     }
     if (error instanceof Error) {
-      const anthropicError: AnthropicError = new AnthropicError(error.message);
+      const JuglowError: JuglowError = new JuglowError(error.message);
       // @ts-ignore
-      anthropicError.cause = error;
-      return this._emit('error', anthropicError);
+      JuglowError.cause = error;
+      return this._emit('error', JuglowError);
     }
-    return this._emit('error', new AnthropicError(String(error)));
+    return this._emit('error', new JuglowError(String(error)));
   };
 
   protected _emit<Event extends keyof MessageStreamEvents<ParsedT>>(
@@ -420,7 +420,7 @@ export class MessageStream<ParsedT = null> implements AsyncIterable<MessageStrea
     if (event === 'error') {
       // NOTE: _emit('error', error) should only be called from #handleError().
 
-      const error = args[0] as AnthropicError;
+      const error = args[0] as JuglowError;
       if (!this.#catchingPromiseCreated && !listeners?.length) {
         // Trigger an unhandled rejection if the user hasn't registered any error handlers.
         // If you are seeing stack traces here, make sure to handle errors via either:
@@ -511,11 +511,11 @@ export class MessageStream<ParsedT = null> implements AsyncIterable<MessageStrea
   }
   #endRequest(): ParsedMessage<ParsedT> {
     if (this.ended) {
-      throw new AnthropicError(`stream has ended, this shouldn't happen`);
+      throw new JuglowError(`stream has ended, this shouldn't happen`);
     }
     const snapshot = this.#currentMessageSnapshot;
     if (!snapshot) {
-      throw new AnthropicError(`request ended without sending any chunks`);
+      throw new JuglowError(`request ended without sending any chunks`);
     }
     this.#currentMessageSnapshot = undefined;
     return maybeParseMessage(snapshot, this.#params, { logger: this.#logger });
@@ -560,13 +560,13 @@ export class MessageStream<ParsedT = null> implements AsyncIterable<MessageStrea
 
     if (event.type === 'message_start') {
       if (snapshot) {
-        throw new AnthropicError(`Unexpected event order, got ${event.type} before receiving "message_stop"`);
+        throw new JuglowError(`Unexpected event order, got ${event.type} before receiving "message_stop"`);
       }
       return event.message;
     }
 
     if (!snapshot) {
-      throw new AnthropicError(`Unexpected event order, got ${event.type} before "message_start"`);
+      throw new JuglowError(`Unexpected event order, got ${event.type} before "message_start"`);
     }
 
     switch (event.type) {

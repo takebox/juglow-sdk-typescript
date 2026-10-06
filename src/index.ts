@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-export { Anthropic as default } from './client';
+export { Juglow as default } from './client';
 
 export { type Uploadable, toFile } from './core/uploads';
 export { APIPromise } from './core/api-promise';
@@ -12,8 +12,8 @@ export {
   type BetaRefusalFallbackOptions,
 } from './lib/middleware';
 export {
-  BaseAnthropic,
-  Anthropic,
+  BaseJuglow,
+  Juglow,
   type APIRequest,
   type ClientOptions,
   HUMAN_PROMPT,
@@ -21,7 +21,7 @@ export {
 } from './client';
 export { PagePromise } from './core/pagination';
 export {
-  AnthropicError,
+  JuglowError,
   APIError,
   APIConnectionError,
   APIConnectionTimeoutError,

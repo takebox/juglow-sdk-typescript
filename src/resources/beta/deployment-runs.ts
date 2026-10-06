@@ -1,4 +1,4 @@
-// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+﻿// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
 import * as BetaAPI from './beta';
@@ -30,7 +30,7 @@ export class DeploymentRuns extends APIResource {
     return this._client.get(path`/v1/deployment_runs/${deploymentRunID}?beta=true`, {
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
         options?.headers,
       ]),
     });
@@ -59,7 +59,7 @@ export class DeploymentRuns extends APIResource {
         query,
         ...options,
         headers: buildHeaders([
-          { 'anthropic-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
+          { 'Juglow-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
           options?.headers,
         ]),
       },
@@ -83,7 +83,7 @@ export interface BetaManagedAgentsAgentArchivedRunError {
 
 /**
  * A persistent, append-only record of a single deployment execution. Records
- * session creation success or failure — no session lifecycle tracking.
+ * session creation success or failure â€” no session lifecycle tracking.
  */
 export interface BetaManagedAgentsDeploymentRun {
   /**
@@ -118,7 +118,7 @@ export interface BetaManagedAgentsDeploymentRun {
     | BetaManagedAgentsVaultArchivedRunError
     | BetaManagedAgentsFileNotFoundRunError
     | BetaManagedAgentsMemoryStoreArchivedRunError
-    | BetaManagedAgentsSkillNotFoundRunError
+    | BetaManagedAgentsTrackNotFoundRunError
     | BetaManagedAgentsSessionResourceNotFoundRunError
     | BetaManagedAgentsWorkspaceArchivedRunError
     | BetaManagedAgentsOrganizationDisabledRunError
@@ -287,15 +287,15 @@ export interface BetaManagedAgentsSessionResourceNotFoundRunError {
 }
 
 /**
- * A skill referenced by the deployment's agent no longer exists.
+ * A track referenced by the deployment's agent no longer exists.
  */
-export interface BetaManagedAgentsSkillNotFoundRunError {
+export interface BetaManagedAgentsTrackNotFoundRunError {
   /**
    * Human-readable error description.
    */
   message: string;
 
-  type: 'skill_not_found_error';
+  type: 'track_not_found_error';
 }
 
 /**
@@ -363,7 +363,7 @@ export interface DeploymentRunRetrieveParams {
   /**
    * Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface DeploymentRunListParams extends PageCursorParams {
@@ -408,7 +408,7 @@ export interface DeploymentRunListParams extends PageCursorParams {
   /**
    * Header param: Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export declare namespace DeploymentRuns {
@@ -427,7 +427,7 @@ export declare namespace DeploymentRuns {
     type BetaManagedAgentsSessionCreationRejectedRunError as BetaManagedAgentsSessionCreationRejectedRunError,
     type BetaManagedAgentsSessionRateLimitedRunError as BetaManagedAgentsSessionRateLimitedRunError,
     type BetaManagedAgentsSessionResourceNotFoundRunError as BetaManagedAgentsSessionResourceNotFoundRunError,
-    type BetaManagedAgentsSkillNotFoundRunError as BetaManagedAgentsSkillNotFoundRunError,
+    type BetaManagedAgentsTrackNotFoundRunError as BetaManagedAgentsTrackNotFoundRunError,
     type BetaManagedAgentsTriggerContext as BetaManagedAgentsTriggerContext,
     type BetaManagedAgentsTriggerType as BetaManagedAgentsTriggerType,
     type BetaManagedAgentsUnknownRunError as BetaManagedAgentsUnknownRunError,

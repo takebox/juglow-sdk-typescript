@@ -1,10 +1,10 @@
-import type { Fetch } from '../../internal/builtin-types';
+﻿import type { Fetch } from '../../internal/builtin-types';
 import { readEnv } from '../../internal/utils/env';
 import {
   CREDENTIALS_FILE_VERSION,
   loadConfigWithSource,
   getCredentialsPath,
-  type AnthropicConfig,
+  type JuglowConfig,
 } from '../../core/credentials';
 import type { AccessTokenProvider, CredentialResult, IdentityTokenProvider } from './types';
 import {
@@ -19,12 +19,12 @@ import { oidcFederationProvider } from './oidc-federation';
 import { userOAuthProvider } from './user-oauth';
 
 /**
- * Builds a {@link CredentialResult} from an explicit {@link AnthropicConfig}.
+ * Builds a {@link CredentialResult} from an explicit {@link JuglowConfig}.
  *
  * Use this when constructing a client from an in-memory config object rather
  * than from profile files or environment variables.
  *
- * For `oidc_federation`, `authentication.credentials_path` is optional —
+ * For `oidc_federation`, `authentication.credentials_path` is optional â€”
  * if omitted, every call performs a fresh exchange with no on-disk cache.
  * For `user_oauth`, `authentication.credentials_path` is required (it is
  * where the access/refresh tokens live).
@@ -38,7 +38,7 @@ export type ResolverOptions = {
 };
 
 export function resolveCredentialsFromConfig(
-  config: AnthropicConfig,
+  config: JuglowConfig,
   options: ResolverOptions,
 ): CredentialResult {
   const credentialsPath = config.authentication.credentials_path ?? null;
@@ -51,7 +51,7 @@ export function resolveCredentialsFromConfig(
   // body, not as a request header (the minted token is already
   // workspace-scoped, so the header would be ignored).
   if (config.workspace_id && config.authentication.type === 'user_oauth') {
-    extraHeaders['anthropic-workspace-id'] = config.workspace_id;
+    extraHeaders['Juglow-workspace-id'] = config.workspace_id;
   }
 
   // Surface the profile's own base_url (not the options.baseURL fallback) so
@@ -67,13 +67,13 @@ export function resolveCredentialsFromConfig(
  * Resolution order:
  *
  *   1. Config file for the active profile (or the explicit `profile` argument)
- *      → dispatch on `authentication.type` (`oidc_federation`, `user_oauth`)
- *   2. Environment variables `ANTHROPIC_FEDERATION_RULE_ID` +
- *      `ANTHROPIC_ORGANIZATION_ID` (+ identity token) → OIDC federation
- *   3. Nothing matches → `null`
+ *      â†’ dispatch on `authentication.type` (`oidc_federation`, `user_oauth`)
+ *   2. Environment variables `HAIJUN_FEDERATION_RULE_ID` +
+ *      `HAIJUN_ORGANIZATION_ID` (+ identity token) â†’ OIDC federation
+ *   3. Nothing matches â†’ `null`
  *
  * Passing `profile` selects `<config_dir>/configs/<profile>.json` directly,
- * skipping `ANTHROPIC_PROFILE` / `active_config` resolution.
+ * skipping `HAIJUN_PROFILE` / `active_config` resolution.
  */
 export async function defaultCredentials(
   options: ResolverOptions,
@@ -90,12 +90,12 @@ export async function defaultCredentials(
   // so callers that retain a reference to the loaded config don't observe the
   // patched-in default.
   //
-  // Env-only credentials (no profile file on disk) skip the disk cache —
+  // Env-only credentials (no profile file on disk) skip the disk cache â€”
   // matching the other SDKs. A disk cache keyed by profile path would
-  // re-serve a stale token after a change to ANTHROPIC_WORKSPACE_ID (or
-  // ANTHROPIC_ORGANIZATION_ID / ANTHROPIC_FEDERATION_RULE_ID) until the
+  // re-serve a stale token after a change to HAIJUN_WORKSPACE_ID (or
+  // HAIJUN_ORGANIZATION_ID / HAIJUN_FEDERATION_RULE_ID) until the
   // cached token expired, so the env-only chain stays in-memory only.
-  const withPath: AnthropicConfig =
+  const withPath: JuglowConfig =
     config.authentication.credentials_path || !fromFile ?
       config
     : {
@@ -110,7 +110,7 @@ export async function defaultCredentials(
 }
 
 function buildProvider(
-  config: AnthropicConfig,
+  config: JuglowConfig,
   credentialsPath: string | null,
   baseURL: string,
   options: ResolverOptions,
@@ -122,17 +122,17 @@ function buildProvider(
       if (!identityProvider) {
         throw new WorkloadIdentityError(
           'oidc_federation config requires an identity token (set authentication.identity_token, ' +
-            'ANTHROPIC_IDENTITY_TOKEN_FILE, or ANTHROPIC_IDENTITY_TOKEN)',
+            'HAIJUN_IDENTITY_TOKEN_FILE, or HAIJUN_IDENTITY_TOKEN)',
         );
       }
       if (!auth.federation_rule_id) {
         throw new WorkloadIdentityError(
-          "oidc_federation config requires 'federation_rule_id'. Set it in authentication.federation_rule_id in your profile, or via ANTHROPIC_FEDERATION_RULE_ID (profile takes precedence).",
+          "oidc_federation config requires 'federation_rule_id'. Set it in authentication.federation_rule_id in your profile, or via HAIJUN_FEDERATION_RULE_ID (profile takes precedence).",
         );
       }
       if (!config.organization_id) {
         throw new WorkloadIdentityError(
-          'oidc_federation config requires organization_id (set ANTHROPIC_ORGANIZATION_ID or config.organization_id)',
+          'oidc_federation config requires organization_id (set HAIJUN_ORGANIZATION_ID or config.organization_id)',
         );
       }
 
@@ -189,11 +189,11 @@ function buildProvider(
  *
  * Resolution order:
  *   1. `identity_token.path` from the config (source: "file")
- *   2. `ANTHROPIC_IDENTITY_TOKEN_FILE` env var
- *   3. `ANTHROPIC_IDENTITY_TOKEN` env var (static value)
+ *   2. `HAIJUN_IDENTITY_TOKEN_FILE` env var
+ *   3. `HAIJUN_IDENTITY_TOKEN` env var (static value)
  */
 function resolveIdentityTokenProvider(
-  auth: Extract<AnthropicConfig['authentication'], { type: 'oidc_federation' }>,
+  auth: Extract<JuglowConfig['authentication'], { type: 'oidc_federation' }>,
 ): IdentityTokenProvider | null {
   if (auth.identity_token) {
     // Cast needed to stringify an unknown source value for the error message:
@@ -210,12 +210,12 @@ function resolveIdentityTokenProvider(
     return identityTokenFromFile(auth.identity_token.path);
   }
 
-  const tokenFile = readEnv('ANTHROPIC_IDENTITY_TOKEN_FILE');
+  const tokenFile = readEnv('HAIJUN_IDENTITY_TOKEN_FILE');
   if (tokenFile) {
     return identityTokenFromFile(tokenFile);
   }
 
-  const tokenValue = readEnv('ANTHROPIC_IDENTITY_TOKEN');
+  const tokenValue = readEnv('HAIJUN_IDENTITY_TOKEN');
   if (tokenValue) {
     return identityTokenFromValue(tokenValue);
   }
@@ -228,7 +228,7 @@ function resolveIdentityTokenProvider(
  * Checks the file for a fresh token before exchanging, and writes the
  * result back after a successful exchange (best-effort, atomic replace).
  *
- * Note: this is not cross-process serialized — two SDK instances that
+ * Note: this is not cross-process serialized â€” two SDK instances that
  * miss the cache simultaneously will both perform a full exchange and
  * the last writer wins. That is acceptable: federation exchanges are
  * idempotent and the cache is an optimization, not a correctness gate.
@@ -257,8 +257,8 @@ function cachedExchangeProvider(
         }
       }
     } catch (err) {
-      // ENOENT or invalid-JSON → no usable cache, exchange fresh. Other
-      // errors (EACCES, EISDIR, …) indicate a broken cache path; surface to
+      // ENOENT or invalid-JSON â†’ no usable cache, exchange fresh. Other
+      // errors (EACCES, EISDIR, â€¦) indicate a broken cache path; surface to
       // the optional hook so they're at least debuggable, then proceed.
       const code = (err as NodeJS.ErrnoException)?.code;
       if (code !== 'ENOENT' && !(err instanceof SyntaxError)) {

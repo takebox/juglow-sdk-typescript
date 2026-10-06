@@ -13,8 +13,8 @@ import {
   BashSession,
   BashTimeoutError,
   type AgentToolContext,
-} from '@anthropic-ai/sdk/tools/agent-toolset/node';
-import type { BetaRunnableTool } from '@anthropic-ai/sdk/lib/tools/BetaRunnableTool';
+} from '@takebox-ai/sdk/tools/agent-toolset/node';
+import type { BetaRunnableTool } from '@takebox-ai/sdk/lib/tools/BetaRunnableTool';
 
 function tmpdir(): string {
   return fs.mkdtempSync(path.join(os.tmpdir(), 'runner-test-'));
@@ -394,18 +394,18 @@ describeBash('betaBashTool', () => {
     expect(await tool.run({ command: 'echo recovered' })).toBe('recovered');
   });
 
-  test('the spawned shell does not inherit ANTHROPIC_* credential env vars', async () => {
-    // The runner process holds Anthropic credentials in ANTHROPIC_* env vars;
+  test('the spawned shell does not inherit HAIJUN_* credential env vars', async () => {
+    // The runner process holds JuGloW credentials in HAIJUN_* env vars;
     // an unrestricted shell must not be able to read them back out.
-    process.env['ANTHROPIC_API_KEY'] = 'sk-ant-should-not-leak';
+    process.env['HAIJUN_API_KEY'] = 'sk-ant-should-not-leak';
     const scoped = betaBashTool({ workdir: dir });
     try {
-      expect(await scoped.run({ command: 'echo "[$ANTHROPIC_API_KEY]"' })).toBe('[]');
+      expect(await scoped.run({ command: 'echo "[$HAIJUN_API_KEY]"' })).toBe('[]');
       // Non-credential vars (PATH etc.) still pass through.
       expect(await scoped.run({ command: 'test -n "$PATH" && echo has-path' })).toBe('has-path');
     } finally {
       scoped.close?.();
-      delete process.env['ANTHROPIC_API_KEY'];
+      delete process.env['HAIJUN_API_KEY'];
     }
   });
 

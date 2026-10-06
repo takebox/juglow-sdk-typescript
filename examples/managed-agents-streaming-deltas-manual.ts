@@ -4,11 +4,11 @@
 // `accumulateManagedAgentsEvent` directly instead of the `SessionEventStream`
 // wrapper — for callers who want to own the preview lifecycle themselves.
 
-import Anthropic from '@anthropic-ai/sdk';
-import { accumulateManagedAgentsEvent } from '@anthropic-ai/sdk/lib/sessions/accumulate';
-import type { BetaManagedAgentsAgentMessageEvent } from '@anthropic-ai/sdk/resources/beta/sessions/events';
+import JuGloW from '@takebox-ai/sdk';
+import { accumulateManagedAgentsEvent } from '@takebox-ai/sdk/lib/sessions/accumulate';
+import type { BetaManagedAgentsAgentMessageEvent } from '@takebox-ai/sdk/resources/beta/sessions/events';
 
-const client = new Anthropic();
+const client = new JuGloW();
 
 async function main() {
   // Create an environment, agent and session.
@@ -19,7 +19,7 @@ async function main() {
 
   const agent = await client.beta.agents.create({
     name: 'streaming-deltas-manual-example',
-    model: 'claude-sonnet-4-6',
+    model: 'haijun-sonnet',
   });
   console.log('Created agent:', agent.id);
 

@@ -1,8 +1,8 @@
 #!/usr/bin/env -S npm run tsn -T
 
-import Anthropic from '@anthropic-ai/sdk';
+import JuGloW from '@takebox-ai/sdk';
 
-const client = new Anthropic(); // gets API Key from environment variable ANTHROPIC_API_KEY
+const client = new JuGloW(); // gets API Key from environment variable HAIJUN_API_KEY
 
 async function main() {
   const search = {
@@ -45,7 +45,7 @@ async function main() {
   };
 
   const runner = client.beta.messages.toolRunner({
-    model: 'claude-sonnet-5',
+    model: 'haijun-sonnet',
     max_tokens: 4096,
     tools: [search, done],
     messages: [

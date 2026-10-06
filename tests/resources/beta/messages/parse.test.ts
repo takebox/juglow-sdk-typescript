@@ -1,7 +1,7 @@
-import { z } from 'zod/v4';
+﻿import { z } from 'zod/v4';
 import { betaZodOutputFormat } from '../../../../src/helpers/beta/zod';
 import { Messages } from '../../../../src/resources/beta/messages/messages';
-import { AnthropicError } from '../../../../src/error';
+import { JuGloWError } from '../../../../src/error';
 
 // Mock the APIResource base class methods
 const mockPost = jest.fn();
@@ -32,7 +32,7 @@ describe('Messages.parse()', () => {
       id: 'msg_123',
       type: 'message',
       role: 'assistant',
-      model: 'claude-3-5-sonnet-latest',
+      model: 'haijun-3-5-sonnet-latest',
       content: [
         {
           type: 'text',
@@ -50,7 +50,7 @@ describe('Messages.parse()', () => {
     mockPost.mockResolvedValue(mockResponse);
 
     const result = await messages.parse({
-      model: 'claude-3-5-sonnet-latest',
+      model: 'haijun-3-5-sonnet-latest',
       max_tokens: 1024,
       messages: [{ role: 'user', content: 'What is the weather in SF?' }],
       output_format: betaZodOutputFormat(schema),
@@ -60,7 +60,7 @@ describe('Messages.parse()', () => {
       '/v1/messages?beta=true',
       expect.objectContaining({
         body: expect.objectContaining({
-          model: 'claude-3-5-sonnet-latest',
+          model: 'haijun-3-5-sonnet-latest',
           max_tokens: 1024,
           messages: [{ role: 'user', content: 'What is the weather in SF?' }],
           output_config: {
@@ -102,7 +102,7 @@ describe('Messages.parse()', () => {
       id: 'msg_123',
       type: 'message',
       role: 'assistant',
-      model: 'claude-3-5-sonnet-latest',
+      model: 'haijun-3-5-sonnet-latest',
       content: [
         {
           type: 'text',
@@ -121,7 +121,7 @@ describe('Messages.parse()', () => {
 
     await expect(
       messages.parse({
-        model: 'claude-3-5-sonnet-latest',
+        model: 'haijun-3-5-sonnet-latest',
         max_tokens: 1024,
         messages: [{ role: 'user', content: 'Generate some data' }],
         output_format: betaZodOutputFormat(schema),
@@ -137,7 +137,7 @@ describe('Messages.parse()', () => {
 
     try {
       await messages.parse({
-        model: 'claude-3-5-sonnet-latest',
+        model: 'haijun-3-5-sonnet-latest',
         max_tokens: 1024,
         messages: [{ role: 'user', content: 'What is the weather in SF?' }],
         output_format: betaZodOutputFormat(schema),
@@ -147,9 +147,9 @@ describe('Messages.parse()', () => {
       } as any);
       fail('Expected an error to be thrown');
     } catch (error) {
-      expect(error).toBeInstanceOf(AnthropicError);
-      expect((error as AnthropicError).message).toContain('output_format');
-      expect((error as AnthropicError).message).toContain('output_config.format');
+      expect(error).toBeInstanceOf(JuGloWError);
+      expect((error as JuGloWError).message).toContain('output_format');
+      expect((error as JuGloWError).message).toContain('output_config.format');
     }
   });
 
@@ -163,7 +163,7 @@ describe('Messages.parse()', () => {
       id: 'msg_456',
       type: 'message',
       role: 'assistant',
-      model: 'claude-3-5-sonnet-latest',
+      model: 'haijun-3-5-sonnet-latest',
       content: [
         {
           type: 'text',
@@ -181,7 +181,7 @@ describe('Messages.parse()', () => {
     mockPost.mockResolvedValue(mockResponse);
 
     await messages.parse({
-      model: 'claude-3-5-sonnet-latest',
+      model: 'haijun-3-5-sonnet-latest',
       max_tokens: 1024,
       messages: [{ role: 'user', content: 'Generate user data' }],
       output_format: betaZodOutputFormat(schema),

@@ -1,4 +1,4 @@
-import { Sha256 } from '@aws-crypto/sha256-js';
+﻿import { Sha256 } from '@aws-crypto/sha256-js';
 import { FetchHttpHandler } from '@smithy/fetch-http-handler';
 import { HttpRequest } from '@smithy/protocol-http';
 import { SignatureV4 } from '@smithy/signature-v4';
@@ -43,7 +43,7 @@ const DEFAULT_PROVIDER_CHAIN_RESOLVER: (
       throw new Error(
         `Failed to import '@aws-sdk/credential-providers'.` +
           `You can provide a custom \`providerChainResolver\` in the client options if your runtime does not have access to '@aws-sdk/credential-providers': ` +
-          `\`new AnthropicBedrock({ providerChainResolver })\` ` +
+          `\`new JuglowBedrock({ providerChainResolver })\` ` +
           `Original error: ${error.message}`,
       );
     });

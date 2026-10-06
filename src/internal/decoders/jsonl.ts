@@ -1,4 +1,4 @@
-import { AnthropicError } from '../../core/error';
+import { JuglowError } from '../../core/error';
 import { ReadableStreamToAsyncIterable } from '../shims';
 import { LineDecoder, type Bytes } from './line';
 
@@ -36,11 +36,11 @@ export class JSONLDecoder<T> {
         typeof (globalThis as any).navigator !== 'undefined' &&
         (globalThis as any).navigator.product === 'ReactNative'
       ) {
-        throw new AnthropicError(
+        throw new JuglowError(
           `The default react-native fetch implementation does not support streaming. Please use expo/fetch: https://docs.expo.dev/versions/latest/sdk/expo/#expofetch-api`,
         );
       }
-      throw new AnthropicError(`Attempted to iterate over a response with no body`);
+      throw new JuglowError(`Attempted to iterate over a response with no body`);
     }
 
     return new JSONLDecoder(ReadableStreamToAsyncIterable<Bytes>(response.body), controller);

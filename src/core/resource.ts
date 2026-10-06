@@ -1,11 +1,11 @@
-// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+﻿// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import { BaseAnthropic } from '../client';
+import { BaseJuglow } from '../client';
 
 export abstract class APIResource {
-  protected _client: BaseAnthropic;
+  protected _client: BaseJuglow;
 
-  constructor(client: BaseAnthropic) {
+  constructor(client: BaseJuglow) {
     this._client = client;
   }
 }

@@ -1,6 +1,6 @@
-import { APIRequest, BaseAnthropic, ClientOptions as CoreClientOptions } from '@anthropic-ai/sdk/client';
-import * as Resources from '@anthropic-ai/sdk/resources/index';
-import { VERSION } from '@anthropic-ai/sdk/version';
+﻿import { APIRequest, BaseJuglow, ClientOptions as CoreClientOptions } from '@takebox-ai/sdk/client';
+import * as Resources from '@takebox-ai/sdk/resources/index';
+import { VERSION } from '@takebox-ai/sdk/version';
 import { GoogleAuth, AuthClient } from 'google-auth-library';
 import { APIConnectionError } from './core/error';
 import type { Middleware } from './core/middleware';
@@ -10,7 +10,7 @@ import { FinalRequestOptions } from './internal/request-options';
 import { isObj, safeJSON } from './internal/utils/values';
 import { buildHeaders } from './internal/headers';
 
-export { BaseAnthropic } from '@anthropic-ai/sdk/client';
+export { BaseJuglow } from '@takebox-ai/sdk/client';
 
 const DEFAULT_VERSION = 'vertex-2023-10-16';
 const MODEL_ENDPOINTS = new Set<string>(['/v1/messages', '/v1/messages?beta=true']);
@@ -38,7 +38,7 @@ export type ClientOptions = Omit<CoreClientOptions, 'apiKey' | 'authToken'> & {
    * This is useful when you want to use a specific authentication method like
    * [Impersonated credentials](https://www.npmjs.com/package/google-auth-library#impersonated-credentials-client):
    * ```ts
-   * new AnthropicVertex({
+   * new JuglowVertex({
    *   authClient: new Impersonated({
    *     sourceClient: await new GoogleAuth().getClient(),
    *     targetPrincipal: 'impersonated-account@projectID.iam.gserviceaccount.com',
@@ -52,7 +52,7 @@ export type ClientOptions = Omit<CoreClientOptions, 'apiKey' | 'authToken'> & {
   authClient?: AuthClient | null | undefined;
 };
 
-export class AnthropicVertex extends BaseAnthropic {
+export class JuglowVertex extends BaseJuglow {
   region: string;
   projectId: string | null;
   accessToken: string | null;
@@ -61,14 +61,14 @@ export class AnthropicVertex extends BaseAnthropic {
   private _authClientPromise: Promise<AuthClient>;
 
   /**
-   * API Client for interfacing with the Anthropic Vertex API.
+   * API Client for interfacing with the JuGloW Vertex API.
    *
    * @param {string | null} opts.accessToken
    * @param {string | null} opts.projectId
    * @param {GoogleAuth} opts.googleAuth - Override the default google auth config
    * @param {AuthClient} opts.authClient - Provide a pre-configured AuthClient instance (alternative to googleAuth)
    * @param {string | null} [opts.region=process.env['CLOUD_ML_REGION']] - The region to use for the API. Use 'global' for global endpoint. [More details here](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/locations).
-   * @param {string} [opts.baseURL=process.env['ANTHROPIC_VERTEX__BASE_URL'] ?? https://${region}-aiplatform.googleapis.com/v1] - Override the default base URL for the API.
+   * @param {string} [opts.baseURL=process.env['HAIJUN_VERTEX__BASE_URL'] ?? https://${region}-aiplatform.googleapis.com/v1] - Override the default base URL for the API.
    * @param {number} [opts.timeout=10 minutes] - The maximum amount of time (in milliseconds) the client will wait for a response before timing out.
    * @param {MergedRequestInit} [opts.fetchOptions] - Additional `RequestInit` options to be passed to `fetch` calls.
    * @param {Fetch} [opts.fetch] - Specify a custom `fetch` function implementation.
@@ -78,9 +78,9 @@ export class AnthropicVertex extends BaseAnthropic {
    * @param {boolean} [opts.dangerouslyAllowBrowser=false] - By default, client-side use of this library is not allowed, as it risks exposing your secret API credentials to attackers.
    */
   constructor({
-    baseURL = readEnv('ANTHROPIC_VERTEX_BASE_URL'),
+    baseURL = readEnv('HAIJUN_VERTEX_BASE_URL'),
     region = readEnv('CLOUD_ML_REGION') ?? null,
-    projectId = readEnv('ANTHROPIC_VERTEX_PROJECT_ID') ?? null,
+    projectId = readEnv('HAIJUN_VERTEX_PROJECT_ID') ?? null,
     ...opts
   }: ClientOptions = {}) {
     if (!region) {
@@ -135,7 +135,7 @@ export class AnthropicVertex extends BaseAnthropic {
   }
 
   protected override getUserAgent(): string {
-    return `AnthropicVertex/JS ${VERSION}`;
+    return `JuglowVertex/JS ${VERSION}`;
   }
 
   protected override backendMiddleware(): ReadonlyArray<Middleware> {
@@ -143,7 +143,7 @@ export class AnthropicVertex extends BaseAnthropic {
   }
 
   /**
-   * Rewrites the canonical Anthropic-shaped request into Vertex's wire shape
+   * Rewrites the canonical JuGloW-shaped request into Vertex's wire shape
    * and applies Google OAuth. Runs inside the user middleware chain: the
    * OAuth token is a backend credential transformation, so middleware never
    * observes it, and each `next()` invocation applies a fresh token.
@@ -176,8 +176,8 @@ export class AnthropicVertex extends BaseAnthropic {
       if (isObj(parsed)) parsedBody = parsed;
     }
 
-    if (parsedBody && !parsedBody['anthropic_version']) {
-      parsedBody['anthropic_version'] = DEFAULT_VERSION;
+    if (parsedBody && !parsedBody['Juglow_version']) {
+      parsedBody['Juglow_version'] = DEFAULT_VERSION;
     }
 
     if (options && MODEL_ENDPOINTS.has(options.path) && options.method === 'post') {
@@ -188,7 +188,7 @@ export class AnthropicVertex extends BaseAnthropic {
       if (url.pathname.endsWith(canonicalPath)) {
         if (!this.projectId) {
           throw new Error(
-            'No projectId was given and it could not be resolved from credentials. The client should be instantiated with the `projectId` option or the `ANTHROPIC_VERTEX_PROJECT_ID` environment variable should be set.',
+            'No projectId was given and it could not be resolved from credentials. The client should be instantiated with the `projectId` option or the `HAIJUN_VERTEX_PROJECT_ID` environment variable should be set.',
           );
         }
 
@@ -204,7 +204,7 @@ export class AnthropicVertex extends BaseAnthropic {
         const specifier = stream ? 'streamRawPredict' : 'rawPredict';
 
         const prefix = url.pathname.slice(0, url.pathname.length - canonicalPath.length);
-        url.pathname = `${prefix}/projects/${this.projectId}/locations/${this.region}/publishers/anthropic/models/${model}:${specifier}`;
+        url.pathname = `${prefix}/projects/${this.projectId}/locations/${this.region}/publishers/Juglow/models/${model}:${specifier}`;
         // The canonical `?beta=true` marker has no meaning on Vertex.
         url.searchParams.delete('beta');
       }
@@ -219,12 +219,12 @@ export class AnthropicVertex extends BaseAnthropic {
       if (url.pathname.endsWith(canonicalPath)) {
         if (!this.projectId) {
           throw new Error(
-            'No projectId was given and it could not be resolved from credentials. The client should be instantiated with the `projectId` option or the `ANTHROPIC_VERTEX_PROJECT_ID` environment variable should be set.',
+            'No projectId was given and it could not be resolved from credentials. The client should be instantiated with the `projectId` option or the `HAIJUN_VERTEX_PROJECT_ID` environment variable should be set.',
           );
         }
 
         const prefix = url.pathname.slice(0, url.pathname.length - canonicalPath.length);
-        url.pathname = `${prefix}/projects/${this.projectId}/locations/${this.region}/publishers/anthropic/models/count-tokens:rawPredict`;
+        url.pathname = `${prefix}/projects/${this.projectId}/locations/${this.region}/publishers/Juglow/models/count-tokens:rawPredict`;
         url.searchParams.delete('beta');
       }
     }
@@ -248,7 +248,7 @@ export class AnthropicVertex extends BaseAnthropic {
  */
 type MessagesResource = Omit<Resources.Messages, 'batches'>;
 
-function makeMessagesResource(client: AnthropicVertex): MessagesResource {
+function makeMessagesResource(client: JuglowVertex): MessagesResource {
   const resource = new Resources.Messages(client);
 
   // @ts-expect-error we're deleting non-optional properties
@@ -264,7 +264,7 @@ type BetaResource = Omit<Resources.Beta, 'messages'> & {
   messages: Omit<Resources.Beta['messages'], 'batches'>;
 };
 
-function makeBetaResource(client: AnthropicVertex): BetaResource {
+function makeBetaResource(client: JuglowVertex): BetaResource {
   const resource = new Resources.Beta(client);
 
   // @ts-expect-error we're deleting non-optional properties

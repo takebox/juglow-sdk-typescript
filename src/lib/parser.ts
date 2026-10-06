@@ -1,5 +1,5 @@
 import type { Logger } from '../client';
-import { AnthropicError } from '../core/error';
+import { JuglowError } from '../core/error';
 import {
   ContentBlock,
   JSONOutputFormat,
@@ -120,6 +120,6 @@ function parseOutputFormat<Params extends ParseableMessageCreateParams>(
 
     return JSON.parse(content);
   } catch (error) {
-    throw new AnthropicError(`Failed to parse structured output: ${error}`);
+    throw new JuglowError(`Failed to parse structured output: ${error}`);
   }
 }

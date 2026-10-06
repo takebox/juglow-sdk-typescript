@@ -1,10 +1,10 @@
-export * from '@anthropic-ai/sdk/streaming';
+export * from '@takebox-ai/sdk/streaming';
 
 import { EventStreamMarshaller } from '@smithy/eventstream-serde-node';
 import { fromBase64, toBase64 } from '@smithy/util-base64';
 import { streamCollector } from '@smithy/fetch-http-handler';
 import { EventStreamSerdeContext, SerdeContext } from '@smithy/types';
-import { AnthropicError } from '@anthropic-ai/sdk/error';
+import { JuGloWError } from '@takebox-ai/sdk/error';
 import { de_ResponseStream } from '../AWS_restJson1';
 import type { BodyInit } from '../internal/builtin-types';
 import { ReadableStreamFrom, ReadableStreamToAsyncIterable } from '../internal/shims';
@@ -32,13 +32,13 @@ export const getMinimalSerdeContext = (): SerdeContext & EventStreamSerdeContext
 
 /**
  * Transcodes a Bedrock streaming response from AWS's binary EventStream
- * framing to the SSE format the Anthropic API uses, preserving status,
+ * framing to the SSE format the JuGloW API uses, preserving status,
  * headers (apart from content type/length), and URL.
  *
- * Chunk frames carry Anthropic-shaped JSON payloads; each becomes an SSE
- * frame named by the payload's `type`, so Anthropic error payloads become
+ * Chunk frames carry JuGloW-shaped JSON payloads; each becomes an SSE
+ * frame named by the payload's `type`, so JuGloW error payloads become
  * standard SSE `error` events. AWS exception frames become SSE `error`
- * events with an Anthropic-shaped error body.
+ * events with an JuGloW-shaped error body.
  */
 export function eventStreamToSSEResponse(response: Response): Response {
   const body = response.body;
@@ -56,7 +56,7 @@ export function eventStreamToSSEResponse(response: Response): Response {
         const data = toUtf8(event.chunk.bytes);
         const parsed = safeJSON(data);
         if (parsed === undefined) {
-          throw new AnthropicError(`Could not parse a Bedrock chunk into JSON: ${data}`);
+          throw new JuGloWError(`Could not parse a Bedrock chunk into JSON: ${data}`);
         }
         // Frames without a `type` (e.g. gateway keep-alives) have no SSE
         // event name to carry them; drop them rather than failing the stream.

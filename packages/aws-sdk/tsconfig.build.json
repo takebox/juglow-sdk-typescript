@@ -5,8 +5,8 @@
   "compilerOptions": {
     "rootDir": "./dist/src",
     "paths": {
-      "@anthropic-ai/aws-sdk/*": ["src/*"],
-      "@anthropic-ai/aws-sdk": ["src/index.ts"]
+      "@takebox-ai/aws-sdk/*": ["src/*"],
+      "@takebox-ai/aws-sdk": ["src/index.ts"]
     },
     "noEmit": false,
     "declaration": true,

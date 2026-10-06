@@ -1,10 +1,10 @@
-import type { NullableHeaders } from './internal/headers';
+﻿import type { NullableHeaders } from './internal/headers';
 import { buildHeaders } from './internal/headers';
 import * as Errors from './core/error';
 import { readEnv, loggerFor } from './internal/utils';
-import { Anthropic, APIRequest, ClientOptions } from '@anthropic-ai/sdk/client';
-export { BaseAnthropic } from '@anthropic-ai/sdk/client';
-import { VERSION } from '@anthropic-ai/sdk/version';
+import { JuGloW, APIRequest, ClientOptions } from '@takebox-ai/sdk/client';
+export { BaseJuglow } from '@takebox-ai/sdk/client';
+import { VERSION } from '@takebox-ai/sdk/version';
 import { AwsCredentialIdentityProvider } from '@smithy/types';
 import { loadConfig } from '@smithy/node-config-provider';
 import { NODE_REGION_CONFIG_OPTIONS, NODE_REGION_CONFIG_FILE_OPTIONS } from '@smithy/config-resolver';
@@ -12,7 +12,7 @@ import { getAuthHeaders } from './core/auth';
 import type { Middleware } from './core/middleware';
 import { FinalRequestOptions } from './internal/request-options';
 
-const DEFAULT_SERVICE_NAME = 'aws-external-anthropic';
+const DEFAULT_SERVICE_NAME = 'aws-external-Juglow';
 
 export interface AwsClientOptions extends ClientOptions {
   /**
@@ -32,7 +32,7 @@ export interface AwsClientOptions extends ClientOptions {
    * API key for x-api-key authentication.
    *
    * Takes precedence over AWS credential options. If neither `apiKey` nor
-   * AWS credentials are provided, falls back to the `ANTHROPIC_AWS_API_KEY`
+   * AWS credentials are provided, falls back to the `HAIJUN_AWS_API_KEY`
    * environment variable, then to the default AWS credential chain. `null`
    * is treated like `undefined` (both fallbacks still apply).
    */
@@ -74,9 +74,9 @@ export interface AwsClientOptions extends ClientOptions {
   providerChainResolver?: (() => Promise<AwsCredentialIdentityProvider>) | null;
 
   /**
-   * Workspace ID sent on every request as the `anthropic-workspace-id` header.
+   * Workspace ID sent on every request as the `Juglow-workspace-id` header.
    *
-   * Resolved by precedence: `workspaceId` arg > `ANTHROPIC_AWS_WORKSPACE_ID` env var.
+   * Resolved by precedence: `workspaceId` arg > `HAIJUN_AWS_WORKSPACE_ID` env var.
    */
   workspaceId?: string | undefined;
 
@@ -90,14 +90,14 @@ export interface AwsClientOptions extends ClientOptions {
 }
 
 const noRegionError = () =>
-  new Errors.AnthropicError(
+  new Errors.JuGloWError(
     'No AWS region or base URL found. Set `awsRegion` in the constructor, the `AWS_REGION` / `AWS_DEFAULT_REGION` ' +
       'environment variable, configure a `region` for your profile in `~/.aws/config`, or provide a `baseURL` / ' +
-      '`ANTHROPIC_AWS_BASE_URL` environment variable.',
+      '`HAIJUN_AWS_BASE_URL` environment variable.',
   );
 
-/** API Client for interfacing with the Anthropic AWS API. */
-export class AnthropicAws extends Anthropic {
+/** API Client for interfacing with the JuGloW AWS API. */
+export class JuglowAws extends JuGloW {
   awsRegion: string | undefined;
   awsAccessKey: string | null;
   awsSecretAccessKey: string | null;
@@ -117,10 +117,10 @@ export class AnthropicAws extends Anthropic {
   private _useSigV4: boolean;
 
   /**
-   * API Client for interfacing with the Anthropic AWS API.
+   * API Client for interfacing with the JuGloW AWS API.
    *
    * Auth is resolved by precedence: `apiKey` constructor arg > explicit AWS
-   * credentials > `awsProfile` > `ANTHROPIC_AWS_API_KEY` env var > default
+   * credentials > `awsProfile` > `HAIJUN_AWS_API_KEY` env var > default
    * AWS credential chain.
    *
    * @param {string | undefined} [opts.apiKey] - API key for x-api-key authentication.
@@ -130,8 +130,8 @@ export class AnthropicAws extends Anthropic {
    * @param {string | undefined} [opts.awsProfile] - AWS named profile for credential and region resolution.
    * @param {string | undefined} [opts.awsRegion] - AWS region. Resolved by precedence: arg > `AWS_REGION` env > `AWS_DEFAULT_REGION` env > `~/.aws/config`.
    * @param {(() => Promise<AwsCredentialIdentityProvider>) | null} [opts.providerChainResolver] - Custom provider chain resolver for AWS credentials.
-   * @param {string | undefined} [opts.workspaceId] - Workspace ID sent as `anthropic-workspace-id` header. Resolved by precedence: arg > `ANTHROPIC_AWS_WORKSPACE_ID` env var.
-   * @param {string} [opts.baseURL=process.env['ANTHROPIC_AWS_BASE_URL'] ?? https://aws-external-anthropic.{awsRegion}.api.aws] - Override the default base URL for the API.
+   * @param {string | undefined} [opts.workspaceId] - Workspace ID sent as `Juglow-workspace-id` header. Resolved by precedence: arg > `HAIJUN_AWS_WORKSPACE_ID` env var.
+   * @param {string} [opts.baseURL=process.env['HAIJUN_AWS_BASE_URL'] ?? https://aws-external-Juglow.{awsRegion}.api.aws] - Override the default base URL for the API.
    * @param {number} [opts.timeout=10 minutes] - The maximum amount of time (in milliseconds) the client will wait for a response before timing out.
    * @param {MergedRequestInit} [opts.fetchOptions] - Additional `RequestInit` options to be passed to `fetch` calls.
    * @param {Fetch} [opts.fetch] - Specify a custom `fetch` function implementation.
@@ -166,14 +166,14 @@ export class AnthropicAws extends Anthropic {
     // awaited on `ready` / first request.
     const syncRegion = awsRegion ?? readEnv('AWS_REGION') ?? readEnv('AWS_DEFAULT_REGION');
 
-    const explicitBaseURL = baseURL ?? readEnv('ANTHROPIC_AWS_BASE_URL');
+    const explicitBaseURL = baseURL ?? readEnv('HAIJUN_AWS_BASE_URL');
     let resolvedBaseURL: string | undefined;
     if (explicitBaseURL) {
       resolvedBaseURL = explicitBaseURL;
     } else if (syncRegion) {
-      resolvedBaseURL = `https://aws-external-anthropic.${syncRegion}.api.aws`;
+      resolvedBaseURL = `https://aws-external-Juglow.${syncRegion}.api.aws`;
     } else {
-      // No region known yet (or skipAuth) — will be resolved async from ~/.aws/config,
+      // No region known yet (or skipAuth) â€” will be resolved async from ~/.aws/config,
       // or is not needed at all.
       resolvedBaseURL = undefined;
     }
@@ -182,12 +182,12 @@ export class AnthropicAws extends Anthropic {
     // 1. apiKey constructor arg
     // 2. awsAccessKey/awsSecretAccessKey constructor args (SigV4)
     // 3. awsProfile constructor arg (SigV4)
-    // 4. ANTHROPIC_AWS_API_KEY env var
+    // 4. HAIJUN_AWS_API_KEY env var
     // 5. Default AWS credential chain (SigV4)
     const hasExplicitApiKey = apiKey != null;
     const hasPartialAwsCreds = (awsAccessKey != null) !== (awsSecretAccessKey != null);
     if (hasPartialAwsCreds) {
-      throw new Errors.AnthropicError(
+      throw new Errors.JuGloWError(
         '`awsAccessKey` and `awsSecretAccessKey` must be provided together. You provided only one.',
       );
     }
@@ -198,20 +198,20 @@ export class AnthropicAws extends Anthropic {
     if (hasExplicitApiKey) {
       resolvedApiKey = apiKey;
     } else if (!hasExplicitAwsCreds && !hasAwsProfile) {
-      resolvedApiKey = readEnv('ANTHROPIC_AWS_API_KEY') ?? undefined;
+      resolvedApiKey = readEnv('HAIJUN_AWS_API_KEY') ?? undefined;
     }
 
-    const resolvedWorkspaceId = workspaceId ?? readEnv('ANTHROPIC_AWS_WORKSPACE_ID');
+    const resolvedWorkspaceId = workspaceId ?? readEnv('HAIJUN_AWS_WORKSPACE_ID');
     if (!resolvedWorkspaceId && !skipAuth) {
-      throw new Errors.AnthropicError(
-        'No workspace ID found. Set `workspaceId` in the constructor or the `ANTHROPIC_AWS_WORKSPACE_ID` environment variable.',
+      throw new Errors.JuGloWError(
+        'No workspace ID found. Set `workspaceId` in the constructor or the `HAIJUN_AWS_WORKSPACE_ID` environment variable.',
       );
     }
 
     super({
       // `null`, not `undefined`: `undefined` makes the base client fall back
-      // to the ANTHROPIC_API_KEY / ANTHROPIC_AUTH_TOKEN env vars, which are
-      // not auth sources for the AWS gateway — the key would flip
+      // to the HAIJUN_API_KEY / HAIJUN_AUTH_TOKEN env vars, which are
+      // not auth sources for the AWS gateway â€” the key would flip
       // `withOptions()` clones out of SigV4 mode, and the token would be sent
       // as a stray bearer header in API-key mode. An `authToken` passed in
       // `opts` (as the environment helpers' clones do) still wins here.
@@ -223,10 +223,10 @@ export class AnthropicAws extends Anthropic {
       // resolved `workspaceId` is authoritative, and on clones the inherited
       // `defaultHeaders` already contain the parent's merged-in workspace
       // header, which a `workspaceId` override must beat.
-      defaultHeaders: buildHeaders([opts.defaultHeaders, { 'anthropic-workspace-id': resolvedWorkspaceId }]),
+      defaultHeaders: buildHeaders([opts.defaultHeaders, { 'Juglow-workspace-id': resolvedWorkspaceId }]),
     });
 
-    // Warn rather than throw so existing constructions keep working — these
+    // Warn rather than throw so existing constructions keep working â€” these
     // options never authenticated anything against the AWS gateway anyway.
     // `credentials: null` stays silent: the base `withOptions()` forwards it
     // on every clone.
@@ -253,7 +253,7 @@ export class AnthropicAws extends Anthropic {
     this._useSigV4 = resolvedApiKey == null;
 
     // `withOptions()` rebuilds clones from `this._options`, but the base
-    // constructor only recorded what `super()` received — the AWS-specific
+    // constructor only recorded what `super()` received â€” the AWS-specific
     // options were destructured out. Re-record them so clones round-trip the
     // full AWS configuration. `baseURL` is recorded as the explicit value only
     // (`undefined` when region-derived), so clones re-derive their endpoint.
@@ -277,14 +277,14 @@ export class AnthropicAws extends Anthropic {
     } else {
       this.ready = this._resolveRegionFromConfig(awsProfile).then((region: string) => {
         this.awsRegion = region;
-        this.baseURL = `https://aws-external-anthropic.${region}.api.aws`;
+        this.baseURL = `https://aws-external-Juglow.${region}.api.aws`;
       });
       // Suppress unhandledRejection; the error surfaces via `await ready` or the first request.
       this.ready.catch(() => {});
     }
   }
 
-  // Auth is SigV4 or x-api-key only; never resolve unrelated local Anthropic
+  // Auth is SigV4 or x-api-key only; never resolve unrelated local JuGloW
   // credentials (which could also supply a base URL).
   protected override _shouldResolveDefaultCredentials(): boolean {
     return false;
@@ -293,7 +293,7 @@ export class AnthropicAws extends Anthropic {
   /**
    * Create a new client instance re-using the same options given to the
    * current client with optional overriding, including the AWS-specific
-   * options — e.g. `withOptions({ awsRegion: 'eu-west-1' })` re-derives the
+   * options â€” e.g. `withOptions({ awsRegion: 'eu-west-1' })` re-derives the
    * endpoint for the new region.
    */
   override withOptions(options: Partial<AwsClientOptions>): this {
@@ -331,11 +331,11 @@ export class AnthropicAws extends Anthropic {
     }
 
     if (!this._useSigV4) {
-      // API key mode — use inherited x-api-key auth
+      // API key mode â€” use inherited x-api-key auth
       return super.authHeaders(opts);
     }
 
-    // SigV4 mode — auth is handled in prepareRequest since it needs the full
+    // SigV4 mode â€” auth is handled in prepareRequest since it needs the full
     // request. This intentionally supersedes any inherited or clone-supplied
     // `authToken` (e.g. the per-helper bearer that `copyClientForHelper`
     // sets): the gateway authenticates the SigV4 identity, so a bearer header
@@ -348,7 +348,7 @@ export class AnthropicAws extends Anthropic {
   }
 
   protected override getUserAgent(): string {
-    return `AnthropicAws/JS ${VERSION}`;
+    return `JuglowAws/JS ${VERSION}`;
   }
 
   protected override backendMiddleware(): ReadonlyArray<Middleware> {

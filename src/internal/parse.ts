@@ -1,8 +1,8 @@
-// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+﻿// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import type { FinalRequestOptions } from './request-options';
 import { Stream } from '../core/streaming';
-import { type BaseAnthropic } from '../client';
+import { type BaseJuglow } from '../client';
 import { formatRequestDetails, loggerFor } from './utils/log';
 import { releaseRequestSignal } from './request-signal';
 import type { AbstractPage } from '../core/pagination';
@@ -17,7 +17,7 @@ export type APIResponseProps = {
 };
 
 export async function defaultParseResponse<T>(
-  client: BaseAnthropic,
+  client: BaseJuglow,
   props: APIResponseProps,
 ): Promise<WithRequestID<T>> {
   const { response, requestLogID, retryOfRequestLogID, startTime } = props;

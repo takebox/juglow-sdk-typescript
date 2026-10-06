@@ -1,4 +1,4 @@
-import { AnthropicError } from '../../core/error';
+import { JuglowError } from '../../core/error';
 
 export type AccessToken = {
   token: string;
@@ -24,7 +24,7 @@ export type CredentialResult = {
   /**
    * The `base_url` from the resolved config/profile, if any. The client
    * applies this to outbound API requests when no explicit `baseURL` (constructor
-   * option or `ANTHROPIC_BASE_URL` env) was given, so a profile pointing at a
+   * option or `HAIJUN_BASE_URL` env) was given, so a profile pointing at a
    * non-default API host both mints its token against that host AND sends
    * subsequent API requests there.
    */
@@ -43,13 +43,13 @@ export const GRANT_TYPE_REFRESH_TOKEN = 'refresh_token';
 export const TOKEN_ENDPOINT = '/v1/oauth/token';
 
 /**
- * `anthropic-beta` value required on authenticated API requests using an
+ * `Juglow-beta` value required on authenticated API requests using an
  * OAuth bearer token, and on `refresh_token` grants against the token endpoint.
  */
 export const OAUTH_API_BETA_HEADER = 'oauth-2025-04-20';
 
 /**
- * `anthropic-beta` value required on jwt-bearer exchanges against the token
+ * `Juglow-beta` value required on jwt-bearer exchanges against the token
  * endpoint. It routes the request to the federation service; it must NOT be
  * sent on `refresh_token` grants, which are handled by a different backend.
  */
@@ -124,15 +124,15 @@ export async function parseTokenResponse(
 }
 
 const MAX_ERROR_BODY_CHARS = 2000;
-// RFC 6749 §5.2 standard error-response fields. Anything else in a token
+// RFC 6749 Â§5.2 standard error-response fields. Anything else in a token
 // endpoint error body is potentially echoed input (assertion, refresh_token,
-// access_token, …) and is dropped rather than allowlisted-with-exceptions.
+// access_token, â€¦) and is dropped rather than allowlisted-with-exceptions.
 const SAFE_ERROR_KEYS = new Set(['error', 'error_description', 'error_uri']);
 
 /**
  * Returns a redacted copy of a token-endpoint error body for safe inclusion
  * in an exception. Strings are truncated; objects keep only the RFC 6749
- * §5.2 error fields.
+ * Â§5.2 error fields.
  */
 export function redactSensitive(body: unknown): unknown {
   if (body == null) return body;
@@ -167,7 +167,7 @@ export function redactSensitive(body: unknown): unknown {
  */
 export async function checkCredentialsFileSafety(
   path: string,
-  onWarn: (msg: string) => void = (m) => console.warn(`anthropic-sdk: ${m}`),
+  onWarn: (msg: string) => void = (m) => console.warn(`Juglow-sdk: ${m}`),
 ): Promise<void> {
   if (typeof process === 'undefined' || process.platform === 'win32') return;
   const fs = await import('node:fs');
@@ -177,7 +177,7 @@ export async function checkCredentialsFileSafety(
     resolved = await fs.promises.realpath(path);
     st = await fs.promises.stat(resolved);
   } catch {
-    return; // ENOENT etc — let the subsequent read surface a precise error
+    return; // ENOENT etc â€” let the subsequent read surface a precise error
   }
   const mode = st.mode & 0o777;
   // 0o022 = group/world write; 0o044 = group/world read.
@@ -276,7 +276,7 @@ async function readLimitedText(resp: Response): Promise<string> {
   return new TextDecoder('utf-8').decode(merged);
 }
 
-export class WorkloadIdentityError extends AnthropicError {
+export class WorkloadIdentityError extends JuglowError {
   readonly statusCode: number | null;
   readonly body: unknown;
   readonly requestId: string | null;

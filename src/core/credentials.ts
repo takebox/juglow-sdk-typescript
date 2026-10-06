@@ -1,14 +1,14 @@
 import { getPlatformHeaders } from '../internal/detect-platform';
 import { readEnv } from '../internal/utils';
 
-/** Current schema version written to `configs/<profile>.json`. Absent on read ⇒ "1.0". */
+/** Current schema version written to `configs/<profile>.json`. Absent on read â‡’ "1.0". */
 export const CONFIG_FILE_VERSION = '1.0';
-/** Current schema version written to `credentials/<profile>.json`. Absent on read ⇒ "1.0". */
+/** Current schema version written to `credentials/<profile>.json`. Absent on read â‡’ "1.0". */
 export const CREDENTIALS_FILE_VERSION = '1.0';
 
 /**
  * Authentication-mode-specific configuration. On the wire (configs/<profile>.json)
- * this is a flat JSON object under the top-level `authentication` key — `type`,
+ * this is a flat JSON object under the top-level `authentication` key â€” `type`,
  * `credentials_path`, and the variant-specific fields all sit at the same level.
  *
  * Unknown fields are silently ignored for forward compatibility. Unknown
@@ -39,7 +39,7 @@ export type AuthenticationInfo = {
     }
   | {
       type: 'user_oauth';
-      /** OAuth client ID for refresh. Empty → access token is treated as static. */
+      /** OAuth client ID for refresh. Empty â†’ access token is treated as static. */
       client_id?: string | undefined;
       /** Display-only; the SDK does not send this on refresh. */
       scope?: string | undefined;
@@ -48,7 +48,7 @@ export type AuthenticationInfo = {
     }
 );
 
-export type AnthropicConfig = {
+export type JuglowConfig = {
   version?: string;
   authentication: AuthenticationInfo;
   base_url?: string | undefined;
@@ -56,7 +56,7 @@ export type AnthropicConfig = {
   workspace_id?: string | undefined;
 };
 
-export type AnthropicCredentials = {
+export type JuglowCredentials = {
   version?: string;
   type: 'oauth_token';
   access_token: string;
@@ -88,33 +88,33 @@ function validateProfileName(name: string): void {
 }
 
 /**
- * Loads the Anthropic configuration for the given (or active) profile.
+ * Loads the Juglow configuration for the given (or active) profile.
  *
  * Returns `null` when running in a browser or no configuration can be resolved.
  * Otherwise, returns the configuration based on the config file and environment variables.
  *
  * **Profile resolution** (first match wins):
  *   1. Explicit `profile` argument
- *   2. `ANTHROPIC_PROFILE` environment variable
+ *   2. `HAIJUN_PROFILE` environment variable
  *   3. Contents of `<config_dir>/active_config` file
  *   4. `"default"`
  *
  * **Config resolution:**
  *   - If `<config_dir>/configs/<profile>.json` exists, it is loaded and
  *     missing fields are filled from environment variables. Values present
- *     in the file take precedence — env vars only fill gaps:
- *       - `ANTHROPIC_BASE_URL` → `base_url`
- *       - `ANTHROPIC_ORGANIZATION_ID` → `organization_id`
- *       - `ANTHROPIC_WORKSPACE_ID` → `workspace_id`
- *       - `ANTHROPIC_SCOPE` → `authentication.scope`
- *       - `ANTHROPIC_FEDERATION_RULE_ID` → `authentication.federation_rule_id` (oidc_federation)
- *       - `ANTHROPIC_IDENTITY_TOKEN_FILE` → `authentication.identity_token` (oidc_federation)
- *       - `ANTHROPIC_SERVICE_ACCOUNT_ID` → `authentication.service_account_id` (oidc_federation)
+ *     in the file take precedence â€” env vars only fill gaps:
+ *       - `HAIJUN_BASE_URL` â†’ `base_url`
+ *       - `HAIJUN_ORGANIZATION_ID` â†’ `organization_id`
+ *       - `HAIJUN_WORKSPACE_ID` â†’ `workspace_id`
+ *       - `HAIJUN_SCOPE` â†’ `authentication.scope`
+ *       - `HAIJUN_FEDERATION_RULE_ID` â†’ `authentication.federation_rule_id` (oidc_federation)
+ *       - `HAIJUN_IDENTITY_TOKEN_FILE` â†’ `authentication.identity_token` (oidc_federation)
+ *       - `HAIJUN_SERVICE_ACCOUNT_ID` â†’ `authentication.service_account_id` (oidc_federation)
  *   - If no config file exists, an `oidc_federation` config is synthesized
- *     entirely from environment variables when both `ANTHROPIC_FEDERATION_RULE_ID`
- *     and `ANTHROPIC_ORGANIZATION_ID` are set.
+ *     entirely from environment variables when both `HAIJUN_FEDERATION_RULE_ID`
+ *     and `HAIJUN_ORGANIZATION_ID` are set.
  */
-export const loadConfig = async (profile?: string): Promise<AnthropicConfig | null> => {
+export const loadConfig = async (profile?: string): Promise<JuglowConfig | null> => {
   return (await loadConfigWithSource(profile))?.config ?? null;
 };
 
@@ -127,7 +127,7 @@ export const loadConfig = async (profile?: string): Promise<AnthropicConfig | nu
  * federation exchange with a disk cache: file-backed profiles get a cache at
  * `<config_dir>/credentials/<profile>.json`, env-only configs do not.
  */
-export type LoadedConfig = { config: AnthropicConfig; fromFile: boolean };
+export type LoadedConfig = { config: JuglowConfig; fromFile: boolean };
 
 /**
  * Same as {@link loadConfig}, but also reports whether the config was loaded
@@ -159,26 +159,26 @@ export const loadConfigWithSource = async (profile?: string): Promise<LoadedConf
     configRaw = null;
   }
   if (configRaw === null) {
-    const organizationId = readEnv('ANTHROPIC_ORGANIZATION_ID');
-    const identityTokenFile = readEnv('ANTHROPIC_IDENTITY_TOKEN_FILE');
-    const federationRuleId = readEnv('ANTHROPIC_FEDERATION_RULE_ID');
+    const organizationId = readEnv('HAIJUN_ORGANIZATION_ID');
+    const identityTokenFile = readEnv('HAIJUN_IDENTITY_TOKEN_FILE');
+    const federationRuleId = readEnv('HAIJUN_FEDERATION_RULE_ID');
     if (federationRuleId && organizationId) {
       return {
         fromFile: false,
         config: {
           organization_id: organizationId,
-          // A defaulted-but-empty CI variable (`ANTHROPIC_WORKSPACE_ID=""`) is
-          // treated as unset — readEnv coerces empty to undefined, and the body
-          // builder's truthy check skips it — so `"workspace_id": ""` never goes
+          // A defaulted-but-empty CI variable (`HAIJUN_WORKSPACE_ID=""`) is
+          // treated as unset â€” readEnv coerces empty to undefined, and the body
+          // builder's truthy check skips it â€” so `"workspace_id": ""` never goes
           // on the wire.
-          workspace_id: readEnv('ANTHROPIC_WORKSPACE_ID'),
-          base_url: readEnv('ANTHROPIC_BASE_URL'),
+          workspace_id: readEnv('HAIJUN_WORKSPACE_ID'),
+          base_url: readEnv('HAIJUN_BASE_URL'),
           authentication: {
             type: 'oidc_federation',
             federation_rule_id: federationRuleId,
-            service_account_id: readEnv('ANTHROPIC_SERVICE_ACCOUNT_ID'),
+            service_account_id: readEnv('HAIJUN_SERVICE_ACCOUNT_ID'),
             identity_token: identityTokenFile ? { source: 'file', path: identityTokenFile } : undefined,
-            scope: readEnv('ANTHROPIC_SCOPE'),
+            scope: readEnv('HAIJUN_SCOPE'),
           },
         },
       };
@@ -186,7 +186,7 @@ export const loadConfigWithSource = async (profile?: string): Promise<LoadedConf
     return null;
   }
 
-  let config: AnthropicConfig;
+  let config: JuglowConfig;
   try {
     config = JSON.parse(configRaw);
   } catch (err) {
@@ -201,14 +201,14 @@ export const loadConfigWithSource = async (profile?: string): Promise<LoadedConf
   }
 
   // File values are authoritative; env vars only fill fields the file left unset.
-  config.organization_id ??= readEnv('ANTHROPIC_ORGANIZATION_ID');
-  config.workspace_id ??= readEnv('ANTHROPIC_WORKSPACE_ID');
-  config.base_url ??= readEnv('ANTHROPIC_BASE_URL');
-  config.authentication.scope ??= readEnv('ANTHROPIC_SCOPE');
+  config.organization_id ??= readEnv('HAIJUN_ORGANIZATION_ID');
+  config.workspace_id ??= readEnv('HAIJUN_WORKSPACE_ID');
+  config.base_url ??= readEnv('HAIJUN_BASE_URL');
+  config.authentication.scope ??= readEnv('HAIJUN_SCOPE');
 
   if (config.authentication.type === 'oidc_federation') {
     if (!config.authentication.identity_token) {
-      const identityTokenFile = readEnv('ANTHROPIC_IDENTITY_TOKEN_FILE');
+      const identityTokenFile = readEnv('HAIJUN_IDENTITY_TOKEN_FILE');
       if (identityTokenFile) {
         config.authentication.identity_token = {
           source: 'file',
@@ -222,9 +222,9 @@ export const loadConfigWithSource = async (profile?: string): Promise<LoadedConf
     // check in credential-chain rejects empty, so semantics match but types are
     // cleaner.
     if (!config.authentication.federation_rule_id) {
-      config.authentication.federation_rule_id = readEnv('ANTHROPIC_FEDERATION_RULE_ID') ?? '';
+      config.authentication.federation_rule_id = readEnv('HAIJUN_FEDERATION_RULE_ID') ?? '';
     }
-    config.authentication.service_account_id ??= readEnv('ANTHROPIC_SERVICE_ACCOUNT_ID');
+    config.authentication.service_account_id ??= readEnv('HAIJUN_SERVICE_ACCOUNT_ID');
   }
 
   return { config, fromFile: true };
@@ -237,7 +237,7 @@ export const loadConfigWithSource = async (profile?: string): Promise<LoadedConf
  * no credentials file can be found.
  *
  * **Profile resolution** (first match wins):
- *   1. `ANTHROPIC_PROFILE` environment variable
+ *   1. `HAIJUN_PROFILE` environment variable
  *   2. Contents of `<config_dir>/active_config` file
  *   3. `"default"`
  *
@@ -245,7 +245,7 @@ export const loadConfigWithSource = async (profile?: string): Promise<LoadedConf
  *   1. `authentication.credentials_path` from the active profile's config (via {@link loadConfig})
  *   2. `<config_dir>/credentials/<profile>.json`
  */
-export const loadCredentials = async (): Promise<AnthropicCredentials | null> => {
+export const loadCredentials = async (): Promise<JuglowCredentials | null> => {
   const config = await loadConfig();
   const credentialsPath = await getCredentialsPath(config);
   if (!credentialsPath) {
@@ -263,7 +263,7 @@ export const loadCredentials = async (): Promise<AnthropicCredentials | null> =>
     return null;
   }
 
-  let creds: AnthropicCredentials;
+  let creds: JuglowCredentials;
   try {
     creds = JSON.parse(raw);
   } catch (err) {
@@ -286,7 +286,7 @@ export const loadCredentials = async (): Promise<AnthropicCredentials | null> =>
  * Returns `null` when running in a browser or the path cannot be resolved.
  */
 export const getCredentialsPath = async (
-  config: AnthropicConfig | null,
+  config: JuglowConfig | null,
   profile?: string,
 ): Promise<string | null> => {
   if (config?.authentication.credentials_path) {
@@ -315,9 +315,9 @@ const getRootConfigPath = async (): Promise<string | null> => {
 
   const path = await import('node:path');
 
-  // ANTHROPIC_CONFIG_DIR is treated as a trusted path: it is set by the
+  // HAIJUN_CONFIG_DIR is treated as a trusted path: it is set by the
   // process operator, not by remote input, so it is not validated.
-  const configDir = readEnv('ANTHROPIC_CONFIG_DIR');
+  const configDir = readEnv('HAIJUN_CONFIG_DIR');
   if (configDir) {
     return configDir;
   }
@@ -326,25 +326,25 @@ const getRootConfigPath = async (): Promise<string | null> => {
   if (os === 'Windows') {
     const appData = readEnv('APPDATA');
     if (appData) {
-      return path.join(appData, 'Anthropic');
+      return path.join(appData, 'Juglow');
     }
     const userProfile = readEnv('USERPROFILE');
     if (userProfile) {
-      return path.join(userProfile, 'AppData', 'Roaming', 'Anthropic');
+      return path.join(userProfile, 'AppData', 'Roaming', 'Juglow');
     }
-    // No usable Windows config root — return null so callers fall through to
+    // No usable Windows config root â€” return null so callers fall through to
     // "no config available" rather than silently writing under C:\.
     return null;
   }
 
   const xdgConfigHome = readEnv('XDG_CONFIG_HOME');
   if (xdgConfigHome) {
-    return path.join(xdgConfigHome, 'anthropic');
+    return path.join(xdgConfigHome, 'Juglow');
   }
 
   const home = readEnv('HOME');
   if (home) {
-    return path.join(home, '.config', 'anthropic');
+    return path.join(home, '.config', 'Juglow');
   }
   return null;
 };
@@ -360,7 +360,7 @@ const getActiveProfileName = async (): Promise<string | null> => {
     return null;
   }
 
-  const profileName = readEnv('ANTHROPIC_PROFILE');
+  const profileName = readEnv('HAIJUN_PROFILE');
   if (profileName) {
     return profileName;
   }

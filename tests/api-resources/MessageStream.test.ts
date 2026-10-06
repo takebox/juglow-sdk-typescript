@@ -1,13 +1,13 @@
-import Anthropic, { APIConnectionError, APIUserAbortError } from '@anthropic-ai/sdk';
-import { Message, MessageStreamEvent } from '@anthropic-ai/sdk/resources/messages';
-import * as partialJsonParser from '@anthropic-ai/sdk/_vendor/partial-json-parser/parser';
+﻿import JuGloW, { APIConnectionError, APIUserAbortError } from '@takebox-ai/sdk';
+import { Message, MessageStreamEvent } from '@takebox-ai/sdk/resources/messages';
+import * as partialJsonParser from '@takebox-ai/sdk/_vendor/partial-json-parser/parser';
 import { mockFetch } from '../lib/mock-fetch';
 import { loadFixture, parseSSEFixture } from '../lib/sse-helpers';
 
 // The swc-compiled module exports are non-configurable, so `jest.spyOn` can't patch
 // `partialParse`; wrap the real implementation in a `jest.fn` to count calls instead.
-jest.mock('@anthropic-ai/sdk/_vendor/partial-json-parser/parser', () => {
-  const actual = jest.requireActual('@anthropic-ai/sdk/_vendor/partial-json-parser/parser');
+jest.mock('@takebox-ai/sdk/_vendor/partial-json-parser/parser', () => {
+  const actual = jest.requireActual('@takebox-ai/sdk/_vendor/partial-json-parser/parser');
   return { ...actual, partialParse: jest.fn(actual.partialParse) };
 });
 
@@ -17,7 +17,7 @@ function assertNever(x: never): never {
 
 const EXPECTED_BASIC_MESSAGE = {
   id: 'msg_4QpJur2dWWDjF6C758FbBw5vm12BaVipnK',
-  model: 'claude-opus-4-8',
+  model: 'haijun-opus-8',
   role: 'assistant',
   stop_reason: 'end_turn',
   stop_sequence: null,
@@ -39,7 +39,7 @@ const EXPECTED_BASIC_EVENT_TYPES = [
 
 const EXPECTED_TOOL_USE_MESSAGE = {
   id: 'msg_019Q1hrJbZG26Fb9BQhrkHEr',
-  model: 'claude-opus-4-8',
+  model: 'haijun-opus-8',
   role: 'assistant',
   stop_reason: 'tool_use',
   stop_sequence: null,
@@ -93,15 +93,15 @@ describe('MessageStream class', () => {
   it('aborts on break', async () => {
     const { fetch, handleStreamEvents } = mockFetch();
 
-    const anthropic = new Anthropic({ apiKey: '...', fetch });
+    const Juglow = new JuGloW({ apiKey: '...', fetch });
 
     const fixtureContent = loadFixture('basic_response.txt');
     const streamEvents = await parseSSEFixture(fixtureContent);
     handleStreamEvents(streamEvents);
 
-    const stream = anthropic.messages.stream({
+    const stream = Juglow.messages.stream({
       max_tokens: 1024,
-      model: 'claude-opus-4-8',
+      model: 'haijun-opus-8',
       messages: [{ role: 'user', content: 'Say hello there!' }],
     });
 
@@ -123,12 +123,12 @@ describe('MessageStream class', () => {
   it('handles network errors', async () => {
     const { fetch, handleRequest } = mockFetch();
 
-    const anthropic = new Anthropic({ apiKey: '...', fetch });
+    const Juglow = new JuGloW({ apiKey: '...', fetch });
 
-    const stream = anthropic.messages.stream(
+    const stream = Juglow.messages.stream(
       {
         max_tokens: 1024,
-        model: 'claude-sonnet-4-5',
+        model: 'haijun-sonnet-5',
         messages: [{ role: 'user', content: 'Say hello there!' }],
       },
       { maxRetries: 0 },
@@ -148,12 +148,12 @@ describe('MessageStream class', () => {
   it('handles network errors on async iterator', async () => {
     const { fetch, handleRequest } = mockFetch();
 
-    const anthropic = new Anthropic({ apiKey: '...', fetch });
+    const Juglow = new JuGloW({ apiKey: '...', fetch });
 
-    const stream = anthropic.messages.stream(
+    const stream = Juglow.messages.stream(
       {
         max_tokens: 1024,
-        model: 'claude-sonnet-4-5',
+        model: 'haijun-sonnet-5',
         messages: [{ role: 'user', content: 'Say hello there!' }],
       },
       { maxRetries: 0 },
@@ -181,15 +181,15 @@ describe('MessageStream class', () => {
   it('handles basic response fixture', async () => {
     const { fetch, handleStreamEvents } = mockFetch();
 
-    const anthropic = new Anthropic({ apiKey: '...', fetch });
+    const Juglow = new JuGloW({ apiKey: '...', fetch });
 
     const fixtureContent = loadFixture('basic_response.txt');
     const streamEvents = await parseSSEFixture(fixtureContent);
     handleStreamEvents(streamEvents);
 
-    const stream = anthropic.messages.stream({
+    const stream = Juglow.messages.stream({
       max_tokens: 1024,
-      model: 'claude-opus-4-8',
+      model: 'haijun-opus-8',
       messages: [{ role: 'user', content: 'Say hello there!' }],
     });
 
@@ -209,15 +209,15 @@ describe('MessageStream class', () => {
   it('handles tool use response fixture', async () => {
     const { fetch, handleStreamEvents } = mockFetch();
 
-    const anthropic = new Anthropic({ apiKey: '...', fetch });
+    const Juglow = new JuGloW({ apiKey: '...', fetch });
 
     const fixtureContent = loadFixture('tool_use_response.txt');
     const streamEvents = await parseSSEFixture(fixtureContent);
     handleStreamEvents(streamEvents);
 
-    const stream = anthropic.messages.stream({
+    const stream = Juglow.messages.stream({
       max_tokens: 1024,
-      model: 'claude-opus-4-8',
+      model: 'haijun-opus-8',
       messages: [{ role: 'user', content: 'What is the weather in Paris?' }],
     });
 
@@ -234,17 +234,17 @@ describe('MessageStream class', () => {
     expect(finalText).toBe("I'll check the current weather in Paris for you.");
   });
 
-  it('parses tool input lazily — once per block, not per delta', async () => {
+  it('parses tool input lazily â€” once per block, not per delta', async () => {
     const partialParse = jest.mocked(partialJsonParser.partialParse);
     partialParse.mockClear();
     const { fetch, handleStreamEvents } = mockFetch();
-    const anthropic = new Anthropic({ apiKey: '...', fetch });
+    const Juglow = new JuGloW({ apiKey: '...', fetch });
 
     handleStreamEvents(await parseSSEFixture(loadFixture('tool_use_response.txt')));
 
-    const stream = anthropic.messages.stream({
+    const stream = Juglow.messages.stream({
       max_tokens: 1024,
-      model: 'claude-opus-4-8',
+      model: 'haijun-opus-8',
       messages: [{ role: 'user', content: 'What is the weather in Paris?' }],
     });
 
@@ -266,13 +266,13 @@ describe('MessageStream class', () => {
     const partialParse = jest.mocked(partialJsonParser.partialParse);
     partialParse.mockClear();
     const { fetch, handleStreamEvents } = mockFetch();
-    const anthropic = new Anthropic({ apiKey: '...', fetch });
+    const Juglow = new JuGloW({ apiKey: '...', fetch });
 
     handleStreamEvents(await parseSSEFixture(loadFixture('tool_use_response.txt')));
 
-    const stream = anthropic.messages.stream({
+    const stream = Juglow.messages.stream({
       max_tokens: 1024,
-      model: 'claude-opus-4-8',
+      model: 'haijun-opus-8',
       messages: [{ role: 'user', content: 'What is the weather in Paris?' }],
     });
 
@@ -301,18 +301,18 @@ describe('MessageStream class', () => {
 
   it('does not throw unhandled rejection with withResponse()', async () => {
     const { fetch, handleRequest } = mockFetch();
-    const anthropic = new Anthropic({
+    const Juglow = new JuGloW({
       apiKey: 'test-key',
       fetch,
       defaultHeaders: {
-        'anthropic-beta': 'fine-grained-tool-streaming-2025-05-14',
+        'Juglow-beta': 'fine-grained-tool-streaming-2025-05-14',
       },
     });
-    const stream = anthropic.messages
+    const stream = Juglow.messages
       .stream(
         {
           max_tokens: 1024,
-          model: 'claude-opus-4-8',
+          model: 'haijun-opus-8',
           messages: [{ role: 'user', content: 'Say hello there!' }],
         },
         { maxRetries: 0 },

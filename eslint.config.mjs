@@ -22,7 +22,7 @@ export default tseslint.config(
         {
           patterns: [
             {
-              regex: '^@anthropic-ai/sdk(/.*)?',
+              regex: '^@takebox-ai/sdk(/.*)?',
               message: 'Use a relative import, not a package import.',
             },
           ],

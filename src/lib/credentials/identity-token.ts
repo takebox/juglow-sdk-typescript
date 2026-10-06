@@ -1,4 +1,4 @@
-import { AnthropicError } from '../../core/error';
+import { JuglowError } from '../../core/error';
 import type { IdentityTokenProvider } from './types';
 
 /**
@@ -7,7 +7,7 @@ import type { IdentityTokenProvider } from './types';
  */
 export function identityTokenFromFile(path: string): IdentityTokenProvider {
   if (!path) {
-    throw new AnthropicError('Identity token file path is empty');
+    throw new JuglowError('Identity token file path is empty');
   }
 
   return async () => {
@@ -16,11 +16,11 @@ export function identityTokenFromFile(path: string): IdentityTokenProvider {
     try {
       content = await fs.promises.readFile(path, 'utf-8');
     } catch (err) {
-      throw new AnthropicError(`Failed to read identity token file at ${path}: ${err}`);
+      throw new JuglowError(`Failed to read identity token file at ${path}: ${err}`);
     }
     const token = content.trim();
     if (!token) {
-      throw new AnthropicError(`Identity token file at ${path} is empty`);
+      throw new JuglowError(`Identity token file at ${path} is empty`);
     }
     return token;
   };
@@ -31,7 +31,7 @@ export function identityTokenFromFile(path: string): IdentityTokenProvider {
  */
 export function identityTokenFromValue(token: string): IdentityTokenProvider {
   if (!token) {
-    throw new AnthropicError('Identity token value is empty');
+    throw new JuglowError('Identity token value is empty');
   }
   return () => token;
 }

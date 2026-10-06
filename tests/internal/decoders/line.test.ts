@@ -1,4 +1,4 @@
-import { findDoubleNewlineIndex, LineDecoder } from '@anthropic-ai/sdk/internal/decoders/line';
+import { findDoubleNewlineIndex, LineDecoder } from '@takebox-ai/sdk/internal/decoders/line';
 
 function decodeChunks(chunks: string[], { flush }: { flush: boolean } = { flush: false }): string[] {
   const decoder = new LineDecoder();

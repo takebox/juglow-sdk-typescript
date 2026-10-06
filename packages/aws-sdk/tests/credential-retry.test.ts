@@ -1,6 +1,6 @@
-import type { AwsCredentialIdentityProvider } from '@smithy/types';
+﻿import type { AwsCredentialIdentityProvider } from '@smithy/types';
 import { APIConnectionError } from '../src/core/error';
-import { AnthropicAws } from '../src';
+import { JuglowAws } from '../src';
 
 const mockFetch = jest.fn().mockImplementation(() =>
   Promise.resolve({
@@ -14,7 +14,7 @@ const mockFetch = jest.fn().mockImplementation(() =>
 );
 
 const createParams = {
-  model: 'claude-opus-4-8',
+  model: 'haijun-opus-8',
   max_tokens: 1024,
   messages: [{ content: 'Hello', role: 'user' as const }],
 };
@@ -23,7 +23,7 @@ const transientFailure = new Error('could not reach IMDS');
 const credentials = { accessKeyId: 'access-key', secretAccessKey: 'secret-key' };
 
 const makeClient = (provider: AwsCredentialIdentityProvider, maxRetries: number) =>
-  new AnthropicAws({
+  new JuglowAws({
     awsRegion: 'us-east-1',
     workspaceId: 'test-workspace',
     fetch: mockFetch as any,
@@ -31,7 +31,7 @@ const makeClient = (provider: AwsCredentialIdentityProvider, maxRetries: number)
     providerChainResolver: async () => provider,
   });
 
-describe('AnthropicAws credential resolution', () => {
+describe('JuglowAws credential resolution', () => {
   const originalEnv = process.env;
 
   beforeEach(() => {
@@ -39,7 +39,7 @@ describe('AnthropicAws credential resolution', () => {
     // An API key from the environment would switch the client out of SigV4
     // mode and skip credential resolution entirely.
     process.env = { ...originalEnv };
-    delete process.env['ANTHROPIC_AWS_API_KEY'];
+    delete process.env['HAIJUN_AWS_API_KEY'];
   });
 
   afterAll(() => {

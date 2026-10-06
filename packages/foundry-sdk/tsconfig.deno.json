@@ -6,8 +6,8 @@
     "rootDir": "./deno",
     "lib": ["es2020", "DOM"],
     "paths": {
-      "@anthropic-ai/foundry-sdk/*": ["src/*"],
-      "@anthropic-ai/foundry-sdk": ["src/index.ts"]
+      "@takebox-ai/foundry-sdk/*": ["src/*"],
+      "@takebox-ai/foundry-sdk": ["src/index.ts"]
     },
     "noEmit": true,
     "declaration": true,

@@ -1,10 +1,10 @@
-import type { NullableHeaders } from './internal/headers';
+﻿import type { NullableHeaders } from './internal/headers';
 import { buildHeaders } from './internal/headers';
 import * as Errors from './core/error';
 import { readEnv } from './internal/utils/env';
-import { APIRequest, BaseAnthropic, ClientOptions } from '@anthropic-ai/sdk/client';
-import * as Resources from '@anthropic-ai/sdk/resources/index';
-import { VERSION } from '@anthropic-ai/sdk/version';
+import { APIRequest, BaseJuglow, ClientOptions } from '@takebox-ai/sdk/client';
+import * as Resources from '@takebox-ai/sdk/resources/index';
+import { VERSION } from '@takebox-ai/sdk/version';
 import { AwsCredentialIdentityProvider } from '@smithy/types';
 import { getAuthHeaders } from './core/aws-auth';
 import type { Middleware } from './core/middleware';
@@ -74,14 +74,14 @@ export interface BedrockMantleClientOptions extends ClientOptions {
 }
 
 /**
- * API Client for interfacing with the Anthropic Bedrock Mantle API.
+ * API Client for interfacing with the JuGloW Bedrock Mantle API.
  *
  * This client uses SigV4 authentication with the `bedrock-mantle` service name
- * and targets `https://bedrock-mantle.{region}.api.aws/anthropic`.
+ * and targets `https://bedrock-mantle.{region}.api.aws/Juglow`.
  *
  * Only the `messages` and `beta.messages` resources are supported.
  */
-export class AnthropicBedrockMantle extends BaseAnthropic {
+export class JuglowBedrockMantle extends BaseJuglow {
   messages: Resources.Messages = new Resources.Messages(this);
   beta: MantleBetaResource = makeMantleBetaResource(this);
 
@@ -96,7 +96,7 @@ export class AnthropicBedrockMantle extends BaseAnthropic {
   private _useSigV4: boolean;
 
   /**
-   * API Client for interfacing with the Anthropic Bedrock Mantle API.
+   * API Client for interfacing with the JuGloW Bedrock Mantle API.
    *
    * Auth is resolved by precedence: `apiKey` constructor arg > explicit AWS
    * credentials > `awsProfile` > `AWS_BEARER_TOKEN_BEDROCK` env var > default
@@ -109,7 +109,7 @@ export class AnthropicBedrockMantle extends BaseAnthropic {
    * @param {string | undefined} [opts.awsProfile] - AWS named profile for credential resolution.
    * @param {string | undefined} [opts.awsRegion] - AWS region. Resolved by precedence: arg > `AWS_REGION` env > `AWS_DEFAULT_REGION` env.
    * @param {(() => Promise<AwsCredentialIdentityProvider>) | null} [opts.providerChainResolver] - Custom provider chain resolver for AWS credentials.
-   * @param {string} [opts.baseURL=process.env['ANTHROPIC_BEDROCK_MANTLE_BASE_URL'] ?? https://bedrock-mantle.{awsRegion}.api.aws/anthropic] - Override the default base URL for the API.
+   * @param {string} [opts.baseURL=process.env['HAIJUN_BEDROCK_MANTLE_BASE_URL'] ?? https://bedrock-mantle.{awsRegion}.api.aws/Juglow] - Override the default base URL for the API.
    * @param {number} [opts.timeout=10 minutes] - The maximum amount of time (in milliseconds) the client will wait for a response before timing out.
    * @param {MergedRequestInit} [opts.fetchOptions] - Additional `RequestInit` options to be passed to `fetch` calls.
    * @param {Fetch} [opts.fetch] - Specify a custom `fetch` function implementation.
@@ -136,12 +136,12 @@ export class AnthropicBedrockMantle extends BaseAnthropic {
 
     const resolvedBaseURL =
       baseURL ??
-      readEnv('ANTHROPIC_BEDROCK_MANTLE_BASE_URL') ??
-      (resolvedRegion ? `https://bedrock-mantle.${resolvedRegion}.api.aws/anthropic` : undefined);
+      readEnv('HAIJUN_BEDROCK_MANTLE_BASE_URL') ??
+      (resolvedRegion ? `https://bedrock-mantle.${resolvedRegion}.api.aws/Juglow` : undefined);
 
     if (!resolvedBaseURL) {
-      throw new Errors.AnthropicError(
-        'No AWS region or base URL found. Set `awsRegion` in the constructor, the `AWS_REGION` / `AWS_DEFAULT_REGION` environment variable, or provide a `baseURL` / `ANTHROPIC_BEDROCK_MANTLE_BASE_URL` environment variable.',
+      throw new Errors.JuGloWError(
+        'No AWS region or base URL found. Set `awsRegion` in the constructor, the `AWS_REGION` / `AWS_DEFAULT_REGION` environment variable, or provide a `baseURL` / `HAIJUN_BEDROCK_MANTLE_BASE_URL` environment variable.',
       );
     }
 
@@ -154,7 +154,7 @@ export class AnthropicBedrockMantle extends BaseAnthropic {
     const hasExplicitApiKey = apiKey != null;
     const hasPartialAwsCreds = (awsAccessKey != null) !== (awsSecretAccessKey != null);
     if (hasPartialAwsCreds) {
-      throw new Errors.AnthropicError(
+      throw new Errors.JuGloWError(
         '`awsAccessKey` and `awsSecretAccessKey` must be provided together. You provided only one.',
       );
     }
@@ -190,11 +190,11 @@ export class AnthropicBedrockMantle extends BaseAnthropic {
     }
 
     if (!this._useSigV4) {
-      // API key / bearer token mode — use Authorization: Bearer header
+      // API key / bearer token mode â€” use Authorization: Bearer header
       return buildHeaders([{ Authorization: `Bearer ${this.apiKey}` }]);
     }
 
-    // SigV4 mode — auth is handled in prepareRequest since it needs the full request
+    // SigV4 mode â€” auth is handled in prepareRequest since it needs the full request
     return undefined;
   }
 
@@ -203,7 +203,7 @@ export class AnthropicBedrockMantle extends BaseAnthropic {
   }
 
   protected override getUserAgent(): string {
-    return `AnthropicBedrockMantle/JS ${VERSION}`;
+    return `JuglowBedrockMantle/JS ${VERSION}`;
   }
 
   protected override backendMiddleware(): ReadonlyArray<Middleware> {
@@ -221,7 +221,7 @@ export class AnthropicBedrockMantle extends BaseAnthropic {
 
     const regionName = this.awsRegion;
     if (!regionName) {
-      throw new Errors.AnthropicError(
+      throw new Errors.JuGloWError(
         'No AWS region found. Set `awsRegion` in the constructor or the `AWS_REGION` / `AWS_DEFAULT_REGION` environment variable.',
       );
     }
@@ -248,7 +248,7 @@ export class AnthropicBedrockMantle extends BaseAnthropic {
  */
 type MantleBetaResource = Pick<Resources.Beta, 'messages'>;
 
-function makeMantleBetaResource(client: AnthropicBedrockMantle): MantleBetaResource {
+function makeMantleBetaResource(client: JuglowBedrockMantle): MantleBetaResource {
   const { messages } = new Resources.Beta(client);
   return { messages };
 }

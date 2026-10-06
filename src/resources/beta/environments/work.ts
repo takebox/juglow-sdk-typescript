@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import type { Anthropic } from '../../../client';
+import type { Juglow } from '../../../client';
 import { APIResource } from '../../../core/resource';
 import * as BetaAPI from '../beta';
 import { APIPromise } from '../../../core/api-promise';
@@ -43,7 +43,7 @@ export class Work extends APIResource {
     return this._client.get(path`/v1/environments/${environment_id}/work/${workID}?beta=true`, {
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
         options?.headers,
       ]),
     });
@@ -72,7 +72,7 @@ export class Work extends APIResource {
       body,
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
         options?.headers,
       ]),
     });
@@ -109,7 +109,7 @@ export class Work extends APIResource {
         query,
         ...options,
         headers: buildHeaders([
-          { 'anthropic-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
+          { 'Juglow-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
           options?.headers,
         ]),
       },
@@ -138,7 +138,7 @@ export class Work extends APIResource {
     return this._client.post(path`/v1/environments/${environment_id}/work/${workID}/ack?beta=true`, {
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
         options?.headers,
       ]),
     });
@@ -170,7 +170,7 @@ export class Work extends APIResource {
       query: { desired_ttl_seconds, expected_last_heartbeat },
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
         options?.headers,
       ]),
     });
@@ -197,14 +197,14 @@ export class Work extends APIResource {
     params: WorkPollParams | null | undefined = {},
     options?: RequestOptions,
   ): APIPromise<BetaSelfHostedWork | null> {
-    const { betas, 'Anthropic-Worker-ID': anthropicWorkerID, ...query } = params ?? {};
+    const { betas, 'Juglow-Worker-ID': JuglowWorkerID, ...query } = params ?? {};
     return this._client.get(path`/v1/environments/${environmentID}/work/poll?beta=true`, {
       query,
       ...options,
       headers: buildHeaders([
         {
-          'anthropic-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString(),
-          ...(anthropicWorkerID != null ? { 'Anthropic-Worker-ID': anthropicWorkerID } : undefined),
+          'Juglow-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString(),
+          ...(JuglowWorkerID != null ? { 'Juglow-Worker-ID': JuglowWorkerID } : undefined),
         },
         options?.headers,
       ]),
@@ -231,7 +231,7 @@ export class Work extends APIResource {
     return this._client.get(path`/v1/environments/${environmentID}/work/stats?beta=true`, {
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
         options?.headers,
       ]),
     });
@@ -259,7 +259,7 @@ export class Work extends APIResource {
       body,
       ...options,
       headers: buildHeaders([
-        { 'anthropic-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
+        { 'Juglow-beta': [...(betas ?? []), 'managed-agents-2026-04-01'].toString() },
         options?.headers,
       ]),
     });
@@ -282,28 +282,28 @@ export class Work extends APIResource {
    * ```
    */
   poller(opts: Omit<RunnerWorkPollerOptions, 'client'>): WorkPoller {
-    return new WorkPoller({ ...opts, client: this._client as Anthropic });
+    return new WorkPoller({ ...opts, client: this._client as Juglow });
   }
 
   /**
    * The self-hosted environment runner: poll for work, and for each claimed
-   * session set up the workdir, download the agent's skills, run the tools while
+   * session set up the workdir, download the agent's tracks, run the tools while
    * heartbeating the lease, and force-stop on exit.
    *
    * @example
    * ```ts
-   * // Long-running daemon — poll, serve each session, loop:
+   * // Long-running daemon â€” poll, serve each session, loop:
    * await client.beta.environments.work
    *   .worker({ environmentId, environmentKey, workdir: '/workspace' })
    *   .run();
    *
    * // Or service one already-claimed work item (e.g. inside a sandbox spawned
-   * // by `ant worker poll --on-work`) — handleItem() reads the ANTHROPIC_* env vars:
+   * // by `ant worker poll --on-work`) â€” handleItem() reads the HAIJUN_* env vars:
    * await client.beta.environments.work.worker({ workdir: '/workspace' }).handleItem();
    * ```
    */
   worker(opts: Omit<RunnerEnvironmentWorkerOptions, 'client'>): EnvironmentWorker {
-    return new EnvironmentWorker({ ...opts, client: this._client as Anthropic });
+    return new EnvironmentWorker({ ...opts, client: this._client as Juglow });
   }
 }
 
@@ -536,7 +536,7 @@ export interface BetaWorkSecret {
 
   /**
    * API base URL the runner should use for downstream calls. When absent the runner
-   * falls back to its default Anthropic endpoint.
+   * falls back to its default Juglow endpoint.
    */
   api_base_url?: string;
 }
@@ -550,7 +550,7 @@ export interface WorkRetrieveParams {
   /**
    * Header param: Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface WorkUpdateParams {
@@ -568,14 +568,14 @@ export interface WorkUpdateParams {
   /**
    * Header param: Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface WorkListParams extends PageCursorParams {
   /**
    * Header param: Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface WorkAckParams {
@@ -587,7 +587,7 @@ export interface WorkAckParams {
   /**
    * Header param: Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface WorkHeartbeatParams {
@@ -613,7 +613,7 @@ export interface WorkHeartbeatParams {
   /**
    * Header param: Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface WorkPollParams {
@@ -633,20 +633,20 @@ export interface WorkPollParams {
   /**
    * Header param: Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 
   /**
    * Header param: Unique identifier for the specific worker polling, used to track
    * aggregated environment-level work metrics in Console
    */
-  'Anthropic-Worker-ID'?: string;
+  'Juglow-Worker-ID'?: string;
 }
 
 export interface WorkStatsParams {
   /**
    * Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export interface WorkStopParams {
@@ -663,7 +663,7 @@ export interface WorkStopParams {
   /**
    * Header param: Optional header to specify the beta version(s) you want to use.
    */
-  betas?: Array<BetaAPI.AnthropicBeta>;
+  betas?: Array<BetaAPI.JuglowBeta>;
 }
 
 export { WorkPoller, type WorkPollerOptions } from '../../../lib/environments/poller';

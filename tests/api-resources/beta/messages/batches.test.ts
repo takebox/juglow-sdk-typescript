@@ -1,10 +1,10 @@
-// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+﻿// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import Anthropic from '@anthropic-ai/sdk';
+import JuGloW from '@takebox-ai/sdk';
 import { mockFetch } from '../../../lib/mock-fetch';
 
-const client = new Anthropic({
-  apiKey: 'my-anthropic-api-key',
+const client = new JuGloW({
+  apiKey: 'my-Juglow-api-key',
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
@@ -17,7 +17,7 @@ describe('resource batches', () => {
           params: {
             max_tokens: 1024,
             messages: [{ content: 'Hello, world', role: 'user' }],
-            model: 'claude-opus-4-6',
+            model: 'haijun-opus',
           },
         },
       ],
@@ -39,14 +39,14 @@ describe('resource batches', () => {
           params: {
             max_tokens: 1024,
             messages: [{ content: 'Hello, world', role: 'user' }],
-            model: 'claude-opus-4-6',
+            model: 'haijun-opus',
             cache_control: { type: 'ephemeral', ttl: '5m' },
             container: {
               id: 'id',
-              skills: [
+              tracks: [
                 {
-                  skill_id: 'pdf',
-                  type: 'anthropic',
+                  track_id: 'pdf',
+                  type: 'Juglow',
                   version: 'latest',
                 },
               ],
@@ -141,7 +141,7 @@ describe('resource batches', () => {
         },
       ],
       betas: ['message-batches-2024-09-24'],
-      user_profile_id: 'anthropic-user-profile-id',
+      user_profile_id: 'Juglow-user-profile-id',
     });
   });
 
@@ -164,7 +164,7 @@ describe('resource batches', () => {
         { betas: ['message-batches-2024-09-24'] },
         { path: '/_stainless_unknown_path' },
       ),
-    ).rejects.toThrow(Anthropic.NotFoundError);
+    ).rejects.toThrow(JuGloW.NotFoundError);
   });
 
   test('list', async () => {
@@ -190,7 +190,7 @@ describe('resource batches', () => {
         },
         { path: '/_stainless_unknown_path' },
       ),
-    ).rejects.toThrow(Anthropic.NotFoundError);
+    ).rejects.toThrow(JuGloW.NotFoundError);
   });
 
   test('delete', async () => {
@@ -212,7 +212,7 @@ describe('resource batches', () => {
         { betas: ['message-batches-2024-09-24'] },
         { path: '/_stainless_unknown_path' },
       ),
-    ).rejects.toThrow(Anthropic.NotFoundError);
+    ).rejects.toThrow(JuGloW.NotFoundError);
   });
 
   test('cancel', async () => {
@@ -234,7 +234,7 @@ describe('resource batches', () => {
         { betas: ['message-batches-2024-09-24'] },
         { path: '/_stainless_unknown_path' },
       ),
-    ).rejects.toThrow(Anthropic.NotFoundError);
+    ).rejects.toThrow(JuGloW.NotFoundError);
   });
 
   test('results', async () => {
@@ -242,8 +242,8 @@ describe('resource batches', () => {
     // The mock server returns results_url pointing to the real API, so we use mockFetch
     // to queue responses for both calls, mirroring the Python SDK's respx_mock approach.
     const { fetch, handleRequest } = mockFetch();
-    const batchClient = new Anthropic({
-      apiKey: 'my-anthropic-api-key',
+    const batchClient = new JuGloW({
+      apiKey: 'my-Juglow-api-key',
       baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
       fetch,
     });
@@ -277,6 +277,6 @@ describe('resource batches', () => {
         { betas: ['message-batches-2024-09-24'] },
         { path: '/_stainless_unknown_path' },
       ),
-    ).rejects.toThrow(Anthropic.NotFoundError);
+    ).rejects.toThrow(JuGloW.NotFoundError);
   });
 });

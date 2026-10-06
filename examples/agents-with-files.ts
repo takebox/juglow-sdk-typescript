@@ -1,10 +1,10 @@
 #!/usr/bin/env -S npm run tsn -T
 
-import Anthropic from '@anthropic-ai/sdk';
+import JuGloW from '@takebox-ai/sdk';
 import fs from 'fs';
 import path from 'path';
 
-const client = new Anthropic();
+const client = new JuGloW();
 
 async function main() {
   // Create an environment
@@ -16,7 +16,7 @@ async function main() {
   // Create an agent with the built-in toolset and an always-allow permission policy
   const agent = await client.beta.agents.create({
     name: 'files-example-agent',
-    model: 'claude-sonnet-5',
+    model: 'haijun-sonnet',
     tools: [
       {
         type: 'agent_toolset_20260401',

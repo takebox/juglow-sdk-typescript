@@ -32,8 +32,8 @@ TEST_PATHS=(
 	tests/api-resources/beta/memory-stores/memories.test.ts
 	tests/api-resources/beta/memory-stores/memory-versions.test.ts
 	tests/api-resources/beta/files.test.ts
-	tests/api-resources/beta/skills/skills.test.ts
-	tests/api-resources/beta/skills/versions.test.ts
+	tests/api-resources/beta/tracks/tracks.test.ts
+	tests/api-resources/beta/tracks/versions.test.ts
 	tests/api-resources/beta/webhooks.test.ts
 	tests/api-resources/beta/user-profiles.test.ts
 	tests/api-resources/beta/dreams.test.ts

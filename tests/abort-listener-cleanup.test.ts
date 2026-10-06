@@ -1,15 +1,15 @@
-import { getEventListeners } from 'node:events';
+﻿import { getEventListeners } from 'node:events';
 import { runInNewContext } from 'node:vm';
 import { setFlagsFromString } from 'node:v8';
-import Anthropic from '@anthropic-ai/sdk';
-import { APIUserAbortError } from '@anthropic-ai/sdk';
+import JuGloW from '@takebox-ai/sdk';
+import { APIUserAbortError } from '@takebox-ai/sdk';
 
 const MESSAGE = {
   id: 'msg_test',
   type: 'message',
   role: 'assistant',
   content: [{ type: 'text', text: 'ok' }],
-  model: 'claude-test',
+  model: 'haijun-test',
   stop_reason: 'end_turn',
   stop_sequence: null,
   usage: { input_tokens: 1, output_tokens: 1 },
@@ -48,11 +48,11 @@ const listenerCount = (signal: AbortSignal) => getEventListeners(signal as any, 
 
 describe('abort listener cleanup on a long-lived signal', () => {
   test('settled requests leave no listeners', async () => {
-    const client = new Anthropic({ apiKey: 'sk-test', fetch: () => Promise.resolve(jsonResponse()) });
+    const client = new JuGloW({ apiKey: 'sk-test', fetch: () => Promise.resolve(jsonResponse()) });
     const session = new AbortController();
     for (let i = 0; i < 3; i++) {
       await client.messages.create(
-        { model: 'claude-test', max_tokens: 16, messages: [{ role: 'user', content: 'hi' }] },
+        { model: 'haijun-test', max_tokens: 16, messages: [{ role: 'user', content: 'hi' }] },
         { signal: session.signal },
       );
     }
@@ -60,7 +60,7 @@ describe('abort listener cleanup on a long-lived signal', () => {
   });
 
   test('failed requests leave no listeners', async () => {
-    const client = new Anthropic({
+    const client = new JuGloW({
       apiKey: 'sk-test',
       maxRetries: 0,
       fetch: () =>
@@ -74,7 +74,7 @@ describe('abort listener cleanup on a long-lived signal', () => {
     const session = new AbortController();
     await expect(
       client.messages.create(
-        { model: 'claude-test', max_tokens: 16, messages: [{ role: 'user', content: 'hi' }] },
+        { model: 'haijun-test', max_tokens: 16, messages: [{ role: 'user', content: 'hi' }] },
         { signal: session.signal },
       ),
     ).rejects.toThrow();
@@ -82,7 +82,7 @@ describe('abort listener cleanup on a long-lived signal', () => {
   });
 
   test('connection errors leave no listeners', async () => {
-    const client = new Anthropic({
+    const client = new JuGloW({
       apiKey: 'sk-test',
       maxRetries: 0,
       fetch: () => Promise.reject(new Error('ECONNREFUSED')),
@@ -90,7 +90,7 @@ describe('abort listener cleanup on a long-lived signal', () => {
     const session = new AbortController();
     await expect(
       client.messages.create(
-        { model: 'claude-test', max_tokens: 16, messages: [{ role: 'user', content: 'hi' }] },
+        { model: 'haijun-test', max_tokens: 16, messages: [{ role: 'user', content: 'hi' }] },
         { signal: session.signal },
       ),
     ).rejects.toThrow();
@@ -99,7 +99,7 @@ describe('abort listener cleanup on a long-lived signal', () => {
 
   test('retried requests release each attempt', async () => {
     let calls = 0;
-    const client = new Anthropic({
+    const client = new JuGloW({
       apiKey: 'sk-test',
       maxRetries: 1,
       fetch: () => {
@@ -117,7 +117,7 @@ describe('abort listener cleanup on a long-lived signal', () => {
     });
     const session = new AbortController();
     await client.messages.create(
-      { model: 'claude-test', max_tokens: 16, messages: [{ role: 'user', content: 'hi' }] },
+      { model: 'haijun-test', max_tokens: 16, messages: [{ role: 'user', content: 'hi' }] },
       { signal: session.signal },
     );
     expect(calls).toBe(2);
@@ -125,11 +125,11 @@ describe('abort listener cleanup on a long-lived signal', () => {
   });
 
   test('consumed streams leave no listeners', async () => {
-    const client = new Anthropic({ apiKey: 'sk-test', fetch: () => Promise.resolve(sseResponse()) });
+    const client = new JuGloW({ apiKey: 'sk-test', fetch: () => Promise.resolve(sseResponse()) });
     const session = new AbortController();
     for (let i = 0; i < 2; i++) {
       const stream = await client.messages.create(
-        { model: 'claude-test', max_tokens: 16, messages: [{ role: 'user', content: 'hi' }], stream: true },
+        { model: 'haijun-test', max_tokens: 16, messages: [{ role: 'user', content: 'hi' }], stream: true },
         { signal: session.signal },
       );
       for await (const _event of stream) {
@@ -140,10 +140,10 @@ describe('abort listener cleanup on a long-lived signal', () => {
   });
 
   test('a stream broken early releases its listener', async () => {
-    const client = new Anthropic({ apiKey: 'sk-test', fetch: () => Promise.resolve(sseResponse()) });
+    const client = new JuGloW({ apiKey: 'sk-test', fetch: () => Promise.resolve(sseResponse()) });
     const session = new AbortController();
     const stream = await client.messages.create(
-      { model: 'claude-test', max_tokens: 16, messages: [{ role: 'user', content: 'hi' }], stream: true },
+      { model: 'haijun-test', max_tokens: 16, messages: [{ role: 'user', content: 'hi' }], stream: true },
       { signal: session.signal },
     );
     for await (const _event of stream) {
@@ -153,7 +153,7 @@ describe('abort listener cleanup on a long-lived signal', () => {
   });
 
   test('abort still cancels an in-flight request', async () => {
-    const client = new Anthropic({
+    const client = new JuGloW({
       apiKey: 'sk-test',
       maxRetries: 0,
       fetch: (_url, init) =>
@@ -163,7 +163,7 @@ describe('abort listener cleanup on a long-lived signal', () => {
     });
     const session = new AbortController();
     const pending = client.messages.create(
-      { model: 'claude-test', max_tokens: 16, messages: [{ role: 'user', content: 'hi' }] },
+      { model: 'haijun-test', max_tokens: 16, messages: [{ role: 'user', content: 'hi' }] },
       { signal: session.signal },
     );
     await new Promise((r) => setTimeout(r, 0));
@@ -174,11 +174,11 @@ describe('abort listener cleanup on a long-lived signal', () => {
 
   test('holding only the body reader keeps the listener armed; dropping it releases', async () => {
     const session = new AbortController();
-    const client = new Anthropic({ apiKey: 'sk-test', fetch: () => Promise.resolve(sseResponse()) });
+    const client = new JuGloW({ apiKey: 'sk-test', fetch: () => Promise.resolve(sseResponse()) });
     let reader: ReadableStreamDefaultReader | null = await (async () => {
       const response = await client.messages
         .create(
-          { model: 'claude-test', max_tokens: 16, messages: [{ role: 'user', content: 'hi' }], stream: true },
+          { model: 'haijun-test', max_tokens: 16, messages: [{ role: 'user', content: 'hi' }], stream: true },
           { signal: session.signal },
         )
         .asResponse();
@@ -206,10 +206,10 @@ describe('abort listener cleanup on a long-lived signal', () => {
 
   test('an abandoned partially-iterated stream is released by the GC backstop', async () => {
     const session = new AbortController();
-    const client = new Anthropic({ apiKey: 'sk-test', fetch: () => Promise.resolve(sseResponse()) });
+    const client = new JuGloW({ apiKey: 'sk-test', fetch: () => Promise.resolve(sseResponse()) });
     await (async () => {
       const stream = await client.messages.create(
-        { model: 'claude-test', max_tokens: 16, messages: [{ role: 'user', content: 'hi' }], stream: true },
+        { model: 'haijun-test', max_tokens: 16, messages: [{ role: 'user', content: 'hi' }], stream: true },
         { signal: session.signal },
       );
       const iterator = stream[Symbol.asyncIterator]();

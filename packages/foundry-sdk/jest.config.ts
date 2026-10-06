@@ -7,8 +7,8 @@ const config: JestConfigWithTsJest = {
     '^.+\\.(t|j)sx?$': ['@swc/jest', { sourceMaps: 'inline' }],
   },
   moduleNameMapper: {
-    '^@anthropic-ai/foundry-sdk$': '<rootDir>/src/index.ts',
-    '^@anthropic-ai/foundry-sdk/(.*)$': '<rootDir>/src/$1',
+    '^@takebox-ai/foundry-sdk$': '<rootDir>/src/index.ts',
+    '^@takebox-ai/foundry-sdk/(.*)$': '<rootDir>/src/$1',
   },
   modulePathIgnorePatterns: ['<rootDir>/dist/', '<rootDir>/deno/'],
   testPathIgnorePatterns: ['scripts'],

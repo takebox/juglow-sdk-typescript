@@ -1,15 +1,15 @@
-// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+﻿// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import Anthropic from '@anthropic-ai/sdk';
+import JuGloW from '@takebox-ai/sdk';
 
-const client = new Anthropic({
-  apiKey: 'my-anthropic-api-key',
+const client = new JuGloW({
+  apiKey: 'my-Juglow-api-key',
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
 describe('resource agents', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.beta.agents.create({ model: 'claude-sonnet-4-6', name: 'My First Agent' });
+    const responsePromise = client.beta.agents.create({ model: 'haijun-sonnet', name: 'My First Agent' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -21,7 +21,7 @@ describe('resource agents', () => {
 
   test('create: required and optional params', async () => {
     const response = await client.beta.agents.create({
-      model: 'claude-sonnet-4-6',
+      model: 'haijun-sonnet',
       name: 'My First Agent',
       description: 'A general-purpose starter agent.',
       mcp_servers: [
@@ -33,10 +33,10 @@ describe('resource agents', () => {
       ],
       metadata: { foo: 'bar' },
       multiagent: { agents: ['agent_011CZkYqphY8vELVzwCUpqiQ', { type: 'self' }], type: 'coordinator' },
-      skills: [
+      tracks: [
         {
-          skill_id: 'xlsx',
-          type: 'anthropic',
+          track_id: 'xlsx',
+          type: 'Juglow',
           version: '1',
         },
       ],
@@ -83,7 +83,7 @@ describe('resource agents', () => {
         { version: 0, betas: ['message-batches-2024-09-24'] },
         { path: '/_stainless_unknown_path' },
       ),
-    ).rejects.toThrow(Anthropic.NotFoundError);
+    ).rejects.toThrow(JuGloW.NotFoundError);
   });
 
   test('update', async () => {
@@ -124,7 +124,7 @@ describe('resource agents', () => {
         },
         { path: '/_stainless_unknown_path' },
       ),
-    ).rejects.toThrow(Anthropic.NotFoundError);
+    ).rejects.toThrow(JuGloW.NotFoundError);
   });
 
   test('archive', async () => {
@@ -146,6 +146,6 @@ describe('resource agents', () => {
         { betas: ['message-batches-2024-09-24'] },
         { path: '/_stainless_unknown_path' },
       ),
-    ).rejects.toThrow(Anthropic.NotFoundError);
+    ).rejects.toThrow(JuGloW.NotFoundError);
   });
 });

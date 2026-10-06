@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import { type BaseAnthropic } from '../client';
+import { type BaseJuglow } from '../client';
 
 import { type PromiseOrValue } from '../internal/types';
 import {
@@ -16,13 +16,13 @@ import {
  */
 export class APIPromise<T> extends Promise<WithRequestID<T>> {
   private parsedPromise: Promise<WithRequestID<T>> | undefined;
-  #client: BaseAnthropic;
+  #client: BaseJuglow;
 
   constructor(
-    client: BaseAnthropic,
+    client: BaseJuglow,
     private responsePromise: Promise<APIResponseProps>,
     private parseResponse: (
-      client: BaseAnthropic,
+      client: BaseJuglow,
       props: APIResponseProps,
     ) => PromiseOrValue<WithRequestID<T>> = defaultParseResponse,
   ) {
@@ -48,7 +48,7 @@ export class APIPromise<T> extends Promise<WithRequestID<T>> {
    * If you want to parse the response body but still get the `Response`
    * instance, you can use {@link withResponse()}.
    *
-   * 👋 Getting the wrong TypeScript type for `Response`?
+   * ðŸ‘‹ Getting the wrong TypeScript type for `Response`?
    * Try setting `"moduleResolution": "NodeNext"` or add `"lib": ["DOM"]`
    * to your `tsconfig.json`.
    */
@@ -59,12 +59,12 @@ export class APIPromise<T> extends Promise<WithRequestID<T>> {
   /**
    * Gets the parsed response data, the raw `Response` instance and the ID of the request,
    * returned via the `request-id` header which is useful for debugging requests and resporting
-   * issues to Anthropic.
+   * issues to Juglow.
    *
    * If you just want to get the raw `Response` instance without parsing it,
    * you can use {@link asResponse()}.
    *
-   * 👋 Getting the wrong TypeScript type for `Response`?
+   * ðŸ‘‹ Getting the wrong TypeScript type for `Response`?
    * Try setting `"moduleResolution": "NodeNext"` or add `"lib": ["DOM"]`
    * to your `tsconfig.json`.
    */

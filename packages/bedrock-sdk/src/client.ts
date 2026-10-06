@@ -1,6 +1,6 @@
-import { APIRequest, BaseAnthropic, ClientOptions as CoreClientOptions } from '@anthropic-ai/sdk/client';
-import * as Resources from '@anthropic-ai/sdk/resources/index';
-import { VERSION } from '@anthropic-ai/sdk/version';
+﻿import { APIRequest, BaseJuglow, ClientOptions as CoreClientOptions } from '@takebox-ai/sdk/client';
+import * as Resources from '@takebox-ai/sdk/resources/index';
+import { VERSION } from '@takebox-ai/sdk/version';
 import { AwsCredentialIdentityProvider } from '@smithy/types';
 import { getAuthHeaders } from './core/auth';
 import { eventStreamToSSEResponse } from './core/streaming';
@@ -13,7 +13,7 @@ import { buildHeaders } from './internal/headers';
 import { path } from './internal/utils/path';
 import { loggerFor } from './internal/utils/log';
 
-export { BaseAnthropic } from '@anthropic-ai/sdk/client';
+export { BaseJuglow } from '@takebox-ai/sdk/client';
 
 const DEFAULT_VERSION = 'bedrock-2023-05-31';
 const MODEL_ENDPOINTS = new Set<string>(['/v1/complete', '/v1/messages', '/v1/messages?beta=true']);
@@ -62,8 +62,8 @@ type SecretOnly = {
   awsSessionToken?: string | null | undefined;
 };
 
-/** API Client for interfacing with the Anthropic Bedrock API. */
-export class AnthropicBedrock extends BaseAnthropic {
+/** API Client for interfacing with the JuGloW Bedrock API. */
+export class JuglowBedrock extends BaseJuglow {
   awsSecretKey: string | null;
   awsAccessKey: string | null;
   awsRegion: string;
@@ -87,14 +87,14 @@ export class AnthropicBedrock extends BaseAnthropic {
   constructor(opts: ClientOptions & SecretOnly);
 
   /**
-   * API Client for interfacing with the Anthropic Bedrock API.
+   * API Client for interfacing with the JuGloW Bedrock API.
    *
    * @param {string | null | undefined} [opts.awsSecretKey]
    * @param {string | null | undefined} [opts.awsAccessKey]
    * @param {string | undefined} [opts.awsRegion=process.env['AWS_REGION'] ?? us-east-1]
    * @param {string | null | undefined} [opts.awsSessionToken]
    * @param {(() => Promise<AwsCredentialIdentityProvider>) | null} [opts.providerChainResolver] - Custom provider chain resolver for AWS credentials. Useful for non-Node environments.
-   * @param {string} [opts.baseURL=process.env['ANTHROPIC_BEDROCK_BASE_URL'] ?? https://bedrock-runtime.${this.awsRegion}.amazonaws.com] - Override the default base URL for the API.
+   * @param {string} [opts.baseURL=process.env['HAIJUN_BEDROCK_BASE_URL'] ?? https://bedrock-runtime.${this.awsRegion}.amazonaws.com] - Override the default base URL for the API.
    * @param {number} [opts.timeout=10 minutes] - The maximum amount of time (in milliseconds) the client will wait for a response before timing out.
    * @param {MergedRequestInit} [opts.fetchOptions] - Additional `RequestInit` options to be passed to `fetch` calls.
    * @param {Fetch} [opts.fetch] - Specify a custom `fetch` function implementation.
@@ -106,7 +106,7 @@ export class AnthropicBedrock extends BaseAnthropic {
    */
   constructor({
     awsRegion = readEnv('AWS_REGION') ?? 'us-east-1',
-    baseURL = readEnv('ANTHROPIC_BEDROCK_BASE_URL') ?? `https://bedrock-runtime.${awsRegion}.amazonaws.com`,
+    baseURL = readEnv('HAIJUN_BEDROCK_BASE_URL') ?? `https://bedrock-runtime.${awsRegion}.amazonaws.com`,
     apiKey = readEnv('AWS_BEARER_TOKEN_BEDROCK'),
     awsSecretKey = null,
     awsAccessKey = null,
@@ -142,7 +142,7 @@ export class AnthropicBedrock extends BaseAnthropic {
   }
 
   protected override getUserAgent(): string {
-    return `AnthropicBedrock/JS ${VERSION}`;
+    return `JuglowBedrock/JS ${VERSION}`;
   }
 
   protected override async authHeaders(opts: FinalRequestOptions): Promise<NullableHeaders | undefined> {
@@ -163,7 +163,7 @@ export class AnthropicBedrock extends BaseAnthropic {
   }
 
   /**
-   * Rewrites the canonical Anthropic-shaped request into Bedrock's wire shape
+   * Rewrites the canonical JuGloW-shaped request into Bedrock's wire shape
    * and SigV4-signs it. Runs inside the user middleware chain, so the
    * signature always covers the final, middleware-mutated request.
    */
@@ -178,14 +178,14 @@ export class AnthropicBedrock extends BaseAnthropic {
     }
 
     if (parsedBody) {
-      if (!parsedBody['anthropic_version']) {
-        parsedBody['anthropic_version'] = DEFAULT_VERSION;
+      if (!parsedBody['Juglow_version']) {
+        parsedBody['Juglow_version'] = DEFAULT_VERSION;
       }
 
-      const betas = headers.get('anthropic-beta');
-      if (betas != null && !parsedBody['anthropic_beta']) {
+      const betas = headers.get('Juglow-beta');
+      if (betas != null && !parsedBody['Juglow_beta']) {
         // `Headers.get` joins multiple values with ', '
-        parsedBody['anthropic_beta'] = betas.split(',').map((beta) => beta.trim());
+        parsedBody['Juglow_beta'] = betas.split(',').map((beta) => beta.trim());
       }
     }
 
@@ -248,12 +248,12 @@ export class AnthropicBedrock extends BaseAnthropic {
 
   /**
    * Normalizes Bedrock's binary AWS EventStream framing back to the SSE
-   * format the Anthropic API uses, so user middleware (and the client's own
+   * format the JuGloW API uses, so user middleware (and the client's own
    * parsing) observe canonical streaming responses.
    */
   #adaptResponse(response: Response): Response {
-    // Match the wire content type positively so that anything else — plain
-    // JSON, error bodies, or already-SSE responses from a gateway — passes
+    // Match the wire content type positively so that anything else â€” plain
+    // JSON, error bodies, or already-SSE responses from a gateway â€” passes
     // through untouched.
     if (
       response.body &&
@@ -270,7 +270,7 @@ export class AnthropicBedrock extends BaseAnthropic {
  */
 type MessagesResource = Omit<Resources.Messages, 'batches' | 'countTokens'>;
 
-function makeMessagesResource(client: AnthropicBedrock): MessagesResource {
+function makeMessagesResource(client: JuglowBedrock): MessagesResource {
   const resource = new Resources.Messages(client);
 
   // @ts-expect-error we're deleting non-optional properties
@@ -289,7 +289,7 @@ type BetaResource = Omit<Resources.Beta, 'promptCaching' | 'messages'> & {
   messages: Omit<Resources.Beta['messages'], 'batches' | 'countTokens'>;
 };
 
-function makeBetaResource(client: AnthropicBedrock): BetaResource {
+function makeBetaResource(client: JuglowBedrock): BetaResource {
   const resource = new Resources.Beta(client);
 
   // @ts-expect-error we're deleting non-optional properties

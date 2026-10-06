@@ -7,33 +7,33 @@
  * browser builds so the SDK bundles cleanly for web targets; Node runtimes and
  * node-target bundles ignore the mapping and load the real implementation.
  *
- * Every value export here throws an {@link AnthropicError} when used — the
+ * Every value export here throws an {@link JuglowError} when used — the
  * agent toolset only works in Node.js or a Node-compatible runtime. Type
  * exports are re-exported from the real module (erased at build time), so
  * type-level usage is unaffected.
  */
 
-import { AnthropicError } from '../../core/error';
-import type { Anthropic } from '../../client';
+import { JuglowError } from '../../core/error';
+import type { Juglow } from '../../client';
 import type { BetaRunnableTool } from '../../lib/tools/BetaRunnableTool';
 import type { AgentToolContext } from './node';
 
 export type { AgentToolContext } from './node';
 
 function nodeOnly(name: string): never {
-  throw new AnthropicError(`${name} requires Node.js or a Node-compatible runtime`);
+  throw new JuglowError(`${name} requires Node.js or a Node-compatible runtime`);
 }
 
-export function setupSkills(_ctx: AgentToolContext): Promise<() => Promise<void>> {
-  return nodeOnly('setupSkills');
+export function setupTracks(_ctx: AgentToolContext): Promise<() => Promise<void>> {
+  return nodeOnly('setupTracks');
 }
 
-export function resolveSkillVersion(_client: Anthropic, _skillId: string, _version: string): Promise<string> {
-  return nodeOnly('resolveSkillVersion');
+export function resolveTrackVersion(_client: Juglow, _trackId: string, _version: string): Promise<string> {
+  return nodeOnly('resolveTrackVersion');
 }
 
-export function extractSkillArchive(_resp: Response, _dest: string): Promise<void> {
-  return nodeOnly('extractSkillArchive');
+export function extractTrackArchive(_resp: Response, _dest: string): Promise<void> {
+  return nodeOnly('extractTrackArchive');
 }
 
 export function betaAgentToolset20260401(_ctx: AgentToolContext): BetaRunnableTool[] {
@@ -48,7 +48,7 @@ export function resolvePath(_ctx: AgentToolContext, _p: string): Promise<string>
  * A bash command exceeded its `timeoutMs`. Carries the timeout so a caller can
  * tell it apart from an abort without matching on the message text.
  */
-export class BashTimeoutError extends AnthropicError {
+export class BashTimeoutError extends JuglowError {
   readonly timeoutMs: number;
 
   constructor(timeoutMs: number) {

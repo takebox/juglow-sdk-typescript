@@ -9,8 +9,8 @@
     "esModuleInterop": true,
     "baseUrl": "./",
     "paths": {
-      "@anthropic-ai/bedrock-sdk/*": ["src/*"],
-      "@anthropic-ai/bedrock-sdk": ["src/index.ts"]
+      "@takebox-ai/bedrock-sdk/*": ["src/*"],
+      "@takebox-ai/bedrock-sdk": ["src/index.ts"]
     },
     "noEmit": true,
 

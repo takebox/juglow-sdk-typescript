@@ -1,5 +1,5 @@
-import type { Fetch } from '../../internal/builtin-types';
-import { CREDENTIALS_FILE_VERSION, type AnthropicCredentials } from '../../core/credentials';
+﻿import type { Fetch } from '../../internal/builtin-types';
+import { CREDENTIALS_FILE_VERSION, type JuglowCredentials } from '../../core/credentials';
 import type { AccessTokenProvider } from './types';
 import {
   GRANT_TYPE_REFRESH_TOKEN,
@@ -30,7 +30,7 @@ export type UserOAuthConfig = {
  * fresh; on expiry performs a `refresh_token` grant and writes the new
  * tokens back to the credentials file (atomic replace, fsync'd).
  *
- * If `clientId` is empty, the access token is treated as static — the
+ * If `clientId` is empty, the access token is treated as static â€” the
  * credentials file is read on every call but no refresh is attempted, and
  * an expired token without a `refresh_token` raises.
  */
@@ -46,7 +46,7 @@ export function userOAuthProvider(config: UserOAuthConfig): AccessTokenProvider 
     } catch (err) {
       throw new WorkloadIdentityError(`Credentials file not found at ${config.credentialsPath}: ${err}`);
     }
-    let creds: AnthropicCredentials;
+    let creds: JuglowCredentials;
     try {
       creds = JSON.parse(raw);
     } catch (err) {
@@ -63,7 +63,7 @@ export function userOAuthProvider(config: UserOAuthConfig): AccessTokenProvider 
     }
 
     // Return cached token if still fresh (or no expiry info), unless the
-    // caller is forcing a refresh after a 401 — then go straight to refresh
+    // caller is forcing a refresh after a 401 â€” then go straight to refresh
     // even if the file's expires_at still looks valid.
     const expiresAt = creds.expires_at;
     if (
@@ -96,8 +96,8 @@ export function userOAuthProvider(config: UserOAuthConfig): AccessTokenProvider 
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'anthropic-beta': OAUTH_API_BETA_HEADER,
-          'User-Agent': config.userAgent || `anthropic-sdk-typescript/${VERSION} userOAuthProvider`,
+          'Juglow-beta': OAUTH_API_BETA_HEADER,
+          'User-Agent': config.userAgent || `Juglow-sdk-typescript/${VERSION} userOAuthProvider`,
         },
         body: JSON.stringify(body),
       });

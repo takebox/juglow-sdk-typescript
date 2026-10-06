@@ -1,10 +1,10 @@
-#!/usr/bin/env -S npm run tsn -T
+﻿#!/usr/bin/env -S npm run tsn -T
 
-import { AnthropicVertex } from '@anthropic-ai/vertex-sdk';
+import { JuglowVertex } from '@takebox-ai/vertex-sdk';
 
-// Reads from the `CLOUD_ML_REGION` & `ANTHROPIC_VERTEX_PROJECT_ID`
+// Reads from the `CLOUD_ML_REGION` & `HAIJUN_VERTEX_PROJECT_ID`
 // environment variables.
-const client = new AnthropicVertex();
+const client = new JuglowVertex();
 
 async function main() {
   const stream = client.messages.stream({
@@ -14,7 +14,7 @@ async function main() {
         content: 'Hello!',
       },
     ],
-    model: 'claude-3-7-sonnet@20250219',
+    model: 'haijun-3-7-sonnet@20250219',
     max_tokens: 300,
   });
   for await (const event of stream) {

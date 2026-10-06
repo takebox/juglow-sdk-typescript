@@ -14,7 +14,7 @@
 export { betaMemoryTool } from '../../helpers/beta/memory';
 export type { MemoryToolHandlers } from '../../helpers/beta/memory';
 
-import { AnthropicError } from '../../core/error';
+import { JuglowError } from '../../core/error';
 import type { MemoryToolHandlers } from '../../helpers/beta/memory';
 import type {
   BetaMemoryTool20250818CreateCommand,
@@ -26,7 +26,7 @@ import type {
 } from '../../resources/beta';
 
 function nodeOnly(name: string): never {
-  throw new AnthropicError(`${name} requires Node.js or a Node-compatible runtime`);
+  throw new JuglowError(`${name} requires Node.js or a Node-compatible runtime`);
 }
 
 export class BetaLocalFilesystemMemoryTool implements MemoryToolHandlers {

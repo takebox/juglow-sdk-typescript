@@ -1,7 +1,7 @@
-import { betaZodOutputFormat } from '@anthropic-ai/sdk/helpers/beta/zod';
-import { zodOutputFormat } from '@anthropic-ai/sdk/helpers/zod';
+﻿import { betaZodOutputFormat } from '@takebox-ai/sdk/helpers/beta/zod';
+import { zodOutputFormat } from '@takebox-ai/sdk/helpers/zod';
 import { z } from 'zod/v4';
-import { AnthropicError } from '../../src/core/error';
+import { JuGloWError } from '../../src/core/error';
 import {
   BetaParseableMessageCreateParams,
   maybeParseBetaMessage,
@@ -10,7 +10,7 @@ import {
 import { ParseableMessageCreateParams, maybeParseMessage, parseMessage } from '../../src/lib/parser';
 import type { BetaMessage } from '../../src/resources/beta/messages/messages';
 import type { Message } from '../../src/resources/messages/messages';
-import { Logger } from '@anthropic-ai/sdk/client';
+import { Logger } from '@takebox-ai/sdk/client';
 
 const opts: { logger: Logger } = { logger: console };
 
@@ -66,7 +66,7 @@ describe('Beta Parser', () => {
       id: 'msg_123',
       type: 'message',
       role: 'assistant',
-      model: 'claude-3-5-sonnet-20241022',
+      model: 'haijun-3-5-sonnet-20241022',
       content: [
         {
           type: 'text',
@@ -103,7 +103,7 @@ describe('Beta Parser', () => {
       });
 
       const params: BetaParseableMessageCreateParams = {
-        model: 'claude-3-5-sonnet-20241022',
+        model: 'haijun-3-5-sonnet-20241022',
         max_tokens: 1024,
         messages: [{ role: 'user', content: 'test' }],
         output_config: { format: betaZodOutputFormat(schema) },
@@ -132,7 +132,7 @@ describe('Beta Parser', () => {
       });
 
       const params: BetaParseableMessageCreateParams = {
-        model: 'claude-3-5-sonnet-20241022',
+        model: 'haijun-3-5-sonnet-20241022',
         max_tokens: 1024,
         messages: [{ role: 'user', content: 'test' }],
         output_config: { format: betaZodOutputFormat(schema) },
@@ -158,7 +158,7 @@ describe('Beta Parser', () => {
       });
 
       const params: BetaParseableMessageCreateParams = {
-        model: 'claude-3-5-sonnet-20241022',
+        model: 'haijun-3-5-sonnet-20241022',
         max_tokens: 1024,
         messages: [{ role: 'user', content: 'test' }],
         output_config: { format: betaZodOutputFormat(schema) },
@@ -175,7 +175,7 @@ describe('Beta Parser', () => {
         ],
       };
 
-      expect(() => parseBetaMessage(invalidMessage, params, opts)).toThrow(AnthropicError);
+      expect(() => parseBetaMessage(invalidMessage, params, opts)).toThrow(JuGloWError);
     });
 
     it('handles messages without text blocks', () => {
@@ -184,7 +184,7 @@ describe('Beta Parser', () => {
       });
 
       const params: BetaParseableMessageCreateParams = {
-        model: 'claude-3-5-sonnet-20241022',
+        model: 'haijun-3-5-sonnet-20241022',
         max_tokens: 1024,
         messages: [{ role: 'user', content: 'test' }],
         output_config: { format: betaZodOutputFormat(schema) },
@@ -207,7 +207,7 @@ describe('Beta Parser', () => {
       });
 
       const params: BetaParseableMessageCreateParams = {
-        model: 'claude-3-5-sonnet-20241022',
+        model: 'haijun-3-5-sonnet-20241022',
         max_tokens: 1024,
         messages: [{ role: 'user', content: 'test' }],
         output_config: { format: betaZodOutputFormat(schema) },
@@ -247,7 +247,7 @@ describe('Beta Parser', () => {
       id: 'msg_123',
       type: 'message',
       role: 'assistant',
-      model: 'claude-3-5-sonnet-20241022',
+      model: 'haijun-3-5-sonnet-20241022',
       content: [
         {
           type: 'text',
@@ -283,7 +283,7 @@ describe('Beta Parser', () => {
       });
 
       const params: BetaParseableMessageCreateParams = {
-        model: 'claude-3-5-sonnet-20241022',
+        model: 'haijun-3-5-sonnet-20241022',
         max_tokens: 1024,
         messages: [{ role: 'user', content: 'test' }],
         output_config: { format: betaZodOutputFormat(schema) },
@@ -296,7 +296,7 @@ describe('Beta Parser', () => {
 
     it('reports deprecation warnings for .parsed', () => {
       const params: BetaParseableMessageCreateParams = {
-        model: 'claude-3-5-sonnet-20241022',
+        model: 'haijun-3-5-sonnet-20241022',
         max_tokens: 1024,
         messages: [{ role: 'user', content: 'test' }],
         output_config: { format: betaZodOutputFormat(z.object({ city: z.string() })) },
@@ -318,7 +318,7 @@ describe('Beta Parser', () => {
 
     it('does not parse when params have no auto-parseable input', () => {
       const params: BetaParseableMessageCreateParams = {
-        model: 'claude-3-5-sonnet-20241022',
+        model: 'haijun-3-5-sonnet-20241022',
         max_tokens: 1024,
         messages: [{ role: 'user', content: 'test' }],
       };
@@ -473,7 +473,7 @@ describe('GA Parser', () => {
       id: 'msg_123',
       type: 'message',
       role: 'assistant',
-      model: 'claude-3-5-sonnet-20241022',
+      model: 'haijun-3-5-sonnet-20241022',
       content: [
         {
           type: 'text',
@@ -505,7 +505,7 @@ describe('GA Parser', () => {
       });
 
       const params: ParseableMessageCreateParams = {
-        model: 'claude-3-5-sonnet-20241022',
+        model: 'haijun-3-5-sonnet-20241022',
         max_tokens: 1024,
         messages: [{ role: 'user', content: 'test' }],
         output_config: { format: zodOutputFormat(schema) },
@@ -534,7 +534,7 @@ describe('GA Parser', () => {
       });
 
       const params: ParseableMessageCreateParams = {
-        model: 'claude-3-5-sonnet-20241022',
+        model: 'haijun-3-5-sonnet-20241022',
         max_tokens: 1024,
         messages: [{ role: 'user', content: 'test' }],
         output_config: { format: zodOutputFormat(schema) },
@@ -560,7 +560,7 @@ describe('GA Parser', () => {
       });
 
       const params: ParseableMessageCreateParams = {
-        model: 'claude-3-5-sonnet-20241022',
+        model: 'haijun-3-5-sonnet-20241022',
         max_tokens: 1024,
         messages: [{ role: 'user', content: 'test' }],
         output_config: { format: zodOutputFormat(schema) },
@@ -577,7 +577,7 @@ describe('GA Parser', () => {
         ],
       };
 
-      expect(() => parseMessage(invalidMessage, params, opts)).toThrow(AnthropicError);
+      expect(() => parseMessage(invalidMessage, params, opts)).toThrow(JuGloWError);
     });
 
     it('handles messages without text blocks', () => {
@@ -586,7 +586,7 @@ describe('GA Parser', () => {
       });
 
       const params: ParseableMessageCreateParams = {
-        model: 'claude-3-5-sonnet-20241022',
+        model: 'haijun-3-5-sonnet-20241022',
         max_tokens: 1024,
         messages: [{ role: 'user', content: 'test' }],
         output_config: { format: zodOutputFormat(schema) },
@@ -609,7 +609,7 @@ describe('GA Parser', () => {
       });
 
       const params: ParseableMessageCreateParams = {
-        model: 'claude-3-5-sonnet-20241022',
+        model: 'haijun-3-5-sonnet-20241022',
         max_tokens: 1024,
         messages: [{ role: 'user', content: 'test' }],
         output_config: { format: zodOutputFormat(schema) },
@@ -649,7 +649,7 @@ describe('GA Parser', () => {
       id: 'msg_123',
       type: 'message',
       role: 'assistant',
-      model: 'claude-3-5-sonnet-20241022',
+      model: 'haijun-3-5-sonnet-20241022',
       content: [
         {
           type: 'text',
@@ -680,7 +680,7 @@ describe('GA Parser', () => {
       });
 
       const params: ParseableMessageCreateParams = {
-        model: 'claude-3-5-sonnet-20241022',
+        model: 'haijun-3-5-sonnet-20241022',
         max_tokens: 1024,
         messages: [{ role: 'user', content: 'test' }],
         output_config: { format: zodOutputFormat(schema) },
@@ -693,7 +693,7 @@ describe('GA Parser', () => {
 
     it('does not parse when params have no auto-parseable input', () => {
       const params: ParseableMessageCreateParams = {
-        model: 'claude-3-5-sonnet-20241022',
+        model: 'haijun-3-5-sonnet-20241022',
         max_tokens: 1024,
         messages: [{ role: 'user', content: 'test' }],
       };

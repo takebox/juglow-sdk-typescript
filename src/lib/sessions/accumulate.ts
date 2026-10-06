@@ -1,4 +1,4 @@
-import { AnthropicError } from '../../core/error';
+import { JuglowError } from '../../core/error';
 import type {
   BetaManagedAgentsAgentMessageEvent,
   BetaManagedAgentsStreamSessionEvents,
@@ -50,7 +50,7 @@ export function accumulateManagedAgentsEvent(
 
     case 'event_delta': {
       if (accumulated === undefined) {
-        throw new AnthropicError(`event_delta for ${event.event_id} received before its event_start`);
+        throw new JuglowError(`event_delta for ${event.event_id} received before its event_start`);
       }
 
       const idx = event.delta.index ?? 0;
@@ -59,7 +59,7 @@ export function accumulateManagedAgentsEvent(
       // Indices arrive in order — the first delta at a new index opens the slot.
       // A gap means deltas arrived out of order or were mis-routed.
       if (idx > accumulated.content.length) {
-        throw new AnthropicError(
+        throw new JuglowError(
           `event_delta index ${idx} is beyond the end of content (length ${accumulated.content.length})`,
         );
       }

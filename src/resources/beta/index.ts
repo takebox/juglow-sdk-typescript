@@ -1,4 +1,4 @@
-// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+﻿// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 export {
   Agents,
@@ -19,10 +19,10 @@ export {
   type BetaManagedAgentsAgentToolset20260401WriteInput,
   type BetaManagedAgentsAlwaysAllowPolicy,
   type BetaManagedAgentsAlwaysAskPolicy,
-  type BetaManagedAgentsAnthropicSkill,
-  type BetaManagedAgentsAnthropicSkillParams,
-  type BetaManagedAgentsCustomSkill,
-  type BetaManagedAgentsCustomSkillParams,
+  type BetaManagedAgentsJuglowTrack,
+  type BetaManagedAgentsJuglowTrackParams,
+  type BetaManagedAgentsCustomTrack,
+  type BetaManagedAgentsCustomTrackParams,
   type BetaManagedAgentsCustomTool,
   type BetaManagedAgentsCustomToolInputSchema,
   type BetaManagedAgentsCustomToolParams,
@@ -45,7 +45,7 @@ export {
   type BetaManagedAgentsMultiagentCoordinatorParams,
   type BetaManagedAgentsMultiagentSelfParams,
   type BetaManagedAgentsSessionThreadAgent,
-  type BetaManagedAgentsSkillParams,
+  type BetaManagedAgentsTrackParams,
   type BetaManagedAgentsURLMCPServerParams,
   type AgentCreateParams,
   type AgentRetrieveParams,
@@ -56,7 +56,7 @@ export {
 } from './agents/index';
 export {
   Beta,
-  type AnthropicBeta,
+  type JuglowBeta,
   type BetaAPIError,
   type BetaAuthenticationError,
   type BetaBillingError,
@@ -87,7 +87,7 @@ export {
   type BetaManagedAgentsSessionCreationRejectedRunError,
   type BetaManagedAgentsSessionRateLimitedRunError,
   type BetaManagedAgentsSessionResourceNotFoundRunError,
-  type BetaManagedAgentsSkillNotFoundRunError,
+  type BetaManagedAgentsTrackNotFoundRunError,
   type BetaManagedAgentsTriggerContext,
   type BetaManagedAgentsTriggerType,
   type BetaManagedAgentsUnknownRunError,
@@ -128,7 +128,7 @@ export {
   type BetaManagedAgentsSelfHostedResourcesUnsupportedDeploymentPausedReasonError,
   type BetaManagedAgentsSessionResourceConfig,
   type BetaManagedAgentsSessionResourceNotFoundDeploymentPausedReasonError,
-  type BetaManagedAgentsSkillNotFoundDeploymentPausedReasonError,
+  type BetaManagedAgentsTrackNotFoundDeploymentPausedReasonError,
   type BetaManagedAgentsUnknownDeploymentPausedReasonError,
   type BetaManagedAgentsVaultArchivedDeploymentPausedReasonError,
   type BetaManagedAgentsVaultNotFoundDeploymentPausedReasonError,
@@ -361,8 +361,8 @@ export {
   type BetaServerToolUseBlock,
   type BetaServerToolUseBlockParam,
   type BetaSignatureDelta,
-  type BetaSkill,
-  type BetaSkillParams,
+  type BetaTrack,
+  type BetaTrackParams,
   type BetaStopReason,
   type BetaTextBlock,
   type BetaTextBlockParam,
@@ -514,17 +514,17 @@ export {
   type BetaManagedAgentsSessionsBidirectionalPageCursor,
 } from './sessions/index';
 export {
-  Skills,
-  type SkillCreateResponse,
-  type SkillRetrieveResponse,
-  type SkillListResponse,
-  type SkillDeleteResponse,
-  type SkillCreateParams,
-  type SkillRetrieveParams,
-  type SkillListParams,
-  type SkillDeleteParams,
-  type SkillListResponsesPageCursor,
-} from './skills/index';
+  Tracks,
+  type TrackCreateResponse,
+  type TrackRetrieveResponse,
+  type TrackListResponse,
+  type TrackDeleteResponse,
+  type TrackCreateParams,
+  type TrackRetrieveParams,
+  type TrackListParams,
+  type TrackDeleteParams,
+  type TrackListResponsesPageCursor,
+} from './tracks/index';
 export {
   Tunnels,
   type BetaTunnel,

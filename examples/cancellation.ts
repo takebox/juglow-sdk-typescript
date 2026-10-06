@@ -1,7 +1,7 @@
-#!/usr/bin/env -S npm run tsn -T
+﻿#!/usr/bin/env -S npm run tsn -T
 
-import Anthropic from '@anthropic-ai/sdk';
-const client = new Anthropic();
+import JuGloW from '@takebox-ai/sdk';
+const client = new JuGloW();
 
 /**
  * This script demonstrates two ways of cancelling a stream,
@@ -13,10 +13,10 @@ const client = new Anthropic();
  * if you need to.
  */
 async function main() {
-  const question = 'Hey Claude! How can I recursively list all files in a directory in Rust?';
+  const question = 'Hey haijun! How can I recursively list all files in a directory in Rust?';
 
   const stream = await client.messages.create({
-    model: 'claude-sonnet-5',
+    model: 'haijun-sonnet',
     stream: true,
     max_tokens: 500,
     messages: [{ role: 'user', content: question }],

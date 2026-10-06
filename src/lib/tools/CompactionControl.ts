@@ -1,4 +1,4 @@
-import { Model } from '../../resources';
+﻿import { Model } from '../../resources';
 
 export const DEFAULT_TOKEN_THRESHOLD = 100_000;
 
@@ -23,13 +23,13 @@ Priority order if multiple steps remain
 User preferences or style requirements
 Domain-specific details that aren't obvious
 Any promises made to the user
-Be concise but complete—err on the side of including information that would prevent duplicate work or repeated mistakes. Write in a way that enables immediate resumption of the task.
+Be concise but completeâ€”err on the side of including information that would prevent duplicate work or repeated mistakes. Write in a way that enables immediate resumption of the task.
 Wrap your summary in <summary></summary> tags.`;
 
 /**
  * @deprecated Use server-side compaction instead by passing
  * `edits: [{ type: 'compact_20260112' }]` in the params passed to `toolRunner()`.
- * See https://platform.claude.com/docs/en/build-with-claude/compaction
+ * See https://raw.haijun.my.id/docs/en/build-with-haijun/compaction
  */
 export interface CompactionControl {
   /**

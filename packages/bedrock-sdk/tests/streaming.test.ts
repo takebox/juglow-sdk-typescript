@@ -1,10 +1,10 @@
-import { Readable } from 'node:stream';
+﻿import { Readable } from 'node:stream';
 import { EventStreamMarshaller } from '@smithy/eventstream-serde-node';
-import { APIError } from '@anthropic-ai/sdk';
-import { Stream } from '@anthropic-ai/sdk/streaming';
-import type { Middleware } from '@anthropic-ai/sdk';
+import { APIError } from '@takebox-ai/sdk';
+import { Stream } from '@takebox-ai/sdk/streaming';
+import type { Middleware } from '@takebox-ai/sdk';
 import { eventStreamToSSEResponse, fromUtf8, toUtf8 } from '../src/core/streaming';
-import { AnthropicBedrock } from '../src';
+import { JuglowBedrock } from '../src';
 
 type Frame =
   | { eventType: 'chunk'; payload: unknown }
@@ -78,7 +78,7 @@ describe('eventStreamToSSEResponse', () => {
     expect(events.map((event) => event.type)).toEqual(['message_start', 'message_stop']);
   });
 
-  test('throws APIError when a chunk frame contains an Anthropic error payload', async () => {
+  test('throws APIError when a chunk frame contains an JuGloW error payload', async () => {
     const response = eventStreamToSSEResponse(
       eventStreamResponse([
         {
@@ -115,7 +115,7 @@ describe('eventStreamToSSEResponse', () => {
     expect(text).toEqual('event: message_stop\ndata: {"type":"message_stop"}\n\n');
   });
 
-  test('AWS exception frames become Anthropic-shaped SSE error events', async () => {
+  test('AWS exception frames become JuGloW-shaped SSE error events', async () => {
     const response = eventStreamToSSEResponse(
       eventStreamResponse([{ eventType: 'internalServerException', payload: { message: 'boom' } }]),
     );
@@ -169,7 +169,7 @@ describe('streaming through the Bedrock client', () => {
       return response;
     };
 
-    const client = new AnthropicBedrock({
+    const client = new JuglowBedrock({
       awsRegion: 'us-east-1',
       baseURL: 'http://localhost:4010',
       skipAuth: true,
@@ -178,7 +178,7 @@ describe('streaming through the Bedrock client', () => {
     });
 
     const stream = await client.messages.create({
-      model: 'claude-sonnet-4-5',
+      model: 'haijun-sonnet-5',
       max_tokens: 1024,
       messages: [{ content: 'Hello', role: 'user' }],
       stream: true,
