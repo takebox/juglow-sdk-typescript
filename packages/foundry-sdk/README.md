@@ -21,7 +21,7 @@ import { JuglowFoundry } from '@takebox-ai/foundry-sdk';
 
 const client = new JuglowFoundry({
   apiKey: process.env.HAIJUN_FOUNDRY_API_KEY, // defaults to process.env.HAIJUN_FOUNDRY_API_KEY
-  resource: 'example-resource.azure.Juglow.com', // your Azure resource
+  resource: 'example-resource.azure.juglow.my.id', // your Azure resource
 });
 
 const message = await client.messages.create({
@@ -47,7 +47,7 @@ const azureADTokenProvider = getBearerTokenProvider(credential, scope);
 
 const client = new JuglowFoundry({
   azureADTokenProvider,
-  resource: 'example-resource.azure.Juglow.com', // your Azure resource
+  resource: 'example-resource.azure.juglow.my.id', // your Azure resource
 });
 
 const message = await client.messages.create({
@@ -66,7 +66,7 @@ If you have a model deployment configured, you can specify it to have the SDK au
 ```ts
 const client = new JuglowFoundry({
   apiKey: process.env.HAIJUN_FOUNDRY_API_KEY,
-  resource: 'example-resource.azure.Juglow.com',
+  resource: 'example-resource.azure.juglow.my.id',
 });
 
 // The SDK will automatically use /deployments/my-haijun-deployment/messages

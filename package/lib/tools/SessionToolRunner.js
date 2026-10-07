@@ -157,7 +157,7 @@ _IdleClock_maxIdleMs = new WeakMap(), _IdleClock_onExpire = new WeakMap(), _Idle
  *
  * @example
  * ```ts
- * import { betaAgentToolset20260401 } from '@Juglow-ai/sdk/tools/agent-toolset/node';
+ * import { betaAgentToolset20260401 } from '@takebox-ai/sdk/tools/agent-toolset/node';
  *
  * for await (const call of client.beta.sessions.events.toolRunner(work.data.id, {
  *   tools: [...betaAgentToolset20260401({ workdir }), myTool],

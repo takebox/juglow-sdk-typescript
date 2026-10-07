@@ -65,7 +65,7 @@ export interface SessionToolRunnerOptions {
    * Tools to expose to the session, in the same {@link BetaRunnableTool} shape
    * `client.beta.messages.toolRunner` accepts. Use
    * `betaAgentToolset20260401({ workdir })` from
-   * `@Juglow-ai/sdk/tools/agent-toolset/node` for the standard
+   * `@takebox-ai/sdk/tools/agent-toolset/node` for the standard
    * `agent_toolset_20260401` set; filter or extend the array to customise.
    */
   tools: Array<BetaRunnableTool>;
@@ -285,7 +285,7 @@ class IdleClock {
  *
  * @example
  * ```ts
- * import { betaAgentToolset20260401 } from '@Juglow-ai/sdk/tools/agent-toolset/node';
+ * import { betaAgentToolset20260401 } from '@takebox-ai/sdk/tools/agent-toolset/node';
  *
  * for await (const call of client.beta.sessions.events.toolRunner(work.data.id, {
  *   tools: [...betaAgentToolset20260401({ workdir }), myTool],

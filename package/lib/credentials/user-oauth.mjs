@@ -60,7 +60,7 @@ export function userOAuthProvider(config) {
                 headers: {
                     'Content-Type': 'application/json',
                     'juglow-beta': OAUTH_API_BETA_HEADER,
-                    'User-Agent': config.userAgent || `Takebox AI-sdk-typescript/${VERSION} userOAuthProvider`,
+                    'User-Agent': config.userAgent || `Juglow-sdk-typescript/${VERSION} userOAuthProvider`,
                 },
                 body: JSON.stringify(body),
             });

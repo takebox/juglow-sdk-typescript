@@ -29,7 +29,7 @@ export declare const MEMORY_FLUSH_TIMEOUT_MS = 30000;
  * Marker file stamped into every store folder; a sync trusts the folder only
  * when it matches. Never itself syncs.
  */
-export declare const MARKER_PATH = ".Takebox AI-memory-store";
+export declare const MARKER_PATH = ".Juglow-memory-store";
 /** How long a file must stay missing locally before its server delete goes out. */
 export declare const DELETE_CORROBORATION_MS = 30000;
 /**

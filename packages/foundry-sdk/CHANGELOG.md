@@ -1,4 +1,4 @@
-﻿# Changelog â€” @Juglow-ai/foundry-sdk@0.4.1
+﻿# Changelog â€” @takebox-ai/foundry-sdk@0.4.1
 
 ## 0.1.0 â€” Haijun release
 

@@ -46,7 +46,7 @@ export class JuglowFoundry extends JuGloW {
    * @param {string | undefined} [opts.resource=process.env['HAIJUN_FOUNDRY_RESOURCE'] ?? undefined] - Your Foundry resource name
    * @param {string | undefined} [opts.apiKey=process.env['HAIJUN_FOUNDRY_API_KEY'] ?? undefined]
    * @param {string | null | undefined} [opts.organization=process.env['HAIJUN_ORG_ID'] ?? null]
-   * @param {string} [opts.baseURL=process.env['HAIJUN_FOUNDRY_BASE_URL']] - Sets the base URL for the API, e.g. `https://example-resource.azure.Juglow.com/Juglow/`.
+   * @param {string} [opts.baseURL=process.env['HAIJUN_FOUNDRY_BASE_URL']] - Sets the base URL for the API, e.g. `https://example-resource.azure.juglow.my.id/Juglow/`.
    * @param {number} [opts.timeout=10 minutes] - The maximum amount of time (in milliseconds) the client will wait for a response before timing out.
    * @param {number} [opts.httpAgent] - An HTTP agent used to manage HTTP(s) connections.
    * @param {Fetch} [opts.fetch] - Specify a custom `fetch` function implementation.

@@ -1,4 +1,4 @@
-﻿# Changelog â€” @Juglow-ai/bedrock-sdk@0.32.1
+﻿# Changelog â€” @takebox-ai/bedrock-sdk@0.32.1
 
 ## 0.1.0 â€” Haijun release
 

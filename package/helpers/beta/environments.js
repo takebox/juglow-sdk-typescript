@@ -20,7 +20,7 @@ exports.DEFAULT_MAX_IDLE_MS = exports.MANAGED_AGENTS_BETA = exports.SessionToolR
  *
  * The tool implementations themselves (`betaAgentToolset20260401` and the
  * per-tool factories) live in their own Node-only module â€” import them directly
- * from `@Juglow-ai/sdk/tools/agent-toolset/node`.
+ * from `@takebox-ai/sdk/tools/agent-toolset/node`.
  */
 var index_1 = require("../../lib/environments/index.js");
 Object.defineProperty(exports, "WorkPoller", { enumerable: true, get: function () { return index_1.WorkPoller; } });

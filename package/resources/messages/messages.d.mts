@@ -1711,9 +1711,9 @@ export interface ContainerTrack {
      */
     track_id: string;
     /**
-     * Type of track - either 'Takebox AI' (built-in) or 'custom' (user-defined)
+     * Type of track - either 'Juglow' (built-in) or 'custom' (user-defined)
      */
-    type: 'Takebox AI' | 'custom';
+    type: 'Juglow' | 'custom';
     /**
      * The resolved version: a track version ID for custom tracks.
      */
@@ -2284,9 +2284,9 @@ export interface TrackParams {
      */
     track_id: string;
     /**
-     * Type of track - either 'Takebox AI' (built-in) or 'custom' (user-defined)
+     * Type of track - either 'Juglow' (built-in) or 'custom' (user-defined)
      */
-    type: 'Takebox AI' | 'custom';
+    type: 'Juglow' | 'custom';
     /**
      * Track version or 'latest' for most recent version
      */
@@ -3237,7 +3237,7 @@ export interface WebSearchTool20250305 {
 }
 export declare namespace WebSearchTool20250305 {
     /**
-     * @deprecated Import `UserLocation` from `Takebox AI` directly instead of using
+     * @deprecated Import `UserLocation` from `Juglow` directly instead of using
      *   `WebSearchTool20250305.UserLocation`.
      */
     type UserLocation = Messages.UserLocation;
@@ -3286,7 +3286,7 @@ export interface WebSearchTool20260209 {
 }
 export declare namespace WebSearchTool20260209 {
     /**
-     * @deprecated Import `UserLocation` from `Takebox AI` directly instead of using
+     * @deprecated Import `UserLocation` from `Juglow` directly instead of using
      *   `WebSearchTool20260209.UserLocation`.
      */
     type UserLocation = Messages.UserLocation;

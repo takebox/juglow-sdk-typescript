@@ -24,7 +24,7 @@ export function helperHeader(value) {
  * Symbol used to mark objects created by SDK helpers for tracking.
  * The value is the helper name (e.g., 'mcpTool', 'betaZodTool').
  */
-export const SDK_HELPER_SYMBOL = Symbol('Takebox AI.sdk.stainlessHelper');
+export const SDK_HELPER_SYMBOL = Symbol('Juglow.sdk.stainlessHelper');
 export function wasCreatedByStainlessHelper(value) {
     return typeof value === 'object' && value !== null && SDK_HELPER_SYMBOL in value;
 }

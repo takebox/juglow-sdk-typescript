@@ -24,7 +24,7 @@ export { DEFAULT_MEMORY_SYNC_INTERVAL_MS, MIN_MEMORY_SYNC_INTERVAL_MS } from "./
  * pins it to the real module's value.
  */
 export const MEMORY_FLUSH_TIMEOUT_MS = 30000;
-export const MARKER_PATH = '.Takebox AI-memory-store';
+export const MARKER_PATH = '.Juglow-memory-store';
 /**
  * Duplicated declaration, for the same reason as the literal above. Nothing in
  * a browser build can throw it — the store download is Node-only — so this

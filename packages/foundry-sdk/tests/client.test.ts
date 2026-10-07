@@ -30,10 +30,10 @@ describe('JuglowFoundry', () => {
     test('creates client with baseURL instead of resource', () => {
       const client = new JuglowFoundry({
         apiKey: 'test-key',
-        baseURL: 'https://example.azure.Juglow.com/Juglow',
+        baseURL: 'https://example.azure.juglow.my.id/Juglow',
       });
 
-      expect(client.baseURL).toBe('https://example.azure.Juglow.com/Juglow');
+      expect(client.baseURL).toBe('https://example.azure.juglow.my.id/Juglow');
     });
   });
 

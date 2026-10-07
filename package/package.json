@@ -2,7 +2,7 @@
   "name": "@takebox-ai/sdk",
   "version": "0.1.0",
   "description": "JuGloW Haijun SDK â€” API client for the Haijun platform gateway (JuGloW-compatible)",
-  "author": "JuGloW <support@Juglow.com>",
+  "author": "JuGloW <support@juglow.my.id>",
   "types": "./index.d.ts",
   "main": "./index.js",
   "type": "commonjs",

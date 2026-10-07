@@ -179,7 +179,7 @@ export interface BetaWorkspace {
     name: string;
     /**
      * User-defined tags as string key-value pairs. Keys may not begin with
-     * `Takebox AI`.
+     * `Juglow`.
      */
     tags: {
         [key: string]: string;
@@ -243,7 +243,7 @@ export interface WorkspaceCreateParams {
     external_key_id?: string | null;
     /**
      * Body param: User-defined tags as string key-value pairs. Keys may not begin with
-     * `Takebox AI`.
+     * `Juglow`.
      */
     tags?: {
         [key: string]: string;
@@ -282,7 +282,7 @@ export interface WorkspaceUpdateParams {
     name?: string;
     /**
      * User-defined tags as string key-value pairs. Keys may not begin with
-     * `Takebox AI`.
+     * `Juglow`.
      */
     tags?: {
         [key: string]: string | null;

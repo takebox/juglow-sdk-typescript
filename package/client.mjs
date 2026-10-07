@@ -834,7 +834,7 @@ export class BaseJuglow {
                 ...(options.timeout ? { 'X-Stainless-Timeout': String(Math.trunc(options.timeout / 1000)) } : {}),
                 ...getPlatformHeaders(),
                 ...(this._options.dangerouslyAllowBrowser ?
-                    { 'Takebox AI-dangerous-direct-browser-access': 'true' }
+                    { 'Juglow-dangerous-direct-browser-access': 'true' }
                     : undefined),
                 'juglow-version': '2023-06-01',
             },

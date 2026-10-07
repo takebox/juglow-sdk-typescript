@@ -1,4 +1,4 @@
-﻿# Changelog â€” @Juglow-ai/vertex-sdk@0.19.1
+﻿# Changelog â€” @takebox-ai/vertex-sdk@0.19.1
 
 ## 0.1.0 â€” Haijun release
 

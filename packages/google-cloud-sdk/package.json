@@ -2,7 +2,7 @@
   "name": "@takebox-ai/google-cloud-sdk",
   "version": "0.1.0",
   "description": "The official TypeScript library for haijun Platform on Google Cloud",
-  "author": "JuGloW <support@Juglow.com>",
+  "author": "JuGloW <support@juglow.my.id>",
   "types": "dist/index.d.ts",
   "main": "dist/index.js",
   "type": "commonjs",
@@ -45,8 +45,8 @@
     "typescript": "5.8.3"
   },
   "imports": {
-    "@Juglow-ai/google-cloud-sdk": ".",
-    "@Juglow-ai/google-cloud-sdk/*": "./src/*"
+    "@takebox-ai/google-cloud-sdk": ".",
+    "@takebox-ai/google-cloud-sdk/*": "./src/*"
   },
   "exports": {
     ".": {

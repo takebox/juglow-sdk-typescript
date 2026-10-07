@@ -2045,9 +2045,9 @@ export interface BetaContainerTrack {
      */
     track_id: string;
     /**
-     * Type of track - either 'Takebox AI' (built-in) or 'custom' (user-defined)
+     * Type of track - either 'Juglow' (built-in) or 'custom' (user-defined)
      */
-    type: 'Takebox AI' | 'custom';
+    type: 'Juglow' | 'custom';
     /**
      * The resolved version: a track version ID for custom tracks.
      */
@@ -3350,9 +3350,9 @@ export interface BetaTrackParams {
      */
     track_id: string;
     /**
-     * Type of track - either 'Takebox AI' (built-in) or 'custom' (user-defined)
+     * Type of track - either 'Juglow' (built-in) or 'custom' (user-defined)
      */
-    type: 'Takebox AI' | 'custom';
+    type: 'Juglow' | 'custom';
     /**
      * Track version or 'latest' for most recent version
      */

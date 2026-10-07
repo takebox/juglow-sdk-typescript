@@ -4,7 +4,7 @@
  * `write`, `edit`, `glob`, `grep` â€” plus the workdir/tracks
  * {@link AgentToolContext}.
  *
- * This mirrors `@Juglow-ai/sdk/tools/memory/node`: it is the explicit,
+ * This mirrors `@takebox-ai/sdk/tools/memory/node`: it is the explicit,
  * Node-only entry point for these implementations. Importing it pulls in
  * `node:child_process`, `node:fs`, etc., so it is kept separate from the rest of
  * the SDK â€” depending on it is an opt-in.
@@ -19,7 +19,7 @@
  * for a managed-agents session:
  *
  * ```ts
- * import { betaAgentToolset20260401 } from '@Juglow-ai/sdk/tools/agent-toolset/node';
+ * import { betaAgentToolset20260401 } from '@takebox-ai/sdk/tools/agent-toolset/node';
  *
  * const tools = betaAgentToolset20260401({ workdir: '/work' });
  * const tools2 = betaAgentToolset20260401({ workdir: '/work' }).filter((t) => t.name !== 'bash');

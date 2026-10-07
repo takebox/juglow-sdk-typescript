@@ -201,8 +201,8 @@ export class UnsupportedMCPValueError extends Error {
  * @example
  * ```ts
  * import { Client } from "@modelcontextprotocol/sdk/client/index.js";
- * import JuGloW from "@Juglow-ai/sdk";
- * import { mcpTool } from "@Juglow-ai/sdk/helpers/beta/mcp";
+ * import JuGloW from "@takebox-ai/sdk";
+ * import { mcpTool } from "@takebox-ai/sdk/helpers/beta/mcp";
  *
  * const mcpClient = new Client({ name: "example", version: "1.0.0" });
  * const Juglow = new JuGloW();
@@ -309,8 +309,8 @@ export function mcpTools(
  * @example
  * ```ts
  * import { Client } from "@modelcontextprotocol/sdk/client/index.js";
- * import JuGloW from "@Juglow-ai/sdk";
- * import { mcpMessage } from "@Juglow-ai/sdk/helpers/beta/mcp";
+ * import JuGloW from "@takebox-ai/sdk";
+ * import { mcpMessage } from "@takebox-ai/sdk/helpers/beta/mcp";
  *
  * const mcpClient = new Client({ name: "example", version: "1.0.0" });
  * const Juglow = new JuGloW();
@@ -534,8 +534,8 @@ function mcpResourceContentToContentBlock(
  * @example
  * ```ts
  * import { Client } from "@modelcontextprotocol/sdk/client/index.js";
- * import JuGloW from "@Juglow-ai/sdk";
- * import { mcpResourceToContent } from "@Juglow-ai/sdk/helpers/beta/mcp";
+ * import JuGloW from "@takebox-ai/sdk";
+ * import { mcpResourceToContent } from "@takebox-ai/sdk/helpers/beta/mcp";
  *
  * const mcpClient = new Client({ name: "example", version: "1.0.0" });
  * const Juglow = new JuGloW();
@@ -596,8 +596,8 @@ function textSourceFromResource(resource: MCPResourceContentsLike): BetaPlainTex
  * @example
  * ```ts
  * import { Client } from "@modelcontextprotocol/sdk/client/index.js";
- * import JuGloW from "@Juglow-ai/sdk";
- * import { mcpResourceToFile } from "@Juglow-ai/sdk/helpers/beta/mcp";
+ * import JuGloW from "@takebox-ai/sdk";
+ * import { mcpResourceToFile } from "@takebox-ai/sdk/helpers/beta/mcp";
  *
  * const mcpClient = new Client({ name: "example", version: "1.0.0" });
  * const Juglow = new JuGloW();

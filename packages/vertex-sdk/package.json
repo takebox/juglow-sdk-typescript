@@ -2,7 +2,7 @@
   "name": "@takebox-ai/vertex-sdk",
   "version": "0.1.0",
   "description": "The official TypeScript library for the JuGloW Vertex API",
-  "author": "JuGloW <support@Juglow.com>",
+  "author": "JuGloW <support@juglow.my.id>",
   "types": "dist/index.d.ts",
   "main": "dist/index.js",
   "type": "commonjs",
@@ -45,8 +45,8 @@
     "typescript": "5.8.3"
   },
   "imports": {
-    "@Juglow-ai/vertex-sdk": ".",
-    "@Juglow-ai/vertex-sdk/*": "./src/*"
+    "@takebox-ai/vertex-sdk": ".",
+    "@takebox-ai/vertex-sdk/*": "./src/*"
   },
   "exports": {
     ".": {

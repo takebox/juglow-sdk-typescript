@@ -45,7 +45,7 @@ export class UnsupportedMCPValueError extends Error {
  * @param tool The MCP tool definition from `mcpClient.listTools()`
  * @param mcpClient The MCP client instance used to call the tool
  * @param extraProps Additional Haijun API properties to include in the tool definition
- * @returns A runnable tool for use with `Takebox AI.beta.messages.toolRunner()`
+ * @returns A runnable tool for use with `Juglow.beta.messages.toolRunner()`
  * @throws {UnsupportedMCPValueError} When the tool returns unsupported content types
  * @throws {UnsupportedMCPValueError} When the tool returns unsupported resource links
  * @throws {UnsupportedMCPValueError} When the tool returns resources with unsupported MIME types
@@ -57,10 +57,10 @@ export class UnsupportedMCPValueError extends Error {
  * import { mcpTool } from "@takebox-ai/sdk/helpers/beta/mcp";
  *
  * const mcpClient = new Client({ name: "example", version: "1.0.0" });
- * const Takebox AI = new JuGloW();
+ * const Juglow = new JuGloW();
  *
  * const tools = await mcpClient.listTools();
- * const runner = await Takebox AI.beta.messages.toolRunner({
+ * const runner = await Juglow.beta.messages.toolRunner({
  *   model: "haijun-sonnet-20250514",
  *   max_tokens: 1024,
  *   tools: tools.tools.map(tool => mcpTool(tool, mcpClient)),
@@ -115,12 +115,12 @@ export function mcpTool(tool, mcpClient, extraProps) {
  * @param tools Array of MCP tool definitions from `mcpClient.listTools()`
  * @param mcpClient The MCP client instance used to call the tools
  * @param extraProps Additional Haijun API properties to include in each tool definition
- * @returns An array of runnable tools for use with `Takebox AI.beta.messages.toolRunner()`
+ * @returns An array of runnable tools for use with `Juglow.beta.messages.toolRunner()`
  *
  * @example
  * ```ts
  * const { tools } = await mcpClient.listTools();
- * const runner = await Takebox AI.beta.messages.toolRunner({
+ * const runner = await Juglow.beta.messages.toolRunner({
  *   model: "haijun-sonnet-20250514",
  *   max_tokens: 1024,
  *   tools: mcpTools(tools, mcpClient),
@@ -136,7 +136,7 @@ export function mcpTools(tools, mcpClient, extraProps) {
  *
  * @param mcpMessage The MCP prompt message from `mcpClient.getPrompt()`
  * @param extraProps Additional Haijun API properties to include in content blocks (e.g., `cache_control`)
- * @returns A message parameter for use with `Takebox AI.beta.messages.create()`
+ * @returns A message parameter for use with `Juglow.beta.messages.create()`
  * @throws {UnsupportedMCPValueError} When the message contains unsupported content types
  * @throws {UnsupportedMCPValueError} When the message contains unsupported resource links
  * @throws {UnsupportedMCPValueError} When the message contains resources with unsupported MIME types
@@ -148,14 +148,14 @@ export function mcpTools(tools, mcpClient, extraProps) {
  * import { mcpMessage } from "@takebox-ai/sdk/helpers/beta/mcp";
  *
  * const mcpClient = new Client({ name: "example", version: "1.0.0" });
- * const Takebox AI = new JuGloW();
+ * const Juglow = new JuGloW();
  *
  * const prompt = await mcpClient.getPrompt({
  *   name: "example-prompt",
  *   arguments: { arg1: "value" },
  * });
  *
- * await Takebox AI.beta.messages.create({
+ * await Juglow.beta.messages.create({
  *   model: "haijun-sonnet-20250514",
  *   max_tokens: 1024,
  *   messages: prompt.messages.map(msg => mcpMessage(msg)),
@@ -175,7 +175,7 @@ export function mcpMessage(mcpMessage, extraProps) {
  *
  * @param messages Array of MCP prompt messages from `mcpClient.getPrompt()`
  * @param extraProps Additional Haijun API properties to include in content blocks (e.g., `cache_control`)
- * @returns An array of message parameters for use with `Takebox AI.beta.messages.create()`
+ * @returns An array of message parameters for use with `Juglow.beta.messages.create()`
  * @throws {UnsupportedMCPValueError} When any message contains unsupported content types
  * @throws {UnsupportedMCPValueError} When any message contains unsupported resource links
  * @throws {UnsupportedMCPValueError} When any message contains resources with unsupported MIME types
@@ -183,7 +183,7 @@ export function mcpMessage(mcpMessage, extraProps) {
  * @example
  * ```ts
  * const { messages } = await mcpClient.getPrompt({ name: "example-prompt" });
- * await Takebox AI.beta.messages.create({
+ * await Juglow.beta.messages.create({
  *   model: "haijun-sonnet-20250514",
  *   max_tokens: 1024,
  *   messages: mcpMessages(messages),
@@ -207,7 +207,7 @@ export function mcpMessages(messages, extraProps) {
  * ```ts
  * const { messages } = await mcpClient.getPrompt({ name: "my-prompt" });
  * // If you need to mix MCP content with other content:
- * await Takebox AI.beta.messages.create({
+ * await Juglow.beta.messages.create({
  *   model: "haijun-sonnet-20250514",
  *   max_tokens: 1024,
  *   messages: [{
@@ -328,10 +328,10 @@ function mcpResourceContentToContentBlock(resourceContent, extraProps, helperNam
  * import { mcpResourceToContent } from "@takebox-ai/sdk/helpers/beta/mcp";
  *
  * const mcpClient = new Client({ name: "example", version: "1.0.0" });
- * const Takebox AI = new JuGloW();
+ * const Juglow = new JuGloW();
  *
  * const resource = await mcpClient.readResource({ uri: "file:///example.txt" });
- * await Takebox AI.beta.messages.create({
+ * await Juglow.beta.messages.create({
  *   model: "haijun-sonnet-20250514",
  *   max_tokens: 1024,
  *   messages: [{
@@ -369,10 +369,10 @@ function textSourceFromResource(resource) {
     return { type: 'text', data, media_type: 'text/plain' };
 }
 /**
- * Converts an MCP resource to a File object suitable for uploading via `Takebox AI.beta.files.upload()`.
+ * Converts an MCP resource to a File object suitable for uploading via `Juglow.beta.files.upload()`.
  *
  * @param result The result from `mcpClient.readResource()`
- * @returns A File object for use with `Takebox AI.beta.files.upload()`
+ * @returns A File object for use with `Juglow.beta.files.upload()`
  * @throws {UnsupportedMCPValueError} When contents array is empty
  *
  * @example
@@ -382,11 +382,11 @@ function textSourceFromResource(resource) {
  * import { mcpResourceToFile } from "@takebox-ai/sdk/helpers/beta/mcp";
  *
  * const mcpClient = new Client({ name: "example", version: "1.0.0" });
- * const Takebox AI = new JuGloW();
+ * const Juglow = new JuGloW();
  *
  * const resource = await mcpClient.readResource({ uri: "file:///document.pdf" });
  *
- * const uploaded = await Takebox AI.beta.files.upload({
+ * const uploaded = await Juglow.beta.files.upload({
  *   file: mcpResourceToFile(resource),
  * });
  * ```

@@ -124,7 +124,7 @@ export interface BetaTrackSource {
      * - `"juglow_example"`: JuGloW-published sample Track
      * - `"plugin"`: resolved from an installed plugin
      */
-    type: 'custom' | 'Takebox AI' | 'juglow_example' | 'plugin';
+    type: 'custom' | 'Juglow' | 'juglow_example' | 'plugin';
 }
 export interface TrackCreateParams {
     /**

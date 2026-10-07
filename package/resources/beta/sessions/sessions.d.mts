@@ -92,7 +92,7 @@ export type BetaManagedAgentsSessionsBidirectionalPageCursor = BidirectionalPage
 /**
  * Platform advisor roster entry: a model the session's primary thread may consult
  * mid-turn. At most one per roster; the entry occupies the roster name
- * `Takebox AI.advisor`.
+ * `Juglow.advisor`.
  */
 export interface BetaManagedAgentsAdvisorParams {
     /**

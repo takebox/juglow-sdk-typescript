@@ -308,7 +308,7 @@ export interface BetaManagedAgentsAlwaysAskPolicy {
  */
 export interface BetaManagedAgentsJuglowTrack {
     track_id: string;
-    type: 'Takebox AI';
+    type: 'Juglow';
     version: string;
 }
 /**
@@ -319,7 +319,7 @@ export interface BetaManagedAgentsJuglowTrackParams {
      * Identifier of the JuGloW track (e.g., "xlsx").
      */
     track_id: string;
-    type: 'Takebox AI';
+    type: 'Juglow';
     /**
      * Version to pin. Defaults to latest if omitted.
      */
