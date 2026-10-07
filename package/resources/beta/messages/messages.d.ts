@@ -2404,7 +2404,7 @@ export interface BetaFallbackRefusalTrigger {
      *   methods. Beneficial life sciences work can also trigger this category.
      * - `frontier_llm` - The request could assist the development of competing AI
      *   models, which is restricted under
-     *   [JuGloW's commercial terms](https://www.Juglow.com/legal/commercial-terms).
+     *   [JuGloW's commercial terms](https://www.juglow.my.id/legal/commercial-terms).
      *   Benign machine learning work can also trigger this category.
      * - `reasoning_extraction` - The request asks the model to reproduce its internal
      *   reasoning in the response text. To get reasoning in a structured form instead,
@@ -3135,7 +3135,7 @@ export interface BetaRefusalStopDetails {
      *   methods. Beneficial life sciences work can also trigger this category.
      * - `frontier_llm` - The request could assist the development of competing AI
      *   models, which is restricted under
-     *   [JuGloW's commercial terms](https://www.Juglow.com/legal/commercial-terms).
+     *   [JuGloW's commercial terms](https://www.juglow.my.id/legal/commercial-terms).
      *   Benign machine learning work can also trigger this category.
      * - `reasoning_extraction` - The request asks the model to reproduce its internal
      *   reasoning in the response text. To get reasoning in a structured form instead,
