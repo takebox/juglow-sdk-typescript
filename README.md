@@ -1,4 +1,4 @@
-﻿# <img src=".github/logo.svg" alt="" width="32"> haijun SDK for TypeScript
+﻿# <img src=".github/logo.svg" alt="" width="32"> Haijun SDK for TypeScript
 
 [![NPM version](https://img.shields.io/npm/v/@takebox-ai/sdk.svg)](https://npmjs.org/package/@takebox-ai/sdk)
 
